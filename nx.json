@@ -1,8 +1,4 @@
 {
-  "npmScope": "learnit-monorepo",
-  "affected": {
-    "defaultBase": "master"
-  },
   "implicitDependencies": {
     "package.json": {
       "dependencies": "*",
@@ -10,18 +6,34 @@
     },
     ".eslintrc.json": "*"
   },
+  "affected": {
+    "defaultBase": "master"
+  },
+  "npmScope": "learnit-monorepo",
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "e2e"
-        ]
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
       }
     }
   },
-  "projects": {}
+  "projects": {
+    "api": {
+      "tags": []
+    },
+    "shared-types": {
+      "tags": []
+    },
+    "webapp": {
+      "tags": []
+    },
+    "webapp-e2e": {
+      "tags": [],
+      "implicitDependencies": ["webapp"]
+    },
+    "rnapp": {
+      "tags": []
+    }
+  }
 }
