@@ -1,25 +1,23 @@
+import { useEffect } from 'react';
+import type { AppProps } from 'next/app';
 import React from 'react';
-import { AppProps } from 'next/app';
-import Head from 'next/head';
-import { ReactComponent as NxLogo } from '../public/nx-logo-white.svg';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import { darkTheme, lightTheme } from '@/styles/muiTheme';
 
-function CustomApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector('#jss-server-side');
+    if (jssStyles) {
+      jssStyles.parentElement.removeChild(jssStyles);
+    }
+  }, []);
   return (
-    <>
-      <Head>
-        <title>Welcome to webapp!</title>
-      </Head>
-      <div className="app">
-        <header className="flex">
-          <NxLogo width="75" height="50" />
-          <h1>Welcome to webapp!</h1>
-        </header>
-        <main>
-          <Component {...pageProps} />
-        </main>
-      </div>
-    </>
+    <ThemeProvider theme={lightTheme}>
+      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+      <CssBaseline />
+      <Component {...pageProps} />
+    </ThemeProvider>
   );
 }
-
-export default CustomApp;
+export default MyApp;
