@@ -9,7 +9,8 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  //TODO-production: remove CORS
+  //app.enableCors();
   //swagger setup
   const config = new DocumentBuilder()
     .setTitle('Learnit Digital API')

@@ -54,7 +54,6 @@ function AuthButton(props) {
   let css;
   let icon;
   const variant: 'text' | 'contained' | 'outlined' = 'contained';
-  console.log(type);
   switch (type) {
     case 'google':
       css = _classes.google;
@@ -71,7 +70,6 @@ function AuthButton(props) {
     default:
       css = _classes.default;
   }
-  console.log(css);
   return (
     <Button
       variant="contained"

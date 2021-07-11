@@ -15,7 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@learnit-monorepo/shared-types": ["libs/shared-types/src/index.ts"]
+      "@libs/shared-types": ["libs/shared-types/src/index.ts"],
+      //webapp aliasing
+      "@/components/*": ["./apps/webapp/src/components/*"],
+      "@/styles/*": ["apps/webapp/src/styles/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

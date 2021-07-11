@@ -1,3 +1,6 @@
-export function sharedTypes(): string {
-  return 'shared-types';
+interface ILoginDto {
+  nameOrEmail: string;
+  password: string;
 }
+
+export { ILoginDto };
