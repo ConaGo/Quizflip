@@ -3,12 +3,15 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { SignupDto } from './dto/signup.dto';
-import { LoginDto } from './dto/login.dto';
+import { ILoginDto } from '@libs/shared-types';
 import SocialSignupData, { SocialType } from './dto/user.social.data';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService
+  ) {}
 
   async validateUser(nameOrEmail: string, password: string): Promise<any> {
     const user = await this.userService.findOneNameOrEmail(nameOrEmail);
@@ -26,8 +29,10 @@ export class AuthService {
     }
     return null;
   }
-  async login(loginDto: LoginDto) {
-    const user = await this.userService.findOneNameOrEmail(loginDto.nameOrEmail);
+  async login(loginDto: ILoginDto) {
+    const user = await this.userService.findOneNameOrEmail(
+      loginDto.nameOrEmail
+    );
     const payload = { name: user.name, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
@@ -37,11 +42,10 @@ export class AuthService {
     if (!user) {
       return null;
     }
-    const z = this.userService.findOneNameOrEmail('l.j.browntown@gmail.com');
+    /*     const z = this.userService.findOneNameOrEmail('l.j.browntown@gmail.com');
     console.log(user);
-    console.log(z);
+    console.log(z); */
     let _user = await this.userService.findOneNameOrEmail(user.email);
-    console.log('JSKLAHDKJSAKD', _user);
     if (!_user) {
       const socialSignupData = new SocialSignupData(authType, user);
       _user = await this.userService.createSocial(socialSignupData);

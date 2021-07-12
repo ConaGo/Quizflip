@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 export default function NavBar() {
   const [openModal, setOpenModal] = useState(false);
-  const [modalType, setModalType] = useState('login');
+  //const [modalType, setModalType] = useState('login');
   const classes = useStyles();
   const handleClose = () => {
     setOpenModal(false);
@@ -54,8 +54,8 @@ export default function NavBar() {
         <AuthModal
           onClose={handleClose}
           open={openModal}
-          type={modalType}
-          setType={setModalType}
+          //type={modalType}
+          //setType={setModalType}
         ></AuthModal>
       ) : null}
     </div>

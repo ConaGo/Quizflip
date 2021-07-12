@@ -1,6 +1,6 @@
-interface ILoginDto {
-  nameOrEmail: string;
-  password: string;
-}
+export * from './dto/signup.dto';
+export * from './dto/login.dto';
+import { SignupDto } from './dto/signup.dto';
+import { LoginDto } from './dto/login.dto';
 
-export { ILoginDto };
+export type DTO = LoginDto | SignupDto;

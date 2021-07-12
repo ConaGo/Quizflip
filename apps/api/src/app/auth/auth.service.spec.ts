@@ -1,15 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 import { AuthModule } from './auth.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
-import { UserService } from 'src/user/user.service';
-import { AppModule } from 'src/app.module';
+import { UserService } from '../user/user.service';
+import { AppModule } from '../app.module';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from 'src/user/user.entity';
+import { User } from '../user/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
-import { user } from 'src/config/constraints';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -87,7 +86,9 @@ describe('AuthService', () => {
     it('should get the user given a LoginDto and sign a jwt with name and id', async () => {
       await service.login(loginUserMock);
 
-      expect(userService.findOneNameOrEmail).toBeCalledWith(loginUserMock.nameOrEmail);
+      expect(userService.findOneNameOrEmail).toBeCalledWith(
+        loginUserMock.nameOrEmail
+      );
       expect(jwtService.sign).toBeCalledWith({
         name: userEntityMock.name,
         sub: userEntityMock.id,
@@ -114,7 +115,9 @@ describe('AuthService', () => {
     };
     it('should call findOneNameOrEmail', async () => {
       await service.socialLoginOrSignup('google', googleDataMock);
-      expect(userService.findOneNameOrEmail).toHaveBeenCalledWith(googleDataMock.email);
+      expect(userService.findOneNameOrEmail).toHaveBeenCalledWith(
+        googleDataMock.email
+      );
     });
     it('should call createSocial if findOneNameOrEmail does not find the user', async () => {
       await service.socialLoginOrSignup('google', googleDataMock);
@@ -125,7 +128,10 @@ describe('AuthService', () => {
       expect(userService.createSocial).toHaveBeenCalledTimes(2);
     });
     it('should return an access_token', async () => {
-      const response = await service.socialLoginOrSignup('google', userEntityMock);
+      const response = await service.socialLoginOrSignup(
+        'google',
+        userEntityMock
+      );
       expect(response.access_token).toBeDefined();
     });
   });

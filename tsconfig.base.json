@@ -15,10 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@libs/shared-types": ["libs/shared-types/src/index.ts"],
-      //webapp aliasing
-      "@/components/*": ["./apps/webapp/src/components/*"],
-      "@/styles/*": ["apps/webapp/src/styles/*"]
+      "@libs/shared-types": ["libs/shared-types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
