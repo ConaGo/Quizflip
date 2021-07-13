@@ -3,7 +3,7 @@ import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { SignupDto } from './dto/signup.dto';
-import { ILoginDto } from '@libs/shared-types';
+import { LoginDto } from '@libs/shared-types';
 import SocialSignupData, { SocialType } from './dto/user.social.data';
 
 @Injectable()
@@ -29,7 +29,7 @@ export class AuthService {
     }
     return null;
   }
-  async login(loginDto: ILoginDto) {
+  async login(loginDto: LoginDto) {
     const user = await this.userService.findOneNameOrEmail(
       loginDto.nameOrEmail
     );
@@ -42,9 +42,6 @@ export class AuthService {
     if (!user) {
       return null;
     }
-    /*     const z = this.userService.findOneNameOrEmail('l.j.browntown@gmail.com');
-    console.log(user);
-    console.log(z); */
     let _user = await this.userService.findOneNameOrEmail(user.email);
     if (!_user) {
       const socialSignupData = new SocialSignupData(authType, user);
