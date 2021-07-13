@@ -22,6 +22,12 @@
     "api": {
       "tags": []
     },
+    "components": {
+      "tags": []
+    },
+    "rnapp": {
+      "tags": []
+    },
     "shared-types": {
       "tags": []
     },
@@ -31,9 +37,6 @@
     "webapp-e2e": {
       "tags": [],
       "implicitDependencies": ["webapp"]
-    },
-    "rnapp": {
-      "tags": []
     }
   }
 }

@@ -1,10 +1,10 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from '@/styles/Home.module.css';
+import styles from '../src/styles/Home.module.css';
 import Button from '@material-ui/core/Button';
 import { ThemeProvider, Checkbox } from '@material-ui/core';
-import { darkTheme, lightTheme } from '@/styles/muiTheme';
-import NavBar from '@/components/NavBar';
+import { darkTheme, lightTheme } from '../src/styles/muiTheme';
+import NavBar from '../src/components/NavBar';
 export default function Home() {
   return (
     <div>

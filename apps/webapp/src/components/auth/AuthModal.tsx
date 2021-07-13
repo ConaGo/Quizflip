@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 
 import { LoginDto, SignupDto, DTO } from '@libs/shared-types';
-import AuthButton from './AuthButton';
+import { AuthButton } from '@libs/components';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -122,8 +122,11 @@ const AuthForm = (
         <Typography variant="body2" align="center">
           Or
         </Typography>
-        <AuthButton type="github">{formType} with GitHub</AuthButton>
-        <AuthButton href="http://localhost:3070/auth/google" type="google">
+        <AuthButton socialType="github">{formType} with GitHub</AuthButton>
+        <AuthButton
+          href="http://localhost:3070/auth/google"
+          socialType="google"
+        >
           {formType} with Google
         </AuthButton>
       </DialogContent>

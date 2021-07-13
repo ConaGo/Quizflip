@@ -4,5 +4,6 @@ module.exports = {
     '<rootDir>/apps/webapp',
     '<rootDir>/libs/shared-types',
     '<rootDir>/apps/rnapp',
+    '<rootDir>/libs/components',
   ],
 };
