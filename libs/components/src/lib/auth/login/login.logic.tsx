@@ -31,16 +31,17 @@ import { ValidationError } from 'joi';
 const useForm = (defaultDto: DTO) => {
   const [dto, setDto] = useState<typeof defaultDto>(defaultDto);
 
-  const didMountRef = useRef(false);
-  const changedRecently = useRef(false);
+  //automated validation after 3 secs
+  /*   let didMountRef = false; //useRef(false);
+  let changedRecently = false; //useRef(false);
   useEffect(() => {
-    changedRecently.current = true;
+    changedRecently = true;
     setTimeout(() => {
-      if (didMountRef.current && !changedRecently.current) validator();
-      else didMountRef.current = true;
-      changedRecently.current = false;
+      if (didMountRef && !changedRecently) validator();
+      else didMountRef = true;
+      changedRecently = false;
     }, 3000);
-  }, [dto]);
+  }, [dto]); */
   const defaultErrors: { [x: string]: string } = {};
   for (const [key] of Object.entries(dto)) {
     defaultErrors[key] = '';
@@ -57,39 +58,17 @@ const useForm = (defaultDto: DTO) => {
   );
 
   const handlers = getHandlers(dto, setDto);
-  /*   const validator = () =>
-    validate(dto).then((e) => {
-      console.log(e);
-      if (e.length <= 0) {
-        setTimeout(() => {
-          refetch();
-        }, 1000);
-      } else {
-        e.forEach((v) => {
-          if (v.constraints && v.property) {
-            const error = Object.values(v.constraints)[0];
-            const propName = v.property;
-            const newErrors = { ...errors, [propName]: error };
-            setErrors(newErrors);
-          }
-        });
-      }
-    }); */
   const validator = () => {
-    console.log(dto);
-    console.log(
-      signupFormData.validate(dto, {
-        abortEarly: false,
-      }).error?.details
-    );
     const newErrors = { ...defaultErrors };
     signupFormData
       .validate(dto, {
         abortEarly: false,
       })
-      .error?.details.forEach((e) => {
-        newErrors[e.path[0]] = e.message;
-      });
+      .error?.details.forEach(
+        (e: { path: (string | number)[]; message: string }) => {
+          newErrors[e.path[0]] = e.message;
+        }
+      );
     setErrors(newErrors);
   };
   const onSubmit = () =>

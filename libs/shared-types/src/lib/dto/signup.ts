@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import Joi from '../joi.extensions';
 
 export const signupFormData = Joi.object({
   email: Joi.string()
@@ -8,9 +8,9 @@ export const signupFormData = Joi.object({
     .messages({
       'string.empty': 'please provide an e-mail',
     }),
-  name: Joi.string()
+  name: Joi.profanity()
     .alphanum()
-    .message('please use only numbers and letters')
+    .message('please use only numbers, letters and no whitspace')
     .min(3)
     .message('must be between 3 and 15 characters long')
     .max(30)

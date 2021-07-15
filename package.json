@@ -49,6 +49,7 @@
     "axios-hooks": "^2.6.3",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react-native": "^4.0.1",
+    "bad-words": "^3.0.4",
     "class-transformer": "^0.4.0",
     "class-validator-password-check": "^1.0.8",
     "core-js": "^3.6.5",
