@@ -50,16 +50,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface AuthButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  classes?: string;
+  //classes?: string;
   className?: string;
   socialType?: string;
   children?: React.ReactNode;
 }
 const AuthButton: FC<AuthButtonProps & React.HTMLProps<HTMLButtonElement>> = ({
-  classes,
+  //classes,
   className,
   socialType,
   children,
+  onClick,
 }) => {
   const _classes = useStyles();
   let css;
@@ -87,6 +88,7 @@ const AuthButton: FC<AuthButtonProps & React.HTMLProps<HTMLButtonElement>> = ({
       startIcon={icon}
       className={clsx(_classes.root, css, className)}
       fullWidth={true}
+      onClick={onClick}
     >
       {children}
     </Button>

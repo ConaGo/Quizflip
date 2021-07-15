@@ -20,7 +20,7 @@ import {
 
 import { LoginDto, SignupDto, DTO } from '@libs/shared-types';
 import { AuthButton } from '@libs/components';
-
+import { Login, Signup } from '@libs/components';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -58,7 +58,7 @@ export default function AuthModal({
   //setType?: Dispatch<SetStateAction<string>>;
   open?: boolean;
 }) {
-  const [formType, setFormType] = useState<FormType>('login');
+  const [formType, setFormType] = useState<FormType>('signup');
   return (
     <Dialog
       transitionDuration={1000}
@@ -67,10 +67,22 @@ export default function AuthModal({
       open={open}
     >
       {formType === 'signup' && (
-        <SignupForm formType={formType} setFormType={setFormType}></SignupForm>
+        <Signup
+          bottomNav={{
+            message: 'Already have an account?',
+            setType: setFormType,
+            type: 'login',
+          }}
+        ></Signup>
       )}
       {formType === 'login' && (
-        <LoginForm formType={formType} setFormType={setFormType}></LoginForm>
+        <Login
+          bottomNav={{
+            message: 'New here? Make an Account!',
+            setType: setFormType,
+            type: 'signup',
+          }}
+        ></Login>
       )}
     </Dialog>
   );
@@ -145,6 +157,7 @@ interface FormProps {
   formType: FormType;
   setFormType: Dispatch<SetStateAction<FormType>>;
 }
+
 const LoginForm = (props: FormProps) => {
   const [loginDto, setLoginDto] = useState<LoginDto>({
     nameOrEmail: '',

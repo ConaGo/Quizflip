@@ -26,7 +26,7 @@ import {
   FormType,
 } from '@libs/shared-types';
 import AuthButton from '../button/AuthButton';
-import useForm from './login.logic';
+import useForm from '../login/login.logic';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -53,14 +53,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-/* eslint-disable-next-line */
-export interface LoginProps {
+export interface SignupProps {
   bottomNav?: NavButtonProps<FormType>;
 }
 
-export function Login({ bottomNav }: LoginProps) {
+export function Signup({ bottomNav }: SignupProps) {
   const { handlers, validator, onSubmit, errors } = useForm({
-    nameOrEmail: '',
+    email: '',
+    name: '',
     password: '',
   });
   const classes = useStyles();
@@ -79,26 +79,48 @@ export function Login({ bottomNav }: LoginProps) {
       </DialogTitle>
       <DialogContent>
         <TextField
-          key="nameOrEmail"
-          onChange={handlers.nameOrEmail}
+          key="email"
+          onChange={handlers.email}
           margin="normal"
-          id="nameOrEmail"
-          label="Username or E-mail"
+          id="email"
+          label="E-mail"
           type="text"
-          error={!!errors.nameOrEmail}
-          helperText={errors.nameOrEmail}
+          error={!!errors.email}
+          helperText={errors.email}
           fullWidth
         />
-        <AuthButton onClick={onSubmit}>Login</AuthButton>
+        <TextField
+          key="name"
+          onChange={handlers.name}
+          margin="normal"
+          id="name"
+          label="Username"
+          type="text"
+          error={!!errors.name}
+          helperText={errors.name}
+          fullWidth
+        />
+        <TextField
+          key="password"
+          onChange={handlers.password}
+          margin="normal"
+          id="password"
+          label="Password"
+          type="password"
+          error={!!errors.password}
+          helperText={errors.password}
+          fullWidth
+        />
+        <AuthButton onClick={onSubmit}>Register</AuthButton>
         <Typography variant="body2" align="center">
           Or
         </Typography>
-        <AuthButton socialType="github">Login with GitHub</AuthButton>
+        <AuthButton socialType="github">Register with GitHub</AuthButton>
         <AuthButton
           href="http://localhost:3070/auth/google"
           socialType="google"
         >
-          Login with Google
+          Register with Google
         </AuthButton>
       </DialogContent>
       {bottomNav && (
@@ -115,4 +137,4 @@ export function Login({ bottomNav }: LoginProps) {
   );
 }
 
-export default Login;
+export default Signup;
