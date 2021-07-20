@@ -1,11 +1,4 @@
-import React, {
-  Dispatch,
-  SetStateAction,
-  useState,
-  useEffect,
-  useRef,
-  ChangeEvent,
-} from 'react';
+import React, { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
 
 import useAxios from 'axios-hooks';
 import {
@@ -15,7 +8,6 @@ import {
   signupFormData,
   recoveryFormData,
 } from '@libs/shared-types';
-import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
 export const nativeHelper = (text: string) => {
   return { e: { target: { value: text } } };
@@ -60,7 +52,7 @@ const useForm = (
   );
 
   const handlers = getHandlers(dto, setDto, nativeOrWeb);
-  const validator = () => {
+  const validator = async () => {
     const newErrors = { ...defaultErrors };
     let formData;
 
@@ -77,21 +69,23 @@ const useForm = (
       default:
         formData = loginFormData;
     }
+
     const es = formData.validate(dto, {
       abortEarly: false,
     }).error;
     console.log(es);
-    if (es.details.length > 1) {
-      es.details.forEach(
-        (e: { path: (string | number)[]; message: string }) => {
-          newErrors[e.path[0]] = e.message;
-        }
-      );
-      setErrors(newErrors);
-      console.log('setting errors');
-    } else {
-      console.log('submitting form');
-      refetch();
+    es?.details?.forEach(
+      (e: { path: (string | number)[]; message: string }) => {
+        newErrors[e.path[0]] = e.message;
+      }
+    );
+    setErrors(newErrors);
+    if (es?.details?.length > 0) {
+      try {
+        await refetch();
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
   const onSubmit = () =>

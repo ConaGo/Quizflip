@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import * as argon2 from 'argon2';
@@ -6,7 +6,7 @@ import { User } from './user.entity';
 import { SignupDto } from '../auth/dto/signup.dto';
 import SocialSignupData from '../auth/dto/user.social.data';
 import { ServerErrorException } from '../exceptions/serverError.exception';
-
+import { PostgresErrorCode } from 'pg';
 @Injectable()
 export class UserService {
   constructor(
@@ -41,7 +41,12 @@ export class UserService {
         passwordHash: passwordHash,
       });
     } catch (err) {
-      console.log(err);
+      if (err?.code === PostgresErrorCode.UniqueViolation) {
+        throw new HttpException(
+          'User with that email already exists',
+          HttpStatus.BAD_REQUEST
+        );
+      }
       throw new ServerErrorException(err);
     }
   }

@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(SignupNative);
+export default SignupNative;

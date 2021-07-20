@@ -98,7 +98,7 @@ export function Login({ setFormType }: LoginProps) {
           margin="normal"
           id="password"
           label="Password"
-          type="text"
+          type="password"
           error={!!errors.password}
           helperText={errors.password}
           fullWidth
