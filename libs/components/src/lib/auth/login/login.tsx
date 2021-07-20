@@ -55,7 +55,7 @@ export interface LoginProps {
 }
 
 export function Login({ setFormType }: LoginProps) {
-  const { handlers, onSubmit, errors } = useForm(
+  const { isLoading, handlers, onSubmit, errors } = useForm(
     {
       nameOrEmail: '',
       password: '',
@@ -111,7 +111,9 @@ export function Login({ setFormType }: LoginProps) {
         >
           Fogot password?
         </Button>
-        <AuthButton onClick={onSubmit}>Login</AuthButton>
+        <AuthButton isLoading={isLoading} onClick={onSubmit}>
+          Login
+        </AuthButton>
         <Typography variant="body2" align="center">
           Or
         </Typography>

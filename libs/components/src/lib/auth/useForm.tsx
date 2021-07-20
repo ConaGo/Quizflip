@@ -22,7 +22,7 @@ const useForm = (
   validator: (string: string) => void;
   errors: { [x: string]: string };
   onSubmit: () => void;
-  requestState: any;
+  isLoading: boolean;
 } => {
   const [dto, setDto] = useState<typeof defaultDto>(defaultDto);
   //automated validation after 3 secs
@@ -41,7 +41,7 @@ const useForm = (
     defaultErrors[key] = '';
   }
   const [errors, setErrors] = useState<typeof defaultErrors>(defaultErrors);
-  const [requestState, refetch] = useAxios(
+  const [{ data, loading, error }, refetch] = useAxios(
     {
       method: 'post',
       url: '/auth/' + formType,
@@ -52,7 +52,10 @@ const useForm = (
   );
 
   const handlers = getHandlers(dto, setDto, nativeOrWeb);
+  const [isLoading, setIsLoading] = useState(false);
   const validator = async () => {
+    console.log('loading..');
+    setIsLoading(true);
     const newErrors = { ...defaultErrors };
     let formData;
 
@@ -73,26 +76,28 @@ const useForm = (
     const es = formData.validate(dto, {
       abortEarly: false,
     }).error;
-    console.log(es);
     es?.details?.forEach(
       (e: { path: (string | number)[]; message: string }) => {
         newErrors[e.path[0]] = e.message;
       }
     );
     setErrors(newErrors);
-    if (es?.details?.length > 0) {
+    console.log(formType);
+    if (!es) {
       try {
         await refetch();
+        console.log(error);
       } catch (err) {
         console.error(err);
       }
     }
+    setIsLoading(false);
+    console.log('done.');
+    console.log(data);
   };
-  const onSubmit = () =>
-    setTimeout(() => {
-      validator();
-    }, 1000);
-  return { handlers, validator, errors, onSubmit, requestState };
+  const onSubmit = () => validator();
+
+  return { handlers, validator, errors, onSubmit, isLoading };
 };
 
 export default useForm;

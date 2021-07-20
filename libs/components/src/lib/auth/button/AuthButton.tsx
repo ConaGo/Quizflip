@@ -9,7 +9,7 @@ import {
   Theme,
   makeStyles,
 } from '@material-ui/core/styles';
-
+import BounceLoader from 'react-spinners/BounceLoader';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -50,13 +50,13 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface AuthButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  //classes?: string;
+  isLoading?: boolean;
   className?: string;
   socialType?: string;
   children?: React.ReactNode;
 }
 const AuthButton: FC<AuthButtonProps & React.HTMLProps<HTMLButtonElement>> = ({
-  //classes,
+  isLoading,
   className,
   socialType,
   children,
@@ -90,7 +90,7 @@ const AuthButton: FC<AuthButtonProps & React.HTMLProps<HTMLButtonElement>> = ({
       fullWidth={true}
       onClick={onClick}
     >
-      {children}
+      {isLoading ? <BounceLoader></BounceLoader> : children}
     </Button>
   );
 };
