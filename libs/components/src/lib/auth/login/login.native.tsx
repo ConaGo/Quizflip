@@ -14,14 +14,7 @@ interface LoginProps {
   navigation: Navigation;
   setFormType: Dispatch<SetStateAction<FormType>>;
 }
-/* export const LoginNative = () => {
-  //const [r, setR] = useState(true);
-  return (
-    <Background>
-      <Button mode="contained">Login</Button>
-    </Background>
-  );
-}; */
+
 export const LoginNative = ({ navigation }: LoginProps) => {
   const { handlers, onSubmit, errors } = useForm(
     {
@@ -41,7 +34,6 @@ export const LoginNative = ({ navigation }: LoginProps) => {
 
       <TextInput
         label="Username or E-mail"
-        //value={'SS'}
         onChangeText={handlers.nameOrEmail as (text: string) => void}
         error={!!errors.nameOrEmail}
         errorText={errors.nameOrEmail}
@@ -54,7 +46,6 @@ export const LoginNative = ({ navigation }: LoginProps) => {
 
       <TextInput
         label="Password"
-        //value={'SS'}
         returnKeyType="done"
         onChangeText={handlers.password as (text: string) => void}
         error={!!errors.password}
@@ -100,4 +91,4 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
 });
-export default LoginNative;
+export default memo(LoginNative);

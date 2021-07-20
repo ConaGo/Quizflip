@@ -10,40 +10,27 @@ import { theme } from '../../styles/theme';
 import { Navigation, FormType } from '@libs/shared-types';
 import useForm from '../useForm';
 
-interface SignupProps {
+interface ForgotPasswordProps {
   navigation: Navigation;
   setFormType: Dispatch<SetStateAction<FormType>>;
 }
-const SignupNative = ({ navigation }: SignupProps) => {
+
+const ForgotPassword = ({ navigation }: ForgotPasswordProps) => {
   const { handlers, onSubmit, errors } = useForm(
     {
-      name: '',
       email: '',
-      password: '',
     },
-    'login',
+    'recovery',
     'native'
   );
 
   return (
     <Background>
-      <BackButton goBack={() => navigation.navigate('Home')} />
+      <BackButton goBack={() => navigation.navigate('Login')} />
 
       <Logo />
 
-      <Header>Create Account</Header>
-
-      <TextInput
-        label="Username"
-        onChangeText={handlers.name as (text: string) => void}
-        error={!!errors.name}
-        errorText={errors.name}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-        returnKeyType="next"
-      />
+      <Header>Restore Password</Header>
 
       <TextInput
         label="Email"
@@ -57,44 +44,32 @@ const SignupNative = ({ navigation }: SignupProps) => {
         keyboardType="email-address"
       />
 
-      <TextInput
-        label="Password"
-        returnKeyType="done"
-        onChangeText={handlers.password as (text: string) => void}
-        error={!!errors.password}
-        errorText={errors.password}
-        secureTextEntry
-      />
-
       <Button mode="contained" onPress={onSubmit} style={styles.button}>
-        Sign Up
+        Send Reset Instructions
       </Button>
 
-      <View style={styles.row}>
-        <Text style={styles.label}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.link}>Login</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        style={styles.back}
+        onPress={() => navigation.navigate('Login')}
+      >
+        <Text style={styles.label}>← Back to login</Text>
+      </TouchableOpacity>
     </Background>
   );
 };
 
 const styles = StyleSheet.create({
-  label: {
-    color: theme.colors.secondary,
+  back: {
+    width: '100%',
+    marginTop: 12,
   },
   button: {
-    marginTop: 24,
+    marginTop: 12,
   },
-  row: {
-    flexDirection: 'row',
-    marginTop: 4,
-  },
-  link: {
-    fontWeight: 'bold',
-    color: theme.colors.primary,
+  label: {
+    color: theme.colors.secondary,
+    width: '100%',
   },
 });
 
-export default memo(SignupNative);
+export default memo(ForgotPassword);

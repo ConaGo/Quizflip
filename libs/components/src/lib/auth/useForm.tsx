@@ -10,9 +10,10 @@ import React, {
 import useAxios from 'axios-hooks';
 import {
   DTO,
-  signupFormData,
   FormType,
   loginFormData,
+  signupFormData,
+  recoveryFormData,
 } from '@libs/shared-types';
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
@@ -69,6 +70,9 @@ const useForm = (
         break;
       case 'signup':
         formData = signupFormData;
+        break;
+      case 'recovery':
+        formData = recoveryFormData;
         break;
       default:
         formData = loginFormData;

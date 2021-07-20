@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction } from 'react';
 
-export * from './dto/signup.dto';
 export { signupFormData } from './dto/signup.joi';
 export { loginFormData } from './dto/login.joi';
-export * from './dto/login.dto';
+export { recoveryFormData } from './dto/recovery.joi';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
-
-export type DTO = LoginDto | SignupDto;
+import { RecoveryDto } from './dto/recovery.dto';
+export { RecoveryDto, LoginDto, SignupDto };
+export type DTO = LoginDto | SignupDto | RecoveryDto;
 
 export type Navigation = {
   navigate: (scene: string) => void;
