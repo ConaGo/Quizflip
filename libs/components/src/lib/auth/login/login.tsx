@@ -18,15 +18,9 @@ import {
   TextField,
 } from '@material-ui/core';
 
-import {
-  LoginDto,
-  SignupDto,
-  DTO,
-  NavButtonProps,
-  FormType,
-} from '@libs/shared-types';
+import { FormType } from '@libs/shared-types';
 import AuthButton from '../button/AuthButton';
-import useForm from './login.logic';
+import useForm from '../useForm';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -51,18 +45,24 @@ const useStyles = makeStyles((theme: Theme) =>
     unstyledButton: {
       textTransform: 'none',
     },
+    passwordForgot: {
+      alignSelf: 'right',
+    },
   })
 );
-/* eslint-disable-next-line */
 export interface LoginProps {
-  bottomNav?: NavButtonProps<FormType>;
+  setFormType: Dispatch<SetStateAction<FormType>>;
 }
 
-export function Login({ bottomNav }: LoginProps) {
-  const { handlers, validator, onSubmit, errors } = useForm({
-    nameOrEmail: '',
-    password: '',
-  });
+export function Login({ setFormType }: LoginProps) {
+  const { handlers, onSubmit, errors } = useForm(
+    {
+      nameOrEmail: '',
+      password: '',
+    },
+    'login',
+    'web'
+  );
   const classes = useStyles();
   return (
     <div className={classes.container}>
@@ -79,16 +79,38 @@ export function Login({ bottomNav }: LoginProps) {
       </DialogTitle>
       <DialogContent>
         <TextField
-          key="nameOrEmail"
-          onChange={handlers.nameOrEmail}
-          margin="normal"
-          id="nameOrEmail"
           label="Username or E-mail"
+          onChange={
+            handlers.nameOrEmail as (e: ChangeEvent<HTMLInputElement>) => void
+          }
+          id="nameOrEmail"
           type="text"
           error={!!errors.nameOrEmail}
           helperText={errors.nameOrEmail}
           fullWidth
+          margin="normal"
         />
+        <TextField
+          key="password"
+          onChange={
+            handlers.password as (e: ChangeEvent<HTMLInputElement>) => void
+          }
+          margin="normal"
+          id="password"
+          label="Password"
+          type="text"
+          error={!!errors.password}
+          helperText={errors.password}
+          fullWidth
+        />
+        <Button
+          onClick={() => setFormType('recovery')}
+          className={classes.passwordForgot}
+          variant="text"
+          size="small"
+        >
+          Fogot password?
+        </Button>
         <AuthButton onClick={onSubmit}>Login</AuthButton>
         <Typography variant="body2" align="center">
           Or
@@ -101,16 +123,15 @@ export function Login({ bottomNav }: LoginProps) {
           Login with Google
         </AuthButton>
       </DialogContent>
-      {bottomNav && (
-        <Button
-          onClick={() => bottomNav.setType(bottomNav.type)}
-          className={classes.unstyledButton}
-          variant="text"
-          size="small"
-        >
-          {bottomNav.message}
-        </Button>
-      )}
+
+      <Button
+        onClick={() => setFormType('signup')}
+        className={classes.unstyledButton}
+        variant="text"
+        size="small"
+      >
+        New here? Make an Account!
+      </Button>
     </div>
   );
 }

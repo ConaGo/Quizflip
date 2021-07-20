@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@libs/components": ["libs/components/src/index.ts"],
+      "@libs/components/native": ["libs/components/src/index.native.ts"],
       "@libs/shared-types": ["libs/shared-types/src/index.ts"]
     }
   },

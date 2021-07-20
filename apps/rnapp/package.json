@@ -17,6 +17,14 @@
     "react-native-status-bar-height": "*",
     "react-native-paper": "*",
     "@nestjs/swagger": "*",
-    "class-validator-password-check": "*"
+    "class-validator-password-check": "*",
+    "@material-ui/core": "*",
+    "@material-ui/icons": "*",
+    "joi": "*",
+    "bad-words": "*",
+    "@testing-library/react": "*",
+    "axios": "*",
+    "axios-hooks": "*",
+    "fast-text-encoding": "*"
   }
 }

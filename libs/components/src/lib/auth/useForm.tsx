@@ -6,31 +6,32 @@ import React, {
   useRef,
   ChangeEvent,
 } from 'react';
-import axios from 'axios';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Modal from '@material-ui/core/Modal';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-} from '@material-ui/core';
 
 import useAxios from 'axios-hooks';
-import { DTO, signupFormData } from '@libs/shared-types';
-import { ValidationError } from 'joi';
+import {
+  DTO,
+  signupFormData,
+  FormType,
+  loginFormData,
+} from '@libs/shared-types';
+import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 
-const useForm = (defaultDto: DTO) => {
+export const nativeHelper = (text: string) => {
+  return { e: { target: { value: text } } };
+};
+type NativeOrWeb = 'native' | 'web';
+const useForm = (
+  defaultDto: DTO,
+  formType: FormType,
+  nativeOrWeb: NativeOrWeb
+): {
+  handlers: Record<string, Handler>;
+  validator: (string: string) => void;
+  errors: { [x: string]: string };
+  onSubmit: () => void;
+  requestState: any;
+} => {
   const [dto, setDto] = useState<typeof defaultDto>(defaultDto);
-
   //automated validation after 3 secs
   /*   let didMountRef = false; //useRef(false);
   let changedRecently = false; //useRef(false);
@@ -50,26 +51,44 @@ const useForm = (defaultDto: DTO) => {
   const [requestState, refetch] = useAxios(
     {
       method: 'post',
-      url: '/auth/signup',
+      url: '/auth/' + formType,
       data: dto,
       baseURL: 'http://localhost:3070',
     },
     { manual: true }
   );
 
-  const handlers = getHandlers(dto, setDto);
+  const handlers = getHandlers(dto, setDto, nativeOrWeb);
   const validator = () => {
     const newErrors = { ...defaultErrors };
-    signupFormData
-      .validate(dto, {
-        abortEarly: false,
-      })
-      .error?.details.forEach(
+    let formData;
+
+    switch (formType) {
+      case 'login':
+        formData = loginFormData;
+        break;
+      case 'signup':
+        formData = signupFormData;
+        break;
+      default:
+        formData = loginFormData;
+    }
+    const es = formData.validate(dto, {
+      abortEarly: false,
+    }).error;
+    console.log(es);
+    if (es.details.length > 1) {
+      es.details.forEach(
         (e: { path: (string | number)[]; message: string }) => {
           newErrors[e.path[0]] = e.message;
         }
       );
-    setErrors(newErrors);
+      setErrors(newErrors);
+      console.log('setting errors');
+    } else {
+      console.log('submitting form');
+      refetch();
+    }
   };
   const onSubmit = () =>
     setTimeout(() => {
@@ -80,14 +99,19 @@ const useForm = (defaultDto: DTO) => {
 
 export default useForm;
 
-type Handler = (e: ChangeEvent<HTMLInputElement>) => void;
+type Handler =
+  | ((e: ChangeEvent<HTMLInputElement>) => void)
+  | ((text: string) => void);
 const getHandlers = (
   obj: DTO,
-  setter: Dispatch<SetStateAction<DTO>>
+  setter: Dispatch<SetStateAction<DTO>>,
+  nativeOrWeb: NativeOrWeb
 ): Record<string, Handler> => {
   const handlers: { [key: string]: Handler } = {};
   for (const [key] of Object.entries(obj)) {
-    handlers[key] = getHandler(key, obj, setter);
+    if (nativeOrWeb === 'web') handlers[key] = getHandler(key, obj, setter);
+    else if (nativeOrWeb === 'native')
+      handlers[key] = getNativeHandler(key, obj, setter);
   }
   return handlers;
 };
@@ -98,6 +122,13 @@ const getHandler = (
   setter: Dispatch<SetStateAction<DTO>>
 ): ((e: ChangeEvent<HTMLInputElement>) => void) => {
   return (e) => setter({ ...obj, [name]: e.target.value });
+};
+const getNativeHandler = (
+  name: string,
+  obj: DTO,
+  setter: Dispatch<SetStateAction<DTO>>
+): ((text: string) => void) => {
+  return (e) => setter({ ...obj, [name]: e });
 };
 
 const capitalize = (string: string): string => {

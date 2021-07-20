@@ -23,14 +23,14 @@ export const signupFormData = Joi.object({
     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
     .required()
     .messages({
-      'string.empty': 'please provide an password',
+      'string.empty': 'please provide a password',
     }),
-  repeat_password: Joi.any()
+  /*   repeat_password: Joi.any()
     .equal(Joi.ref('password'))
     .required()
     .label('Confirm password')
     .messages({
       'any.only': 'passwords are not matching',
       'any.required': 'please type in your password again',
-    }),
+    }), */
 });

@@ -26,7 +26,7 @@ import {
   FormType,
 } from '@libs/shared-types';
 import AuthButton from '../button/AuthButton';
-import useForm from '../login/login.logic';
+import useForm from '../useForm';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -54,15 +54,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 export interface SignupProps {
-  bottomNav?: NavButtonProps<FormType>;
+  setFormType: Dispatch<SetStateAction<FormType>>;
 }
 
-export function Signup({ bottomNav }: SignupProps) {
-  const { handlers, validator, onSubmit, errors } = useForm({
-    email: '',
-    name: '',
-    password: '',
-  });
+export function Signup({ setFormType }: SignupProps) {
+  const { handlers, onSubmit, errors } = useForm(
+    {
+      email: '',
+      name: '',
+      password: '',
+    },
+    'signup',
+    'web'
+  );
   const classes = useStyles();
   return (
     <div className={classes.container}>
@@ -80,7 +84,9 @@ export function Signup({ bottomNav }: SignupProps) {
       <DialogContent>
         <TextField
           key="email"
-          onChange={handlers.email}
+          onChange={
+            handlers.email as (e: ChangeEvent<HTMLInputElement>) => void
+          }
           margin="normal"
           id="email"
           label="E-mail"
@@ -91,7 +97,7 @@ export function Signup({ bottomNav }: SignupProps) {
         />
         <TextField
           key="name"
-          onChange={handlers.name}
+          onChange={handlers.name as (e: ChangeEvent<HTMLInputElement>) => void}
           margin="normal"
           id="name"
           label="Username"
@@ -102,7 +108,9 @@ export function Signup({ bottomNav }: SignupProps) {
         />
         <TextField
           key="password"
-          onChange={handlers.password}
+          onChange={
+            handlers.password as (e: ChangeEvent<HTMLInputElement>) => void
+          }
           margin="normal"
           id="password"
           label="Password"
@@ -123,16 +131,14 @@ export function Signup({ bottomNav }: SignupProps) {
           Register with Google
         </AuthButton>
       </DialogContent>
-      {bottomNav && (
-        <Button
-          onClick={() => bottomNav.setType(bottomNav.type)}
-          className={classes.unstyledButton}
-          variant="text"
-          size="small"
-        >
-          {bottomNav.message}
-        </Button>
-      )}
+      <Button
+        onClick={() => setFormType('login')}
+        className={classes.unstyledButton}
+        variant="text"
+        size="small"
+      >
+        New here? Make an Account!
+      </Button>
     </div>
   );
 }
