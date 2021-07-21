@@ -22,4 +22,9 @@ export class UserController {
   getCurrentUser(@GetUserIdFromJwt() userId: number) {
     return this.userService.findCurrentUser(userId);
   }
+
+  @Get()
+  getAllUsers() {
+    return this.userService.findAll();
+  }
 }

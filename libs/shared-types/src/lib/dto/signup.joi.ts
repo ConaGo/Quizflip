@@ -17,7 +17,7 @@ export const signupFormData = Joi.object({
     .message('must be between 3 and 15 characters long')
     .required()
     .messages({
-      'string.empty': 'please provide an username',
+      'string.empty': 'please provide a username',
     }),
   password: Joi.string()
     .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))

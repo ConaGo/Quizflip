@@ -33,20 +33,34 @@ export class UserService {
     return this.userRepository.delete(id);
   }
   async create(signupDto: SignupDto): Promise<User> {
+    let user = await this.userRepository.findOne({ name: signupDto.name });
+    if (user) {
+      throw new HttpException(
+        'User with that name already exists',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    user = await this.userRepository.findOne({ email: signupDto.email });
+    if (user) {
+      throw new HttpException(
+        'User with that email already exists',
+        HttpStatus.BAD_REQUEST
+      );
+    }
     try {
       const passwordHash = await argon2.hash(signupDto.password);
+      console.log({
+        email: signupDto.email,
+        name: signupDto.name,
+        passwordHash: passwordHash,
+      });
       return this.userRepository.save({
         email: signupDto.email,
         name: signupDto.name,
         passwordHash: passwordHash,
       });
     } catch (err) {
-      if (err?.code === PostgresErrorCode.UniqueViolation) {
-        throw new HttpException(
-          'User with that email already exists',
-          HttpStatus.BAD_REQUEST
-        );
-      }
+      console.log(err);
       throw new ServerErrorException(err);
     }
   }

@@ -21,16 +21,14 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import { LoggingInterceptor } from '../delay.interceptor';
 
 @ApiTags('Auth')
 @Controller('auth')
-@UseInterceptors(LoggingInterceptor)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @ApiBearerAuth()
-  @UseGuards(LocalAuthGuard)
+  //@ApiBearerAuth()
+  //@UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiOperation({
     summary: 'Authentication with password and email/username',

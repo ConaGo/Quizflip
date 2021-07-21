@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme: Theme) =>
     passwordForgot: {
       alignSelf: 'right',
     },
+    input: {
+      marginBottom: '2em',
+    },
   })
 );
 export interface LoginProps {
@@ -55,7 +58,14 @@ export interface LoginProps {
 }
 
 export function Login({ setFormType }: LoginProps) {
-  const { isLoading, handlers, onSubmit, errors } = useForm(
+  const {
+    isSuccess,
+    isFailed,
+    isLoading,
+    handlers,
+    onSubmit,
+    errors,
+  } = useForm(
     {
       nameOrEmail: '',
       password: '',
@@ -79,6 +89,7 @@ export function Login({ setFormType }: LoginProps) {
       </DialogTitle>
       <DialogContent>
         <TextField
+          variant="outlined"
           label="Username or E-mail"
           onChange={
             handlers.nameOrEmail as (e: ChangeEvent<HTMLInputElement>) => void
@@ -89,8 +100,10 @@ export function Login({ setFormType }: LoginProps) {
           helperText={errors.nameOrEmail}
           fullWidth
           margin="normal"
+          className={classes.input}
         />
         <TextField
+          variant="outlined"
           key="password"
           onChange={
             handlers.password as (e: ChangeEvent<HTMLInputElement>) => void
@@ -111,7 +124,12 @@ export function Login({ setFormType }: LoginProps) {
         >
           Fogot password?
         </Button>
-        <AuthButton isLoading={isLoading} onClick={onSubmit}>
+        <AuthButton
+          isLoading={isLoading}
+          isSuccess={isSuccess}
+          isFailed={isFailed}
+          onClick={onSubmit}
+        >
           Login
         </AuthButton>
         <Typography variant="body2" align="center">

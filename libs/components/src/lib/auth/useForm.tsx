@@ -23,6 +23,8 @@ const useForm = (
   errors: { [x: string]: string };
   onSubmit: () => void;
   isLoading: boolean;
+  isFailed: boolean;
+  isSuccess: boolean;
 } => {
   const [dto, setDto] = useState<typeof defaultDto>(defaultDto);
   //automated validation after 3 secs
@@ -53,6 +55,8 @@ const useForm = (
 
   const handlers = getHandlers(dto, setDto, nativeOrWeb);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFailed, setIsFailed] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const validator = async () => {
     console.log('loading..');
     setIsLoading(true);
@@ -86,9 +90,17 @@ const useForm = (
     if (!es) {
       try {
         await refetch();
-        console.log(error);
+        setIsSuccess(true);
+        setIsSuccess(false);
       } catch (err) {
-        console.error(err);
+        const message = err.response.data.message;
+        if (message === 'User with that name already exists')
+          setErrors({ ...errors, name: message });
+        if (message === 'User with that email already exists')
+          setErrors({ ...errors, email: message });
+        setIsFailed(true);
+        sleep(300);
+        setIsFailed(false);
       }
     }
     setIsLoading(false);
@@ -97,7 +109,15 @@ const useForm = (
   };
   const onSubmit = () => validator();
 
-  return { handlers, validator, errors, onSubmit, isLoading };
+  return {
+    handlers,
+    validator,
+    errors,
+    onSubmit,
+    isLoading,
+    isSuccess,
+    isFailed,
+  };
 };
 
 export default useForm;
@@ -133,7 +153,8 @@ const getNativeHandler = (
 ): ((text: string) => void) => {
   return (e) => setter({ ...obj, [name]: e });
 };
-
-const capitalize = (string: string): string => {
-  return string[0].toUpperCase() + string.slice(1).toLowerCase();
-};
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}

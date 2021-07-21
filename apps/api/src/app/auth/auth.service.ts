@@ -23,17 +23,21 @@ export class AuthService {
   }
 
   async signup(signupDto: SignupDto) {
+    await sleep(1999);
     const user = await this.userService.create(signupDto);
 
     if (user) {
       return user;
     }
+    console.log(user);
     return null;
   }
   async login(loginDto: LoginDto) {
+    await sleep(1999);
     const user = await this.userService.findOneNameOrEmail(
       loginDto.nameOrEmail
     );
+
     const payload = { name: user.name, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
@@ -53,4 +57,9 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+}
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }

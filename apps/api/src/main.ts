@@ -2,8 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as morgan from 'morgan';
-
+import morganBody from 'morgan-body';
 import { AppModule } from './app/app.module';
+import { LoggingInterceptor } from './logging.interceptor';
+import { useRequestLogging } from './logging.middleware';
 
 declare const module: any;
 
@@ -25,8 +27,10 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   //logger setup
-  app.use(morgan('tiny'));
-
+  app.useGlobalInterceptors(new LoggingInterceptor());
+  useRequestLogging(app);
+  //app.use(morgan('tiny'));
+  //morganBody(app);
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT);
   //hot reload via npm run start:dev:hot

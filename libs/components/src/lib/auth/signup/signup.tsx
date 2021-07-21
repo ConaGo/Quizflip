@@ -58,7 +58,14 @@ export interface SignupProps {
 }
 
 export function Signup({ setFormType }: SignupProps) {
-  const { handlers, onSubmit, errors } = useForm(
+  const {
+    isFailed,
+    isSuccess,
+    isLoading,
+    handlers,
+    onSubmit,
+    errors,
+  } = useForm(
     {
       email: '',
       name: '',
@@ -83,6 +90,7 @@ export function Signup({ setFormType }: SignupProps) {
       </DialogTitle>
       <DialogContent>
         <TextField
+          variant="outlined"
           key="email"
           onChange={
             handlers.email as (e: ChangeEvent<HTMLInputElement>) => void
@@ -96,6 +104,7 @@ export function Signup({ setFormType }: SignupProps) {
           fullWidth
         />
         <TextField
+          variant="outlined"
           key="name"
           onChange={handlers.name as (e: ChangeEvent<HTMLInputElement>) => void}
           margin="normal"
@@ -107,6 +116,7 @@ export function Signup({ setFormType }: SignupProps) {
           fullWidth
         />
         <TextField
+          variant="outlined"
           key="password"
           onChange={
             handlers.password as (e: ChangeEvent<HTMLInputElement>) => void
@@ -119,7 +129,14 @@ export function Signup({ setFormType }: SignupProps) {
           helperText={errors.password}
           fullWidth
         />
-        <AuthButton onClick={onSubmit}>Register</AuthButton>
+        <AuthButton
+          isLoading={isLoading}
+          isSuccess={isSuccess}
+          isFailed={isFailed}
+          onClick={onSubmit}
+        >
+          Register
+        </AuthButton>
         <Typography variant="body2" align="center">
           Or
         </Typography>
@@ -137,7 +154,7 @@ export function Signup({ setFormType }: SignupProps) {
         variant="text"
         size="small"
       >
-        New here? Make an Account!
+        Already have an account?
       </Button>
     </div>
   );
