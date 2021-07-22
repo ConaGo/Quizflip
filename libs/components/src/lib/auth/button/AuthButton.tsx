@@ -98,6 +98,7 @@ const AuthButton: FC<AuthButtonProps & React.HTMLProps<HTMLButtonElement>> = ({
   socialType,
   children,
   onClick,
+  href,
 }) => {
   const _classes = useStyles();
   const buttonClassname = clsx({
@@ -139,6 +140,7 @@ const AuthButton: FC<AuthButtonProps & React.HTMLProps<HTMLButtonElement>> = ({
         className={clsx(_classes.root, css, className, buttonClassname)}
         fullWidth={!!socialType}
         onClick={onClick}
+        href={href}
       >
         {renderContent(children)}
       </Button>

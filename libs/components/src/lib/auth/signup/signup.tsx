@@ -51,6 +51,13 @@ const useStyles = makeStyles((theme: Theme) =>
     unstyledButton: {
       textTransform: 'none',
     },
+    input: {
+      '& p': {
+        position: 'absolute',
+        bottom: '-2em',
+      },
+      marginBottom: '2em',
+    },
   })
 );
 export interface SignupProps {
@@ -102,6 +109,7 @@ export function Signup({ setFormType }: SignupProps) {
           error={!!errors.email}
           helperText={errors.email}
           fullWidth
+          className={classes.input}
         />
         <TextField
           variant="outlined"
@@ -114,6 +122,7 @@ export function Signup({ setFormType }: SignupProps) {
           error={!!errors.name}
           helperText={errors.name}
           fullWidth
+          className={classes.input}
         />
         <TextField
           variant="outlined"
@@ -128,6 +137,7 @@ export function Signup({ setFormType }: SignupProps) {
           error={!!errors.password}
           helperText={errors.password}
           fullWidth
+          className={classes.input}
         />
         <AuthButton
           isLoading={isLoading}

@@ -1,9 +1,13 @@
 import {
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Post,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -26,5 +30,11 @@ export class UserController {
   @Get()
   getAllUsers() {
     return this.userService.findAll();
+  }
+
+  @Delete()
+  deleteUser(@Query('email') email: string) {
+    console.log(email);
+    return this.userService.deleteOne(email);
   }
 }

@@ -21,6 +21,7 @@ import {
 import { FormType } from '@libs/shared-types';
 import AuthButton from '../button/AuthButton';
 import useForm from '../useForm';
+import { blue } from '@material-ui/core/colors';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -49,6 +50,10 @@ const useStyles = makeStyles((theme: Theme) =>
       alignSelf: 'right',
     },
     input: {
+      '& p': {
+        position: 'absolute',
+        bottom: '-2em',
+      },
       marginBottom: '2em',
     },
   })
@@ -115,6 +120,7 @@ export function Login({ setFormType }: LoginProps) {
           error={!!errors.password}
           helperText={errors.password}
           fullWidth
+          className={classes.input}
         />
         <Button
           onClick={() => setFormType('recovery')}

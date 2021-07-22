@@ -10,8 +10,8 @@ config();
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor() {
     super({
-      clientID: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
+      clientID: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
       callbackURL:
         process.env.Domain + ':' + process.env.PORT + '/auth/google/redirect',
       scope: ['email', 'profile'],
@@ -23,11 +23,10 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: any
   ): Promise<any> {
-    const { name, emails, photos, sub } = profile;
-    console.log(profile);
+    const { name, emails, photos } = profile;
     console.log(refreshToken);
+    console.log(profile);
     const user = {
-      sub: sub,
       email: emails[0].value,
       firstName: name.givenName,
       lastName: name.familyName,

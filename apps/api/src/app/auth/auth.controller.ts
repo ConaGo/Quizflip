@@ -80,6 +80,7 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   googleAuthRedirect(@Req() req) {
+    console.log(req.user.id);
     return this.authService.socialLoginOrSignup('google', req.user);
   }
 }

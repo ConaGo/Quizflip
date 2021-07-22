@@ -4,7 +4,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import * as argon2 from 'argon2';
 import { User } from './user.entity';
 import { SignupDto } from '../auth/dto/signup.dto';
-import SocialSignupData from '../auth/dto/user.social.data';
+import SocialSignupData, { AuthType } from '../auth/dto/user.social.data';
 import { ServerErrorException } from '../exceptions/serverError.exception';
 import { PostgresErrorCode } from 'pg';
 @Injectable()
@@ -21,12 +21,16 @@ export class UserService {
   }
   async findOneNameOrEmail(nameOrEmail: string): Promise<User> {
     let r;
-    await this.userRepository
-      .findOne({ name: nameOrEmail })
-      .then((v) => (r = v));
-    await this.userRepository
-      .findOne({ email: nameOrEmail })
-      .then((v) => (r = v));
+    let user = await this.userRepository.findOne({ name: nameOrEmail });
+    if (!user) {
+      user = await this.userRepository.findOne({ email: nameOrEmail });
+    }
+    if (!user) {
+      throw new HttpException(
+        'User with that name already exists',
+        HttpStatus.BAD_REQUEST
+      );
+    }
     return r;
   }
   async remove(id: string): Promise<DeleteResult> {
@@ -73,5 +77,15 @@ export class UserService {
       console.log(err);
       throw new ServerErrorException(err);
     }
+  }
+  async findSocial(authType: AuthType, sub: string): Promise<User> {
+    return this.userRepository.findOne({ socialId: sub, authType: authType });
+  }
+  async deleteOne(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({ email: email });
+    if (user) {
+      return this.userRepository.remove(user);
+    }
+    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
 }

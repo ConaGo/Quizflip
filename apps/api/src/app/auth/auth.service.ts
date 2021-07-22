@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
@@ -37,17 +37,21 @@ export class AuthService {
     const user = await this.userService.findOneNameOrEmail(
       loginDto.nameOrEmail
     );
-
-    const payload = { name: user.name, sub: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    if (user) {
+      const payload = { name: user.name, sub: user.id };
+      return {
+        access_token: this.jwtService.sign(payload),
+      };
+    }
   }
   async socialLoginOrSignup(authType: SocialType, user: any) {
     if (!user) {
-      return null;
+      throw new HttpException(
+        'Authentication was refused by provider',
+        HttpStatus.UNAUTHORIZED
+      );
     }
-    let _user = await this.userService.findOneNameOrEmail(user.email);
+    let _user = await this.userService.findSocial(authType, user.sub);
     if (!_user) {
       const socialSignupData = new SocialSignupData(authType, user);
       _user = await this.userService.createSocial(socialSignupData);

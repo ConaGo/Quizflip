@@ -91,15 +91,18 @@ const useForm = (
       try {
         await refetch();
         setIsSuccess(true);
+        await sleep(800);
         setIsSuccess(false);
       } catch (err) {
-        const message = err.response.data.message;
+        console.log(err.response);
+        const message = err.response?.data.message;
         if (message === 'User with that name already exists')
-          setErrors({ ...errors, name: message });
+          setErrors({ ...defaultErrors, name: message });
         if (message === 'User with that email already exists')
-          setErrors({ ...errors, email: message });
+          setErrors({ ...defaultErrors, email: message });
+        setIsLoading(false);
         setIsFailed(true);
-        sleep(300);
+        await sleep(800);
         setIsFailed(false);
       }
     }

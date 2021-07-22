@@ -35,6 +35,10 @@ export class User {
   @Column({ type: 'varchar', default: 'local' })
   authType: AuthType;
 
+  @Exclude()
+  @Column({ default: '' })
+  socialId: string;
+
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
   }
