@@ -51,12 +51,13 @@ const useStyles = makeStyles((theme: Theme) =>
     unstyledButton: {
       textTransform: 'none',
     },
+    //position error field
     input: {
       '& p': {
         position: 'absolute',
-        bottom: '-2em',
+        bottom: '-1.3em',
       },
-      marginBottom: '2em',
+      marginBottom: '1.2em',
     },
   })
 );
@@ -150,7 +151,12 @@ export function Signup({ setFormType }: SignupProps) {
         <Typography variant="body2" align="center">
           Or
         </Typography>
-        <AuthButton socialType="github">Register with GitHub</AuthButton>
+        <AuthButton
+          href="http://localhost:3070/auth/github"
+          socialType="github"
+        >
+          Register with GitHub
+        </AuthButton>
         <AuthButton
           href="http://localhost:3070/auth/google"
           socialType="google"

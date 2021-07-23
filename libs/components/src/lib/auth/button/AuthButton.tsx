@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) =>
         ' 100%)',
       color: 'white',
       //transition: 'opacity 0.5s',
-      transition: 'width 0.5s, height 0.3s',
+      transition: 'opacity 0.5s, width 0.5s, height 0.3s, background 0.3s',
       '&:hover': {
         opacity: 1,
       },

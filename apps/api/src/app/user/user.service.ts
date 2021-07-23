@@ -78,8 +78,11 @@ export class UserService {
       throw new ServerErrorException(err);
     }
   }
-  async findSocial(authType: AuthType, sub: string): Promise<User> {
-    return this.userRepository.findOne({ socialId: sub, authType: authType });
+  async findSocial(authType: AuthType, socialId: string): Promise<User> {
+    return this.userRepository.findOne({
+      socialId: socialId,
+      authType: authType,
+    });
   }
   async deleteOne(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ email: email });

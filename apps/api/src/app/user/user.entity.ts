@@ -31,11 +31,9 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @Exclude()
   @Column({ type: 'varchar', default: 'local' })
   authType: AuthType;
 
-  @Exclude()
   @Column({ default: '' })
   socialId: string;
 

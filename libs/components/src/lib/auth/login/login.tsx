@@ -141,7 +141,12 @@ export function Login({ setFormType }: LoginProps) {
         <Typography variant="body2" align="center">
           Or
         </Typography>
-        <AuthButton socialType="github">Login with GitHub</AuthButton>
+        <AuthButton
+          href="http://localhost:3070/auth/github"
+          socialType="github"
+        >
+          Login with GitHub
+        </AuthButton>
         <AuthButton
           href="http://localhost:3070/auth/google"
           socialType="google"

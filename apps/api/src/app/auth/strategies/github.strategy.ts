@@ -1,5 +1,5 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth2';
+import { Strategy, VerifyCallback } from 'passport-github2';
 import { config } from 'dotenv';
 
 import { Injectable } from '@nestjs/common';
@@ -7,14 +7,14 @@ import { Injectable } from '@nestjs/common';
 config();
 
 @Injectable()
-export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
+export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
   constructor() {
     super({
       clientID: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
       callbackURL:
-        process.env.Domain + ':' + process.env.PORT + '/auth/google/redirect',
-      scope: ['email', 'profile'],
+        process.env.DOMAIN + ':' + process.env.PORT + '/auth/github/redirect',
+      scope: ['user:email', 'profile'],
     });
   }
 
@@ -23,15 +23,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: any
   ): Promise<any> {
-    const { name, emails, photos } = profile;
-    console.log(refreshToken);
-    console.log(profile);
+    const { username, emails, photos, id } = profile;
     const user = {
+      socialId: id,
       email: emails[0].value,
-      firstName: name.givenName,
-      lastName: name.familyName,
-      picture: photos[0].value,
-      accessToken,
+      name: username,
+      picture: photos[0]?.value,
     };
     return user;
   }

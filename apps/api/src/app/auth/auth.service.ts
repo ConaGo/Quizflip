@@ -51,9 +51,10 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED
       );
     }
-    let _user = await this.userService.findSocial(authType, user.sub);
+    let _user = await this.userService.findSocial(authType, user.socialId);
     if (!_user) {
       const socialSignupData = new SocialSignupData(authType, user);
+      console.log(socialSignupData);
       _user = await this.userService.createSocial(socialSignupData);
     }
     const payload = { name: _user.name, sub: _user.id };

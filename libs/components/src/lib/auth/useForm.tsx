@@ -91,6 +91,7 @@ const useForm = (
       try {
         await refetch();
         setIsSuccess(true);
+        setIsLoading(false);
         await sleep(800);
         setIsSuccess(false);
       } catch (err) {

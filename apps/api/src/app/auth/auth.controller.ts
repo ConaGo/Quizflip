@@ -10,6 +10,7 @@ import {
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { GithubAuthGuard } from './guards/github-auth.guard';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import {
@@ -73,14 +74,24 @@ export class AuthController {
   @Get('google')
   @UseGuards(GoogleAuthGuard)
   async googleAuth(@Req() req) {
-    console.log('/google');
-    console.log(req.user);
+    console.log('/github');
   }
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   googleAuthRedirect(@Req() req) {
-    console.log(req.user.id);
     return this.authService.socialLoginOrSignup('google', req.user);
+  }
+  @Get('github')
+  @UseGuards(GithubAuthGuard)
+  async githubAuth(@Req() req) {
+    console.log('/github');
+  }
+
+  @Get('github/redirect')
+  @UseGuards(GithubAuthGuard)
+  githubAuthRedirect(@Req() req) {
+    console.log(req.user.id);
+    return this.authService.socialLoginOrSignup('github', req.user);
   }
 }

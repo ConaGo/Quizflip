@@ -1,5 +1,5 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth2';
+import { Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { config } from 'dotenv';
 
 import { Injectable } from '@nestjs/common';
@@ -13,7 +13,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       clientID: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
       callbackURL:
-        process.env.Domain + ':' + process.env.PORT + '/auth/google/redirect',
+        process.env.DOMAIN + ':' + process.env.PORT + '/auth/google/redirect',
       scope: ['email', 'profile'],
     });
   }
@@ -23,16 +23,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: any
   ): Promise<any> {
-    const { name, emails, photos, sub } = profile;
-    console.log(profile);
-    console.log(refreshToken);
+    const { name, emails, photos, id } = profile;
     const user = {
-      sub: sub,
+      socialId: id,
       email: emails[0].value,
-      firstName: name.givenName,
-      lastName: name.familyName,
-      picture: photos[0].value,
-      accessToken,
+      name: name.givenName,
+      picture: photos[0]?.value,
     };
     return user;
   }
