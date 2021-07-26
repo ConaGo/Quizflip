@@ -58,9 +58,7 @@ export class AuthService {
       _user = await this.userService.createSocial(socialSignupData);
     }
     const payload = { name: _user.name, sub: _user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    return this.jwtService.sign(payload);
   }
 }
 function sleep(ms) {

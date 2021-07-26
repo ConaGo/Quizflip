@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, memo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, Image } from 'react-native';
 import Background from '../../core.native/Background';
 import Logo from '../../core.native/Logo';
 import Header from '../../core.native/Header';
@@ -9,13 +9,13 @@ import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
 import { Navigation, FormType } from '@libs/shared-types';
 import useForm from '../useForm';
-
+import GitHubIcon from '@material-ui/icons/GitHub';
 interface SignupProps {
   navigation: Navigation;
   setFormType: Dispatch<SetStateAction<FormType>>;
 }
 const SignupNative = ({ navigation }: SignupProps) => {
-  const { handlers, onSubmit, errors } = useForm(
+  const { handlers, onSubmit, errors, isLoading } = useForm(
     {
       name: '',
       email: '',
@@ -66,11 +66,26 @@ const SignupNative = ({ navigation }: SignupProps) => {
         secureTextEntry
       />
 
-      <Button mode="contained" onPress={onSubmit} style={styles.button}>
+      <Button
+        mode="contained"
+        onPress={onSubmit}
+        style={styles.button}
+        loading={isLoading}
+      >
         Sign Up
       </Button>
-
       <View style={styles.row}>
+        <Text style={styles.label}>Already have an account? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.link}>Login</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.row}>
+        <Image
+          source={{
+            uri: 'https://reactnative.dev/img/tiny_logo.png',
+          }}
+        />
         <Text style={styles.label}>Already have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.link}>Login</Text>

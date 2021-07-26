@@ -6,6 +6,8 @@ import {
   Body,
   Req,
   UseInterceptors,
+  Redirect,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -79,8 +81,14 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  googleAuthRedirect(@Req() req) {
-    return this.authService.socialLoginOrSignup('google', req.user);
+  async googleAuthRedirect(@Req() req, @Res({ passthrough: true }) res) {
+    res.cookie(
+      'jwt',
+      JSON.stringify(
+        await this.authService.socialLoginOrSignup('google', req.user)
+      )
+    );
+    res.redirect('http://localhost:4200/authflow');
   }
   @Get('github')
   @UseGuards(GithubAuthGuard)
@@ -90,8 +98,17 @@ export class AuthController {
 
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)
-  githubAuthRedirect(@Req() req) {
-    console.log(req.user.id);
-    return this.authService.socialLoginOrSignup('github', req.user);
+  async githubAuthRedirect(@Req() req, @Res({ passthrough: true }) res) {
+    console.log(req.user);
+    //setting jwt in "one time cookie" to be able to read it in the frontend
+    //after a redirect.
+    //TODO-Production set cookie to secure so it only gets sent over https connections
+    res.cookie(
+      'jwt',
+      JSON.stringify(
+        await this.authService.socialLoginOrSignup('github', req.user)
+      )
+    );
+    res.redirect('http://localhost:4200/authflow');
   }
 }
