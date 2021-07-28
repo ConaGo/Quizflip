@@ -4,18 +4,18 @@ import { useEffect, useState } from 'react';
 //the frontend via cookies; The jwt gets extracted and  the cookie
 //immediately deleted
 const AuthFlow = () => {
-  const [cookie, setCookie] = useState('');
+  const [jwt, setJwt] = useState('');
   useEffect(() => {
     //Getting the jwt
     document.cookie.split(';').forEach((c) => {
       const [key, val] = c.trim().split('=').map(decodeURIComponent);
-      if (key === 'jwt') setCookie(val);
+      if (key === 'jwt') setJwt(val);
     });
     //reset cookie to null
     document.cookie = 'jwt=';
   }, []);
 
-  return <p>{cookie}</p>;
+  return <p>{jwt}</p>;
 };
 export default AuthFlow;
 

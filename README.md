@@ -1,5 +1,26 @@
 # LearnitMonorepo
 
+## The webapp
+
+The webapp uses the NextJS framework to benefit from
+
+- Bundle splitting with dynamic imports
+- Easy static and server side rendering
+- Nextjs Image component
+
+However, using NextJS ties the webapp to the inflexible routing solution provided.
+To still be able to reap all the benefits of an SPA the App bypasses NextJS routing system on certain parts. This approach is taken from [Colin McDonnell](https://github.com/colinhacks) and described in this [blogpost](https://colinhacks.com/essays/building-a-spa-with-nextjs)
+
+# required env variables with examples
+
+- API_URL=http://localhost:3070
+- SIGNUP_ROUTE=auth/signup
+- LOGIN_ROUTE=auth/login
+
+# starting the Webapp
+
+`nx run webapp:serve`
+
 ## Starting the mobile app
 
 `nx run-android rnapp`

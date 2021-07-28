@@ -21,8 +21,8 @@ import { User } from './user/user.entity';
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
-        DOMAIN: Joi.string(),
-        PORT: Joi.number(),
+        API_DOMAIN: Joi.string(),
+        API_PORT: Joi.number(),
       }),
     }),
     //for Postgres Database Connection

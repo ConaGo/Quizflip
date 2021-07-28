@@ -3,7 +3,6 @@ const withNx = require('@nrwl/next/plugins/with-nx');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 
 module.exports = withNx((phase, { defaultConfig }) => {
-  const backEnd = process.env.BACKEND_HOST + parseInt(process.env.BACKEND_PORT);
   if (phase === PHASE_DEVELOPMENT_SERVER) {
     return {
       /* development only config options here */

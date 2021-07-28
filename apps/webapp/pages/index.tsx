@@ -5,37 +5,35 @@ import Button from '@material-ui/core/Button';
 import { ThemeProvider, Checkbox } from '@material-ui/core';
 import { darkTheme, lightTheme } from '../src/styles/muiTheme';
 import NavBar from '../src/components/NavBar';
+
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+
 export default function Home() {
   return (
     <div>
-      <Head>
-        <title>Learnit Digital</title>
-        <meta name="description" content="Online Learning for University" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta
-          name="viewport"
-          content="minimum-scale=1, initial-scale=1, width=device-width"
-        />
-      </Head>
-
       <main>
-        <ThemeProvider theme={lightTheme}>
-          <NavBar></NavBar>
-        </ThemeProvider>
-      </main>
+        <Router>
+          <div>
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/about">About</Link>
+              </li>
+            </ul>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+            <Switch>
+              <Route path="/about">
+                <h2>About</h2>
+              </Route>
+              <Route path="/">
+                <h2>Home</h2>
+              </Route>
+            </Switch>
+          </div>
+        </Router>
+      </main>
     </div>
   );
 }

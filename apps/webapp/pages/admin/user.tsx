@@ -1,23 +1,39 @@
 import useAxios from 'axios-hooks';
 import axios from 'axios';
-const UserOverview = () => {
-  const [{ data, loading, error }, refetch] = useAxios({
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await axios({
     method: 'get',
     url: '/user/',
-    baseURL: 'http://localhost:3070',
   });
+  const ssrData = res.data;
+  // Pass data to the page via props
+  return { props: { ssrData } };
+}
+const UserOverview = ({ ssrData }) => {
+  let actualData = ssrData;
+  const [{ data, loading, error }, refetch] = useAxios(
+    {
+      method: 'get',
+      url: '/user/',
+      baseURL: 'http://localhost:3070',
+    },
+    { manual: true }
+  );
   const clickHandler = () => {
     refetch();
+    actualData = data;
     console.log(data);
   };
 
-  console.log(data);
+  console.log(ssrData);
+  console.log(process.env);
   return (
     <>
       <button onClick={clickHandler}></button>
       <ul>
-        {data &&
-          data.map((user) => {
+        {actualData &&
+          actualData.map((user) => {
             return (
               <li key={user.email}>
                 {user.email}

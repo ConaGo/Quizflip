@@ -9,19 +9,18 @@ import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
 import { Navigation, FormType } from '@libs/shared-types';
 import useForm from '../useForm';
-import GitHubIcon from '@material-ui/icons/GitHub';
 interface SignupProps {
   navigation: Navigation;
   setFormType: Dispatch<SetStateAction<FormType>>;
 }
 const SignupNative = ({ navigation }: SignupProps) => {
-  const { handlers, onSubmit, errors, isLoading } = useForm(
+  const { handlers, onSubmit, errors } = useForm(
     {
       name: '',
       email: '',
       password: '',
     },
-    'login',
+    'signup',
     'native'
   );
 
@@ -66,26 +65,11 @@ const SignupNative = ({ navigation }: SignupProps) => {
         secureTextEntry
       />
 
-      <Button
-        mode="contained"
-        onPress={onSubmit}
-        style={styles.button}
-        loading={isLoading}
-      >
+      <Button mode="contained" onPress={onSubmit} style={styles.button}>
         Sign Up
       </Button>
+
       <View style={styles.row}>
-        <Text style={styles.label}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.link}>Login</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.row}>
-        <Image
-          source={{
-            uri: 'https://reactnative.dev/img/tiny_logo.png',
-          }}
-        />
         <Text style={styles.label}>Already have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.link}>Login</Text>
@@ -96,6 +80,12 @@ const SignupNative = ({ navigation }: SignupProps) => {
 };
 
 const styles = StyleSheet.create({
+  error: {
+    color: 'red',
+    position: 'relative',
+    top: -13,
+    left: -12,
+  },
   label: {
     color: theme.colors.secondary,
   },
