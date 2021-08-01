@@ -7,6 +7,9 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AuthModal from './auth/AuthModal';
+
+import { FormType } from '@libs/shared-types';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -22,11 +25,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 export default function NavBar() {
   const [openModal, setOpenModal] = useState(false);
-  //const [modalType, setModalType] = useState('login');
+  const [formType, setFormType] = useState<FormType>('login');
   const classes = useStyles();
+
   const handleClose = () => {
     setOpenModal(false);
   };
+
+  const handleOpen = (type: FormType) => {
+    setFormType(type);
+    setOpenModal(!openModal);
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -42,10 +52,10 @@ export default function NavBar() {
           <Typography variant="h6" className={classes.title}>
             News
           </Typography>
-          <Button color="inherit" onClick={() => setOpenModal(!openModal)}>
+          <Button color="inherit" onClick={() => handleOpen('login')}>
             Login
           </Button>
-          <Button color="inherit" onClick={() => setOpenModal(!openModal)}>
+          <Button color="inherit" onClick={() => handleOpen('signup')}>
             Signup
           </Button>
         </Toolbar>
@@ -54,8 +64,8 @@ export default function NavBar() {
         <AuthModal
           onClose={handleClose}
           open={openModal}
-          //type={modalType}
-          //setType={setModalType}
+          formType={formType}
+          setFormType={setFormType}
         ></AuthModal>
       ) : null}
     </div>

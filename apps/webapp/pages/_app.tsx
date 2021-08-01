@@ -9,7 +9,7 @@ import axios from 'axios';
 
 //configure axios
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
-console.log(process.env.NEXT_PUBLIC_API_URL);
+axios.defaults.withCredentials = true; //sending cookies with each request
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {

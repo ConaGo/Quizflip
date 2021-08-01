@@ -38,11 +38,14 @@ const useForm = (
       changedRecently = false;
     }, 3000);
   }, [dto]); */
+
+  //Dynamically create Error object from formtype
   const defaultErrors: { [x: string]: string } = {};
   for (const [key] of Object.entries(dto)) {
     defaultErrors[key] = '';
   }
   const [errors, setErrors] = useState<typeof defaultErrors>(defaultErrors);
+
   const [{ data, loading, error }, refetch] = useAxios(
     {
       method: 'post',

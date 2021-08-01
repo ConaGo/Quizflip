@@ -32,7 +32,7 @@ document.cookie.split(';').reduce((res, c) => {
 */
 
 //Return single key
-//more performance but harder to read
+//better performance but harder to read
 /*
 JSON.stringify(
   document.cookie.replace(

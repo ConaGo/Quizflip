@@ -8,8 +8,11 @@ import {
   UseInterceptors,
   Redirect,
   Res,
+  HttpCode,
 } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
+import { UserService } from '../user/user.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { GithubAuthGuard } from './guards/github-auth.guard';
@@ -28,10 +31,14 @@ import {
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService
+  ) {}
 
   //@ApiBearerAuth()
   //@UseGuards(LocalAuthGuard)
+  @HttpCode(200) //nestjs default for POST is 201
   @Post('login')
   @ApiOperation({
     summary: 'Authentication with password and email/username',
@@ -45,8 +52,16 @@ export class AuthController {
     },
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: LoginDto, @Res({ passthrough: false }) res) {
+    const user = await this.userService.findOneNameOrEmail(
+      loginDto.nameOrEmail
+    );
+    console.log(user);
+    const payload = { name: user.name, sub: user.id };
+    const cookie = await this.authService.getJwtCookie(payload);
+    console.log(cookie);
+    await res.setHeader('Set-Cookie', cookie);
+    return res.send(user);
   }
 
   @Post('signup')
@@ -70,7 +85,7 @@ export class AuthController {
     },
   })
   async signup(@Body() signupDto: SignupDto) {
-    return this.authService.signup(signupDto);
+    const user = await this.userService.create(signupDto);
   }
 
   @Get('google')
@@ -98,17 +113,21 @@ export class AuthController {
 
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)
-  async githubAuthRedirect(@Req() req, @Res({ passthrough: true }) res) {
-    console.log(req.user);
-    //setting jwt in "one time cookie" to be able to read it in the frontend
-    //after a redirect.
-    //TODO-Production set cookie to secure so it only gets sent over https connections
-    res.cookie(
-      'jwt',
-      JSON.stringify(
-        await this.authService.socialLoginOrSignup('github', req.user)
-      )
-    );
+  async githubAuthRedirect(
+    @Req() req: Request,
+    @Res({ passthrough: false }) res: Response
+  ) {
+    const user = await this.authService.socialLoginOrSignup('github', req.user);
+    const payload = { name: user.name, sub: user.id };
+    const cookie = await this.authService.getJwtCookie(payload);
+    console.log(cookie);
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.cookie('Authentication', cookie, {
+      maxAge: 900000,
+      httpOnly: true,
+      path: '/',
+      //domain: 'localhost:4200',
+    });
     res.redirect('http://localhost:4200/authflow');
   }
 }

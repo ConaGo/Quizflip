@@ -11,6 +11,15 @@ module.exports = withNx((phase, { defaultConfig }) => {
         // See: https://github.com/gregberge/svgr
         svgr: true,
       },
+      //Rewriting all routes that are not matched by /pages to react router
+      async rewrites() {
+        return [
+          {
+            source: '/:any*',
+            destination: '/',
+          },
+        ];
+      },
     };
   }
   return {

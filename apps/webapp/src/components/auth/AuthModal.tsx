@@ -24,11 +24,14 @@ import { Login, Signup } from '@libs/components';
 export default function AuthModal({
   onClose,
   open,
+  formType,
+  setFormType,
 }: {
   onClose: () => void;
   open?: boolean;
+  formType: FormType;
+  setFormType: React.Dispatch<React.SetStateAction<FormType>>;
 }) {
-  const [formType, setFormType] = useState<FormType>('signup');
   return (
     <Dialog
       transitionDuration={1000}

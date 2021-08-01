@@ -1,4 +1,8 @@
-import { createParamDecorator, ExecutionContext, ForbiddenException } from '@nestjs/common';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 
 export const GetUserIdFromJwt = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): number => {

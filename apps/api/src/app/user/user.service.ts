@@ -16,22 +16,23 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
-  async findCurrentUser(id: number): Promise<User> {
+  async findOneById(id: number): Promise<User> {
     return this.userRepository.findOne(id);
   }
   async findOneNameOrEmail(nameOrEmail: string): Promise<User> {
-    let r;
+    console.log(1);
     let user = await this.userRepository.findOne({ name: nameOrEmail });
+    console.log(2);
     if (!user) {
       user = await this.userRepository.findOne({ email: nameOrEmail });
     }
+    console.log(3);
     if (!user) {
-      throw new HttpException(
-        'User with that name already exists',
-        HttpStatus.BAD_REQUEST
-      );
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
-    return r;
+    console.log(4);
+    console.log(user);
+    return user;
   }
   async remove(id: string): Promise<DeleteResult> {
     return this.userRepository.delete(id);
@@ -53,18 +54,12 @@ export class UserService {
     }
     try {
       const passwordHash = await argon2.hash(signupDto.password);
-      console.log({
-        email: signupDto.email,
-        name: signupDto.name,
-        passwordHash: passwordHash,
-      });
       return this.userRepository.save({
         email: signupDto.email,
         name: signupDto.name,
         passwordHash: passwordHash,
       });
     } catch (err) {
-      console.log(err);
       throw new ServerErrorException(err);
     }
   }
@@ -74,7 +69,6 @@ export class UserService {
         ...socialSignupData,
       });
     } catch (err) {
-      console.log(err);
       throw new ServerErrorException(err);
     }
   }
@@ -90,5 +84,21 @@ export class UserService {
       return this.userRepository.remove(user);
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  }
+  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+    const user = await this.findOneById(userId);
+    const newRefreshToken = await argon2.hash(refreshToken);
+    await this.userRepository.update(userId, {
+      refreshTokenHashes: [...user.refreshTokenHashes, newRefreshToken],
+    });
+  }
+  async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
+    const user = await this.findOneById(userId);
+    user.refreshTokenHashes.forEach(async (token) => {
+      const isMatching = await argon2.verify(refreshToken, token);
+      if (isMatching) {
+        return user;
+      }
+    });
   }
 }

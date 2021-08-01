@@ -52,6 +52,7 @@
     "bad-words": "^3.0.4",
     "class-transformer": "^0.4.0",
     "class-validator-password-check": "^1.0.8",
+    "cookie-parser": "^1.4.5",
     "core-js": "^3.6.5",
     "document-register-element": "1.13.1",
     "fast-text-encoding": "^1.0.3",

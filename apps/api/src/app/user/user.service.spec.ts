@@ -62,10 +62,10 @@ describe('UserService', () => {
       expect(repository.find).toBeCalled();
     });
   });
-  describe('findCurrentUser', () => {
+  describe('findOneById', () => {
     it('should call findOne with the given id', async () => {
       const userId = 2;
-      await service.findCurrentUser(userId);
+      await service.findOneById(userId);
       expect(repository.findOne).toHaveBeenCalledWith(userId);
     });
   });
@@ -92,7 +92,7 @@ describe('UserService', () => {
 
       expect(userResult).toBe(user);
       expect(repository.findOne).toBeCalledWith({
-        email: user.email,
+        name: user.email,
       });
     });
   });
@@ -113,6 +113,7 @@ describe('UserService', () => {
         name: 'hans',
         email: 'hans@hansi.de',
         authType: 'google',
+        socialId: 'hsadkjsadk',
       };
       await service.createSocial(socialUser);
     });

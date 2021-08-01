@@ -22,28 +22,24 @@ export class AuthService {
     return null;
   }
 
+  //DEPRECATED
   async signup(signupDto: SignupDto) {
+    //REMOVE
     await sleep(1999);
     const user = await this.userService.create(signupDto);
-
-    if (user) {
-      return user;
-    }
-    console.log(user);
-    return null;
+    return user ? user : null;
   }
+
+  //DEPRECATED
   async login(loginDto: LoginDto) {
+    //REMOVE
     await sleep(1999);
     const user = await this.userService.findOneNameOrEmail(
       loginDto.nameOrEmail
     );
-    if (user) {
-      const payload = { name: user.name, sub: user.id };
-      return {
-        access_token: this.jwtService.sign(payload),
-      };
-    }
+    return user ? user : null;
   }
+
   async socialLoginOrSignup(authType: SocialType, user: any) {
     if (!user) {
       throw new HttpException(
@@ -57,10 +53,18 @@ export class AuthService {
       console.log(socialSignupData);
       _user = await this.userService.createSocial(socialSignupData);
     }
-    const payload = { name: _user.name, sub: _user.id };
-    return this.jwtService.sign(payload);
+    return _user;
+  }
+
+  async getJwtCookie(payload: TokenPayload) {
+    const token = this.jwtService.sign(payload);
+    return token;
   }
 }
+export type TokenPayload = {
+  name: string;
+  sub: number;
+};
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);

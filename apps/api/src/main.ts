@@ -3,9 +3,11 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as morgan from 'morgan';
 import morganBody from 'morgan-body';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app/app.module';
 import { LoggingInterceptor } from './logging.interceptor';
 import { useRequestLogging } from './logging.middleware';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 declare const module: any;
 
@@ -26,13 +28,18 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  app.use(cookieParser());
+
   //logger setup
-  app.useGlobalInterceptors(new LoggingInterceptor());
-  useRequestLogging(app);
-  //app.use(morgan('tiny'));
+  //app.useGlobalInterceptors(new LoggingInterceptor());
+  //useRequestLogging(app);
+  app.use(morgan('tiny'));
   //morganBody(app);
-  app.useGlobalPipes(new ValidationPipe());
-  await app.listen(process.env.PORT);
+
+  //app.useGlobalPipes(new ValidationPipe());
+
+  const configService = app.get(ConfigService);
+  await app.listen(configService.get('API_PORT'));
   //hot reload via npm run start:dev:hot
   //stripable
   if (module.hot) {
@@ -40,4 +47,6 @@ async function bootstrap() {
     module.hot.dispose(() => app.close());
   }
 }
-bootstrap().then(() => console.log('Service listening 👍: ', process.env.PORT));
+bootstrap().then(() =>
+  console.log('Service listening 👍: ', process.env.API_PORT)
+);

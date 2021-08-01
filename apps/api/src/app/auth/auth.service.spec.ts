@@ -132,7 +132,7 @@ describe('AuthService', () => {
         'google',
         userEntityMock
       );
-      expect(response.access_token).toBeDefined();
+      expect(response).toBeDefined();
     });
   });
 });
