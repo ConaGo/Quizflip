@@ -27,6 +27,9 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
+import ReqWithUser from './reqWithUser.interface';
+import JwtRefreshGuard from './guards/jwt-refresh-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -52,18 +55,28 @@ export class AuthController {
     },
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async login(@Body() loginDto: LoginDto, @Res({ passthrough: false }) res) {
+  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res) {
+    //res.setHeader('Access-Control-Allow-Credentials', true);
     const user = await this.userService.findOneNameOrEmail(
       loginDto.nameOrEmail
     );
-    console.log(user);
-    const payload = { name: user.name, sub: user.id };
-    const cookie = await this.authService.getJwtCookie(payload);
-    console.log(cookie);
-    await res.setHeader('Set-Cookie', cookie);
-    return res.send(user);
+    //Set jwt
+    res.cookie(...(await this.authService.getJwtCookie(user)));
+    //Set RefreshToken and add it the User
+    res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
+    res.redirect('http://localhost:4200/me');
   }
-
+  @UseGuards(JwtAuthGuard)
+  @Post('log-out')
+  @HttpCode(200)
+  async logOut(
+    @Req() req: ReqWithUser,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    await this.userService.removeRefreshToken(req?.cookies?.Refresh, req.user);
+    res.cookie(...(await this.authService.getLogoutCookie('Refresh')));
+    res.cookie(...(await this.authService.getLogoutCookie('Authentication')));
+  }
   @Post('signup')
   @ApiOperation({
     summary: 'Signup with password, email and username',
@@ -85,49 +98,55 @@ export class AuthController {
     },
   })
   async signup(@Body() signupDto: SignupDto) {
-    const user = await this.userService.create(signupDto);
+    return this.userService.create(signupDto);
   }
 
   @Get('google')
   @UseGuards(GoogleAuthGuard)
-  async googleAuth(@Req() req) {
+  async googleAuth() {
     console.log('/github');
   }
-
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  async googleAuthRedirect(@Req() req, @Res({ passthrough: true }) res) {
-    res.cookie(
-      'jwt',
-      JSON.stringify(
-        await this.authService.socialLoginOrSignup('google', req.user)
-      )
-    );
-    res.redirect('http://localhost:4200/authflow');
+  async googleAuthRedirect(
+    @Req() req: ReqWithUser,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    //res.setHeader('Access-Control-Allow-Credentials', true);
+    const user = await this.authService.socialLoginOrSignup('google', req.user);
+    //Set jwt
+    res.cookie(...(await this.authService.getJwtCookie(user)));
+    //Set RefreshToken and add it the User
+    res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
+    res.redirect('http://localhost:4200/me');
   }
+
   @Get('github')
   @UseGuards(GithubAuthGuard)
   async githubAuth(@Req() req) {
     console.log('/github');
   }
-
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)
   async githubAuthRedirect(
-    @Req() req: Request,
-    @Res({ passthrough: false }) res: Response
+    @Req() req: ReqWithUser,
+    @Res({ passthrough: true }) res: Response
   ) {
+    //res.setHeader('Access-Control-Allow-Credentials', true);
     const user = await this.authService.socialLoginOrSignup('github', req.user);
-    const payload = { name: user.name, sub: user.id };
-    const cookie = await this.authService.getJwtCookie(payload);
-    console.log(cookie);
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    res.cookie('Authentication', cookie, {
-      maxAge: 900000,
-      httpOnly: true,
-      path: '/',
-      //domain: 'localhost:4200',
-    });
-    res.redirect('http://localhost:4200/authflow');
+    //Set jwt
+    res.cookie(...(await this.authService.getJwtCookie(user)));
+    //Set RefreshToken and add it the User
+    res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
+    res.redirect('http://localhost:4200/me');
+  }
+  @UseGuards(JwtRefreshGuard)
+  @Get('refresh')
+  async refresh(
+    @Req() req: ReqWithUser,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(req.user)));
+    return req.user;
   }
 }

@@ -20,18 +20,13 @@ export class UserService {
     return this.userRepository.findOne(id);
   }
   async findOneNameOrEmail(nameOrEmail: string): Promise<User> {
-    console.log(1);
     let user = await this.userRepository.findOne({ name: nameOrEmail });
-    console.log(2);
     if (!user) {
       user = await this.userRepository.findOne({ email: nameOrEmail });
     }
-    console.log(3);
     if (!user) {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     }
-    console.log(4);
-    console.log(user);
     return user;
   }
   async remove(id: string): Promise<DeleteResult> {
@@ -85,7 +80,7 @@ export class UserService {
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
-  async setCurrentRefreshToken(refreshToken: string, userId: number) {
+  async addRefreshToken(refreshToken: string, userId: number) {
     const user = await this.findOneById(userId);
     const newRefreshToken = await argon2.hash(refreshToken);
     await this.userRepository.update(userId, {
@@ -99,6 +94,15 @@ export class UserService {
       if (isMatching) {
         return user;
       }
+    });
+  }
+  async removeRefreshToken(refreshToken: string, user: User) {
+    const oldRefreshToken = await argon2.hash(refreshToken);
+    const newRefreshTokenHashes = user.refreshTokenHashes.filter(
+      (hash) => hash !== oldRefreshToken
+    );
+    return this.userRepository.update(user.id, {
+      refreshTokenHashes: newRefreshTokenHashes,
     });
   }
 }

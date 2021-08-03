@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { IsEmail, IsNotEmpty, Length } from 'class-validator';
+import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AuthType } from '../auth/dto/user.social.data';
 import { classToPlain, Exclude } from 'class-transformer';

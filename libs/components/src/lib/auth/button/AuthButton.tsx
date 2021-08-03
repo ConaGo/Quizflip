@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
       background: 'white',
     },
     default: {
-      //display: 'block',
       width: '100%',
       opacity: 0.9,
       background:
@@ -48,7 +47,6 @@ const useStyles = makeStyles((theme: Theme) =>
         theme.palette.primary.main +
         ' 100%)',
       color: 'white',
-      //transition: 'opacity 0.5s',
       transition: 'opacity 0.5s, width 0.5s, height 0.3s, background 0.3s',
       '&:hover': {
         opacity: 1,
@@ -90,7 +88,9 @@ interface AuthButtonProps
   socialType?: string;
   children?: React.ReactNode;
 }
-const AuthButton: FC<AuthButtonProps & React.HTMLProps<HTMLButtonElement>> = ({
+export const AuthButton: FC<
+  AuthButtonProps & React.HTMLProps<HTMLButtonElement>
+> = ({
   isFailed = false,
   isSuccess = false,
   isLoading,
@@ -147,4 +147,3 @@ const AuthButton: FC<AuthButtonProps & React.HTMLProps<HTMLButtonElement>> = ({
     </div>
   );
 };
-export default AuthButton;

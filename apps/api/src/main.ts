@@ -14,7 +14,7 @@ declare const module: any;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   //TODO-production: remove CORS
-  app.enableCors();
+  app.enableCors({ credentials: true });
   //swagger setup
   const config = new DocumentBuilder()
     .setTitle('Learnit Digital API')
@@ -39,6 +39,8 @@ async function bootstrap() {
   //app.useGlobalPipes(new ValidationPipe());
 
   const configService = app.get(ConfigService);
+
+  console.log(configService.get(''));
   await app.listen(configService.get('API_PORT'));
   //hot reload via npm run start:dev:hot
   //stripable

@@ -25,6 +25,7 @@
     "@testing-library/react": "*",
     "axios": "*",
     "axios-hooks": "*",
-    "fast-text-encoding": "*"
+    "fast-text-encoding": "*",
+    "react-query": "*"
   }
 }

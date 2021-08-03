@@ -5,12 +5,15 @@ import * as argon2 from 'argon2';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from '@libs/shared-types';
 import SocialSignupData, { SocialType } from './dto/user.social.data';
+import { User } from '../user/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) {}
 
   async validateUser(nameOrEmail: string, password: string): Promise<any> {
@@ -56,9 +59,35 @@ export class AuthService {
     return _user;
   }
 
-  async getJwtCookie(payload: TokenPayload) {
+  async getJwtCookie(user: User) {
+    const payload: TokenPayload = { name: user.name, sub: user.id };
+    const name = 'Authentication';
     const token = this.jwtService.sign(payload);
-    return token;
+    const options = {
+      maxAge: 60 * 1000 * this.configService.get('JWT_EXPIRATION_MINUTES'),
+      httpOnly: true,
+      path: '/',
+    };
+    return [name, token, options];
+  }
+  async getAndAddJwtRefreshCookie(user: User) {
+    const payload: TokenPayload = { name: user.name, sub: user.id };
+    const name = 'Refresh';
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_REFRESH_SECRET'),
+      expiresIn: `${this.configService.get('JWT_REFRESH_EXPIRATION_MINUTES')}m`,
+    });
+    const options = {
+      maxAge:
+        60 * 1000 * this.configService.get('JWT_REFRESH_EXPIRATION_MINUTES'),
+      httpOnly: true,
+      path: '/',
+    };
+    await this.userService.addRefreshToken(token, user.id);
+    return [name, token, options];
+  }
+  async getLogoutCookie(name:string) {
+    return [name, '', {maxAge:0, httpOnly:true, path:'/'}]
   }
 }
 export type TokenPayload = {

@@ -25,7 +25,7 @@ import {
   NavButtonProps,
   FormType,
 } from '@libs/shared-types';
-import AuthButton from '../button/AuthButton';
+import { AuthButton } from '../button/AuthButton';
 import useForm from '../useForm';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

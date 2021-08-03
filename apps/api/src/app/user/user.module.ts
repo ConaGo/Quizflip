@@ -9,7 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    JwtModule.registerAsync({
+    /*     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
@@ -18,7 +18,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`,
         },
       }),
-    }),
+    }), */
   ],
   providers: [UserService],
   controllers: [UserController],

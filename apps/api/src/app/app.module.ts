@@ -24,9 +24,9 @@ import { User } from './user/user.entity';
         API_DOMAIN: Joi.string(),
         API_PORT: Joi.number(),
         JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION_TIME: Joi.string().required(),
+        JWT_EXPIRATION_MINUTES: Joi.number().required(),
         JWT_REFRESH_SECRET: Joi.string().required(),
-        JWT_REFRESH_EXPIRATION_TIME: Joi.string().required(),
+        JWT_REFRESH_EXPIRATION_MINUTES: Joi.number().required(),
       }),
     }),
     //for Postgres Database Connection

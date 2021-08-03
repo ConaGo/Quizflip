@@ -8,10 +8,11 @@ import {
   signupFormData,
   recoveryFormData,
 } from '@libs/shared-types';
-
-export const nativeHelper = (text: string) => {
+import axios from 'axios';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+/* export const nativeHelper = (text: string) => {
   return { e: { target: { value: text } } };
-};
+}; */
 type NativeOrWeb = 'native' | 'web';
 const useForm = (
   defaultDto: DTO,
@@ -45,17 +46,6 @@ const useForm = (
     defaultErrors[key] = '';
   }
   const [errors, setErrors] = useState<typeof defaultErrors>(defaultErrors);
-
-  const [{ data, loading, error }, refetch] = useAxios(
-    {
-      method: 'post',
-      url: '/auth/' + formType,
-      data: dto,
-      baseURL: 'http://localhost:3070',
-    },
-    { manual: true }
-  );
-
   const handlers = getHandlers(dto, setDto, nativeOrWeb);
   const [isLoading, setIsLoading] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
@@ -79,27 +69,32 @@ const useForm = (
       default:
         formData = loginFormData;
     }
-
-    const es = formData.validate(dto, {
+    console.log(dto);
+    const errs = formData.validate(dto, {
       abortEarly: false,
     }).error;
-    es?.details?.forEach(
+    errs?.details?.forEach(
       (e: { path: (string | number)[]; message: string }) => {
         newErrors[e.path[0]] = e.message;
       }
     );
     setErrors(newErrors);
-    console.log(formType);
-    if (!es) {
+    console.log(errs);
+    if (!errs) {
       try {
-        await refetch();
+        const response = await axios({
+          method: 'post',
+          url: '/auth/' + formType,
+          data: dto,
+          baseURL: 'http://localhost:3070',
+        });
         setIsSuccess(true);
         setIsLoading(false);
         await sleep(800);
         setIsSuccess(false);
       } catch (err) {
-        console.log(err.response);
         const message = err.response?.data.message;
+        console.log(err);
         if (message === 'User with that name already exists')
           setErrors({ ...defaultErrors, name: message });
         if (message === 'User with that email already exists')
@@ -111,8 +106,6 @@ const useForm = (
       }
     }
     setIsLoading(false);
-    console.log('done.');
-    console.log(data);
   };
   const onSubmit = () => validator();
 

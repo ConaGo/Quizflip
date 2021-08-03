@@ -19,7 +19,7 @@ import {
 } from '@material-ui/core';
 
 import { FormType } from '@libs/shared-types';
-import AuthButton from '../button/AuthButton';
+import { AuthButton } from '../button/AuthButton';
 import useForm from '../useForm';
 import { blue } from '@material-ui/core/colors';
 const useStyles = makeStyles((theme: Theme) =>

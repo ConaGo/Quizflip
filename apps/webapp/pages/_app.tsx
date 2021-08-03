@@ -6,7 +6,7 @@ import { darkTheme, lightTheme } from '../src/styles/muiTheme';
 import NavBar from '../src/components/NavBar';
 import Head from 'next/head';
 import axios from 'axios';
-
+import { withProviders } from '@libs/components';
 //configure axios
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
 axios.defaults.withCredentials = true; //sending cookies with each request
@@ -44,4 +44,4 @@ function MyApp({ Component, pageProps }: AppProps) {
     </ThemeProvider>
   );
 }
-export default MyApp;
+export default withProviders(MyApp);
