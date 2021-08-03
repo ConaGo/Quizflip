@@ -64,7 +64,6 @@ export class AuthController {
     res.cookie(...(await this.authService.getJwtCookie(user)));
     //Set RefreshToken and add it the User
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
-    res.redirect('http://localhost:4200/me');
   }
   @UseGuards(JwtAuthGuard)
   @Post('log-out')
