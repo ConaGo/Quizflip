@@ -89,12 +89,10 @@ export class UserService {
   }
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
     const user = await this.findOneById(userId);
-    user.refreshTokenHashes.forEach(async (token) => {
-      const isMatching = await argon2.verify(refreshToken, token);
-      if (isMatching) {
+    for (let i = user.refreshTokenHashes.length - 1; i >= 0; i--) {
+      if (await argon2.verify(user.refreshTokenHashes[i], refreshToken))
         return user;
-      }
-    });
+    }
   }
   async removeRefreshToken(refreshToken: string, user: User) {
     const oldRefreshToken = await argon2.hash(refreshToken);

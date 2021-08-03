@@ -146,6 +146,7 @@ export class AuthController {
     @Req() req: ReqWithUser,
     @Res({ passthrough: true }) res: Response
   ) {
+    res.cookie(...(await this.authService.getJwtCookie(req.user)));
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(req.user)));
     return req.user;
   }

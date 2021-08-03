@@ -10,6 +10,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { AuthController } from './auth.controller';
 import { GithubStrategy } from './strategies/github.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtRefreshStrategy } from './strategies/jwtRefresh.strategy';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     AuthService,
     LocalStrategy,
     JwtStrategy,
+    JwtRefreshStrategy,
     GoogleStrategy,
     GithubStrategy,
   ],

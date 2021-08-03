@@ -7,7 +7,7 @@ import { UserService } from '../../user/user.service';
 import { TokenPayload } from '../auth.service';
 
 @Injectable()
-export class JwtRefreshTokenStrategy extends PassportStrategy(
+export class JwtRefreshStrategy extends PassportStrategy(
   Strategy,
   'jwt-refresh'
 ) {
@@ -28,6 +28,7 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
 
   async validate(req: Request, payload: TokenPayload) {
     const refreshToken = req.cookies?.Refresh;
+    console.log(refreshToken);
     return this.userService.getUserIfRefreshTokenMatches(
       refreshToken,
       payload.sub

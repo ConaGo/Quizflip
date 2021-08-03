@@ -29,12 +29,11 @@ export class User {
 
   @Exclude()
   @Column({
-    type: 'varchar',
-    nullable: true,
+    type: 'text',
     array: true,
     default: [],
   })
-  refreshTokenHashes?: string[];
+  refreshTokenHashes: string[];
 
   @Exclude()
   @Column({ default: true })
