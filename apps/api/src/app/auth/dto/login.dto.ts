@@ -6,12 +6,10 @@ export class LoginDto {
     example: 'name@provider.com',
     description: 'email or username',
   })
-  /*   @IsString() */
   readonly nameOrEmail: string;
 
   @ApiProperty({
     example: 'TU762$zert',
   })
-  /*   @IsString() */
   readonly password: string;
 }

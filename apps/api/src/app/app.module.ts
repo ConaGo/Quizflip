@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 
 import { User } from './user/user.entity';
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { User } from './user/user.entity';
     }),
     AuthModule,
     UserModule,
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
