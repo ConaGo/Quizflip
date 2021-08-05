@@ -9,6 +9,8 @@ import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
 import { Navigation, FormType } from '@libs/shared-types';
 import useForm from '../useForm';
+import useTry from '../useTry';
+import axios from 'axios';
 
 interface LoginProps {
   navigation: Navigation;
@@ -16,7 +18,7 @@ interface LoginProps {
 }
 
 export const LoginNative = ({ navigation }: LoginProps) => {
-  const { handlers, onSubmit, errors } = useForm(
+  const { handlers, onSubmit, errors, validator } = useForm(
     {
       nameOrEmail: '',
       password: '',
@@ -24,6 +26,37 @@ export const LoginNative = ({ navigation }: LoginProps) => {
     'login',
     'native'
   );
+  const { submittter, i } = useTry();
+
+  const onSubmit2 = async () => {
+    try {
+      const response3 = await axios({
+        method: 'post',
+        url: '/auth/',
+        data: { f: 'd' },
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        baseURL: 'http://10.0.2.2:3070',
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const useTry2 = async () => {
+    const response3 = await axios({
+      method: 'post',
+      url: '/auth/',
+      data: { f: 'd' },
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      baseURL: 'http://10.0.2.2:3070',
+    });
+    console.log(response3);
+  };
   return (
     <Background>
       <BackButton goBack={() => navigation.navigate('Home')} />
@@ -59,7 +92,11 @@ export const LoginNative = ({ navigation }: LoginProps) => {
         </TouchableOpacity>
       </View>
 
-      <Button mode="contained" onPress={onSubmit}>
+      <Button mode="contained" onPress={submittter}>
+        Login
+      </Button>
+
+      <Button mode="contained" onPress={validator}>
         Login
       </Button>
 

@@ -1,6 +1,5 @@
-import React, { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
+import { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
 
-import useAxios from 'axios-hooks';
 import {
   DTO,
   FormType,
@@ -9,10 +8,6 @@ import {
   recoveryFormData,
 } from '@libs/shared-types';
 import axios from 'axios';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
-/* export const nativeHelper = (text: string) => {
-  return { e: { target: { value: text } } };
-}; */
 type NativeOrWeb = 'native' | 'web';
 const useForm = (
   defaultDto: DTO,
@@ -20,9 +15,9 @@ const useForm = (
   nativeOrWeb: NativeOrWeb
 ): {
   handlers: Record<string, Handler>;
-  validator: (string: string) => void;
+  validator: () => void;
   errors: { [x: string]: string };
-  onSubmit: () => void;
+  onSubmit: () => Promise<void>;
   isLoading: boolean;
   isFailed: boolean;
   isSuccess: boolean;
@@ -80,13 +75,21 @@ const useForm = (
     );
     setErrors(newErrors);
     console.log(errs);
+    const baseUrl =
+      nativeOrWeb === 'native'
+        ? 'http://10.0.2.2:3700'
+        : 'http://localhost:3070';
+    console.log(baseUrl);
     if (!errs) {
       try {
         const response = await axios({
           method: 'post',
           url: '/auth/' + formType,
           data: dto,
-          baseURL: 'http://localhost:3070',
+          baseURL: baseUrl,
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
         setIsSuccess(true);
         setIsLoading(false);
@@ -122,9 +125,12 @@ const useForm = (
 
 export default useForm;
 
+//Input Handlers have slightly different call signatures
+//on React vs React-Native so we have to account for this
 type Handler =
   | ((e: ChangeEvent<HTMLInputElement>) => void)
   | ((text: string) => void);
+
 const getHandlers = (
   obj: DTO,
   setter: Dispatch<SetStateAction<DTO>>,
