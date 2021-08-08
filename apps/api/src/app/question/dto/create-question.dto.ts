@@ -14,7 +14,7 @@ export class CreateQuestionDto {
     description: 'Type of the question',
     required: true,
   })
-  readonly type: string;
+  readonly type: QuestionType;
 
   @ApiProperty({
     example: 'Sports',
@@ -28,7 +28,7 @@ export class CreateQuestionDto {
     description:
       'Optional subtags that can be more granular than tags and correspond to a particular tag',
   })
-  readonly subTags: QuestionTag[];
+  readonly subTags: QuestionSubTag[];
 
   @ApiProperty({
     example: 'easy',
@@ -45,7 +45,7 @@ export class CreateQuestionDto {
     description: 'The question to be solved',
     required: true,
   })
-  readonly question;
+  readonly question: string;
 
   @ApiProperty({
     example: ['Nine', 'True'],
@@ -57,7 +57,7 @@ export class CreateQuestionDto {
     example: ['[ "Ten", "Seven", "Eight ]', '[ "False" ]'],
     required: true,
   })
-  readonly incorrectAnswers: string;
+  readonly incorrectAnswers: string[];
 
   @ApiProperty({
     example: 'german',

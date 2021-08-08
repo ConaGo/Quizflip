@@ -17,7 +17,7 @@ import ReqWithUser from '../auth/reqWithUser.interface';
 @Controller('user')
 export class UserController {
   constructor(
-    private readonly userService: UserService //private readonly jwtService: JwtService
+    private readonly userService: UserService
   ) {}
 
   @UseGuards(JwtAuthGuard)

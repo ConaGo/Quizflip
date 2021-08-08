@@ -16,7 +16,6 @@ export {
   QuestionSubTag,
   Language,
 };
-const ApiDescription = {};
 @Entity('question')
 export class Question {
   @ApiProperty({ example: 1, description: 'Unique Identifier' })
@@ -51,9 +50,10 @@ export class Question {
   @Column()
   question: string;
 
+  @Exclude()
   @Column()
   correctAnswer: string;
-
+  @Exclude()
   @Column({
     type: 'text',
     array: true,
