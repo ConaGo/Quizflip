@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 
 import { User } from './user/user.entity';
+import { Question } from './question/entities/question.entity'
 import { QuestionModule } from './question/question.module';
 
 @Module({
@@ -43,7 +44,7 @@ import { QuestionModule } from './question/question.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         //can be set explicitly or automatic
-        entities: [User],
+        entities: [User, Question],
         //entities: [__dirname + '/../**/*.entity.ts'],
         synchronize: true,
       }),

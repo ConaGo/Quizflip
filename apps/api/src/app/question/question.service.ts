@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,25 +8,35 @@ import {Question} from './entities/question.entity'
 export class QuestionService {
   constructor(
     @InjectRepository(Question)
-    private readonly userRepository: Repository<Question>
+    private readonly questionRepository: Repository<Question>
   ) {}
-  create(createQuestionDto: CreateQuestionDto): Promise<Question>{
-    return this.userRepository.save(createQuestionDto)
+  async create(createQuestionDto: CreateQuestionDto): Promise<Question>{
+    return this.questionRepository.save(createQuestionDto)
   }
 
   findAll() {
-    return `This action returns all question`;
+    return this.questionRepository.find();
   }
 
+  async check(id:number, answer:string): Promise<boolean> {
+    const question = await this.questionRepository.findOne(id)
+    if(!question) throw new NotFoundException
+    else{
+      return question.correctAnswer === answer
+    }
+  }
   findOne(id: number) {
+    this.questionRepository.
     return `This action returns a #${id} question`;
   }
 
-  update(id: number, updateQuestionDto: UpdateQuestionDto) {
-    return `This action updates a #${id} question`;
+  async update(id: number, updateQuestionDto: UpdateQuestionDto) {
+    const question = await this.questionRepository.findOne(id)
+    if(!question) throw new NotFoundException
+    return this.questionRepository.update(id, updateQuestionDto)
   }
 
   remove(id: number) {
-    return `This action removes a #${id} question`;
+    return this.questionRepository.delete(id)
   }
 }

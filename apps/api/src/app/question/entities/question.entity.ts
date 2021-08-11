@@ -53,6 +53,7 @@ export class Question {
   @Exclude()
   @Column()
   correctAnswer: string;
+
   @Exclude()
   @Column({
     type: 'text',
@@ -62,4 +63,8 @@ export class Question {
 
   @Column({ default: 'english' })
   language: Language;
+
+  toJSON() {
+    return 
+  }
 }
