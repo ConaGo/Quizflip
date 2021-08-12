@@ -3,7 +3,7 @@ import { User } from '../user/user.entity';
 
 interface ReqWithUser extends Request {
   user: User;
-  cookies: Request.cookies;
+  cookies: Request['cookies'];
 }
 
 export default ReqWithUser;

@@ -1,6 +1,9 @@
 import * as Joi from 'joi';
+import { join } from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -9,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 
 import { User } from './user/user.entity';
-import { Question } from './question/entities/question.entity'
+import { Question } from './question/entities/question.entity';
 import { QuestionModule } from './question/question.module';
 
 @Module({
@@ -31,10 +34,13 @@ import { QuestionModule } from './question/question.module';
         JWT_REFRESH_EXPIRATION_MINUTES: Joi.number().required(),
       }),
     }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: join(process.cwd(), 'apps/api/src/schema.gql'),
+      include: [QuestionModule],
+    }),
     //for Postgres Database Connection
     //TODO-PRODUCTION for production set synchronize to false
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',

@@ -1,4 +1,3 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -17,53 +16,55 @@ export {
   QuestionSubTag,
   Language,
 };
-
 @Entity('question')
-@ObjectType({ description: 'Multiple choice and true/false Questions' })
 export class Question {
-  @Field(() => Int, { description: 'Unique Identifier | example: 1' })
+  @ApiProperty({ example: 1, description: 'Unique Identifier' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field({
-    description: 'Type of the question | example: "boolean" ',
+  @ApiProperty({
+    example: 'boolean',
+    description: 'Type of the question',
   })
   @Column()
   type: QuestionType;
 
-  @Field(() => [String], {
-    description: 'Main Tags ( no commas allowed ) | example: "Sports" ',
+  @ApiProperty({
+    example: 'Sports',
+    description: 'Type of the question',
   })
-  @Column({ type: 'simple-array', nullable: true })
+  @Column('simple-array')
   tags: QuestionTag[];
 
-  @Field(() => [String], {
+  @ApiProperty({
+    example: 'Board Games',
     description:
-      'Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
+      'Optional subtags that can be more granular than tags and correspond to a particular tag',
   })
   @Column({ type: 'simple-array', nullable: true })
-  subTags?: QuestionSubTag[];
+  subTags: QuestionSubTag[];
 
-  @Field()
   @Column()
   difficulty: QuestionDifficulty;
 
-  @Field()
   @Column()
   question: string;
 
-  @Field()
+  @Exclude()
   @Column()
   correctAnswer: string;
 
-  @Field(() => [String])
+  @Exclude()
   @Column({
     type: 'text',
     array: true,
   })
   incorrectAnswers: string[];
 
-  @Field()
   @Column({ default: 'english' })
   language: Language;
+
+  toJSON() {
+    return;
+  }
 }

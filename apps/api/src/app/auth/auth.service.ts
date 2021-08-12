@@ -59,7 +59,7 @@ export class AuthService {
     return _user;
   }
 
-  async getJwtCookie(user: User) {
+  async getJwtCookie(user: User): Promise<[string, string, CookieOptions]> {
     const payload: TokenPayload = { name: user.name, sub: user.id };
     const name = 'Authentication';
     const token = this.jwtService.sign(payload);
@@ -70,7 +70,10 @@ export class AuthService {
     };
     return [name, token, options];
   }
-  async getAndAddJwtRefreshCookie(user: User) {
+
+  async getAndAddJwtRefreshCookie(
+    user: User
+  ): Promise<[string, string, CookieOptions]> {
     const payload: TokenPayload = { name: user.name, sub: user.id };
     const name = 'Refresh';
     const token = this.jwtService.sign(payload, {
@@ -86,14 +89,18 @@ export class AuthService {
     await this.userService.addRefreshToken(token, user.id);
     return [name, token, options];
   }
-  async getLogoutCookie(name:string) {
-    return [name, '', {maxAge:0, httpOnly:true, path:'/'}]
+  async getLogoutCookie(
+    name: string
+  ): Promise<[string, string, CookieOptions]> {
+    return [name, '', { maxAge: 0, httpOnly: true, path: '/' }];
   }
 }
 export type TokenPayload = {
   name: string;
   sub: number;
 };
+export type CookieOptions = { maxAge: number; httpOnly: boolean; path: string };
+
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
