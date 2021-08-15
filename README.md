@@ -1,5 +1,37 @@
 # LearnitMonorepo
 
+## The api
+
+# Postgres notes
+
+1. Install postgres
+2. Login as postgres user 
+```shell
+sudo su - postgres
+```
+3. Login to psql shell
+```shell
+psql
+```
+4. Create a new user with password
+```shell
+create user bob with superuser password 'admin';
+```
+5. Install pgadmin4 as described [here](https://www.pgadmin.org/download/pgadmin-4-apt/) 
+6. Open pgadmin4
+7. Click on 'Add New Server'
+8. Give the server an arbitrary name
+9. On connection tab enter the following
+```
+Hostname/ Address : localhost
+Port : 5432
+Maintenance database : postgres (always)
+Username :  **bob** (the username youve chosen at 4.2)
+Password : admin (or any password you chose at 4.2)
+```
+10. You are done. If it doesnt work yet please refer to the comprehensive answer to the following stackoverflow question
+https://stackoverflow.com/questions/53267642/create-new-local-server-in-pgadmin
+
 ## The webapp
 
 The webapp uses the NextJS framework to benefit from
@@ -11,17 +43,17 @@ The webapp uses the NextJS framework to benefit from
 However, using NextJS ties the webapp to the inflexible routing solution provided.
 To still be able to reap all the benefits of an SPA the App bypasses NextJS routing system on certain parts. This approach is taken from [Colin McDonnell](https://github.com/colinhacks) and described in this [blogpost](https://colinhacks.com/essays/building-a-spa-with-nextjs)
 
-# required env variables with examples
+# required env variables
 
 - API_URL=http://localhost:3070
 - SIGNUP_ROUTE=auth/signup
 - LOGIN_ROUTE=auth/login
 
-# starting the Webapp
+# starting the webapp
 
 `nx run webapp:serve`
 
-## Starting the mobile app
+# Starting the mobile app
 
 `nx run-android rnapp`
 
