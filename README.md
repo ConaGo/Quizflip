@@ -26,8 +26,8 @@ create user bob with superuser password 'admin';
 Hostname/ Address : localhost
 Port : 5432
 Maintenance database : postgres (always)
-Username :  **bob** (the username youve chosen at 4.2)
-Password : admin (or any password you chose at 4.2)
+Username :  **bob** (the username youve chosen at 4.)
+Password : admin (or any password you chose at 4.)
 ```
 10. You are done. If it doesnt work yet please refer to the comprehensive answer to the following stackoverflow question
 https://stackoverflow.com/questions/53267642/create-new-local-server-in-pgadmin
