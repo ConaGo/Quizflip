@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
-
+import Joi from 'joi';
 import {
   DTO,
   FormType,
@@ -11,7 +11,8 @@ import axios from 'axios';
 type NativeOrWeb = 'native' | 'web';
 const useForm = (
   defaultDto: DTO,
-  formType: FormType,
+  validationObject: Joi.ObjectSchema,
+  url: string,
   nativeOrWeb: NativeOrWeb
 ): {
   handlers: Record<string, Handler>;
@@ -49,7 +50,7 @@ const useForm = (
     console.log('loading..');
     setIsLoading(true);
     const newErrors = { ...defaultErrors };
-    let formData;
+    /*     const formData;
 
     switch (formType) {
       case 'login':
@@ -63,8 +64,8 @@ const useForm = (
         break;
       default:
         formData = loginFormData;
-    }
-    const errs = formData.validate(dto, {
+    } */
+    const errs = validationObject.validate(dto, {
       abortEarly: false,
     }).error;
     errs?.details?.forEach(
@@ -82,7 +83,7 @@ const useForm = (
       try {
         const response = await axios({
           method: 'post',
-          url: '/auth/' + formType,
+          url: url,
           data: dto,
           baseURL: baseUrl,
           headers: {

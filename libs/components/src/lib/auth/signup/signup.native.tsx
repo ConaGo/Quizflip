@@ -7,8 +7,9 @@ import Button from '../../core.native/Button';
 import TextInput from '../../core.native/TextInput';
 import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
-import { Navigation, FormType } from '@libs/shared-types';
-import useForm from '../useForm';
+import { Navigation, FormType, signupFormData } from '@libs/shared-types';
+
+import useForm from '../../hooks/useForm';
 interface SignupProps {
   navigation: Navigation;
   setFormType: Dispatch<SetStateAction<FormType>>;
@@ -20,6 +21,7 @@ const SignupNative = ({ navigation }: SignupProps) => {
       email: '',
       password: '',
     },
+    signupFormData,
     'signup',
     'native'
   );

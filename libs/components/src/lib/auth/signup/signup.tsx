@@ -24,9 +24,11 @@ import {
   DTO,
   NavButtonProps,
   FormType,
+  signupFormData,
 } from '@libs/shared-types';
 import { AuthButton } from '../button/AuthButton';
-import useForm from '../useForm';
+
+import useForm from '../../hooks/useForm';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -79,6 +81,7 @@ export function Signup({ setFormType }: SignupProps) {
       name: '',
       password: '',
     },
+    signupFormData,
     'signup',
     'web'
   );

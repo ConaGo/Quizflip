@@ -7,8 +7,8 @@ import Button from '../../core.native/Button';
 import TextInput from '../../core.native/TextInput';
 import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
-import { Navigation, FormType } from '@libs/shared-types';
-import useForm from '../useForm';
+import { Navigation, FormType, recoveryFormData } from '@libs/shared-types';
+import useForm from '../../hooks/useForm';
 
 interface ForgotPasswordProps {
   navigation: Navigation;
@@ -20,6 +20,7 @@ const ForgotPassword = ({ navigation }: ForgotPasswordProps) => {
     {
       email: '',
     },
+    recoveryFormData,
     'recovery',
     'native'
   );

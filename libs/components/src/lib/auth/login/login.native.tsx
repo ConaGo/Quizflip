@@ -7,9 +7,9 @@ import Button from '../../core.native/Button';
 import TextInput from '../../core.native/TextInput';
 import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
-import { Navigation, FormType } from '@libs/shared-types';
-import useForm from '../useForm';
-import useTry from '../useTry';
+import { Navigation, FormType, loginFormData } from '@libs/shared-types';
+import useForm from '../../hooks/useForm';
+import useTry from '../../hooks/useTry';
 import axios from 'axios';
 
 interface LoginProps {
@@ -23,6 +23,7 @@ export const LoginNative = ({ navigation }: LoginProps) => {
       nameOrEmail: '',
       password: '',
     },
+    loginFormData,
     'login',
     'native'
   );
