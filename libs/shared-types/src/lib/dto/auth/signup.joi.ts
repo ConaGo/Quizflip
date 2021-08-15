@@ -1,4 +1,4 @@
-import Joi from '../joi.extensions';
+import Joi from '../../joi.extensions';
 
 export const signupFormData = Joi.object({
   email: Joi.string()

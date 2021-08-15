@@ -1,5 +1,5 @@
 import * as BaseJoi from 'joi';
-import Filter from 'bad-words';
+import * as Filter from 'bad-words';
 
 const filter = new Filter();
 const Joi = BaseJoi.extend(profanity);

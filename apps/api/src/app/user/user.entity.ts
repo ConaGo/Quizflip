@@ -1,13 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AuthType } from '../auth/dto/user.social.data';
 import { classToPlain, Exclude } from 'class-transformer';
+import { Field, Int } from '@nestjs/graphql';
+import { UserToQuestionStats } from '../question/entities/userToQuestionStats.entity';
 
 @Entity('user')
 export class User {
-  @ApiProperty({ example: 1, description: 'Unique Identifier' })
+  @ApiProperty({ example: 1, description: 'Entity-Unique Identifier' })
   @Exclude()
+  @Field(() => Int, { description: 'Entity-Unique Identifier | example: 1' })
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -16,10 +19,12 @@ export class User {
     description: 'Unique user-email',
   })
   @IsEmail()
+  @Field({ description: 'Unique e-mail | example: nest@js.com' })
   @Column({ unique: true })
   email: string;
 
   @Length(3, 15)
+  @Field()
   @Column()
   name: string;
 
@@ -46,6 +51,12 @@ export class User {
   @Exclude()
   @Column({ default: '' })
   socialId: string;
+
+  @ManyToMany(
+    () => UserToQuestionStats,
+    (userToQuestionStats) => userToQuestionStats.user
+  )
+  public userToQuestionStats!: UserToQuestionStats;
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

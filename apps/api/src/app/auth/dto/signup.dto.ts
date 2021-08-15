@@ -15,7 +15,7 @@ export class SignupDto {
     example: 'name@provider.com',
     description: 'Unique user-email',
   })
-  /*   @IsEmail() */
+  /* @IsEmail() */
   readonly email: string;
 
   @ApiProperty({

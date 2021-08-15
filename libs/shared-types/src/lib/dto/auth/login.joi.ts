@@ -1,4 +1,4 @@
-import Joi from '../joi.extensions';
+import Joi from '../../joi.extensions';
 
 export const loginFormData = Joi.object({
   nameOrEmail: Joi.string().required().messages({

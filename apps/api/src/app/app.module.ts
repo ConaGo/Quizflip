@@ -14,6 +14,7 @@ import { UserModule } from './user/user.module';
 import { User } from './user/user.entity';
 import { Question } from './question/entities/question.entity';
 import { QuestionModule } from './question/question.module';
+import { UserToQuestionStats } from './question/entities/userToQuestionStats.entity';
 
 @Module({
   imports: [
@@ -50,7 +51,7 @@ import { QuestionModule } from './question/question.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         //can be set explicitly or automatic
-        entities: [User, Question],
+        entities: [User, Question, UserToQuestionStats],
         //entities: [__dirname + '/../**/*.entity.ts'],
         synchronize: true,
       }),

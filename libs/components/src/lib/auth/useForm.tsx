@@ -64,7 +64,6 @@ const useForm = (
       default:
         formData = loginFormData;
     }
-    console.log(dto);
     const errs = formData.validate(dto, {
       abortEarly: false,
     }).error;
@@ -79,7 +78,6 @@ const useForm = (
       nativeOrWeb === 'native'
         ? 'http://10.0.2.2:3700'
         : 'http://localhost:3070';
-    console.log(baseUrl);
     if (!errs) {
       try {
         const response = await axios({

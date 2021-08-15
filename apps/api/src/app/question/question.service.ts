@@ -13,8 +13,8 @@ export class QuestionService {
     @InjectRepository(Question)
     private readonly questionRepository: Repository<Question>
   ) {}
-  async create(createQuestionDto: CreateQuestionDto): Promise<Question> {
-    return this.questionRepository.save(createQuestionDto);
+  async create(createQuestionInput: CreateQuestionInput): Promise<Question> {
+    return this.questionRepository.save(createQuestionInput);
   }
 
   findAll() {
@@ -32,13 +32,28 @@ export class QuestionService {
     return this.questionRepository.findOne(id);
   }
 
-  async update(id: number, updateQuestionDto: UpdateQuestionDto) {
+  async update(id: number, updateQuestionInput: UpdateQuestionInput) {
     const question = await this.questionRepository.findOne(id);
     if (!question) throw new NotFoundException();
-    return this.questionRepository.update(id, updateQuestionDto);
+    return this.questionRepository.update(id, updateQuestionInput);
   }
 
   remove(id: number) {
     return this.questionRepository.delete(id);
+  }
+
+  async getRandomBatch(count: number): Promise<Question[]> {
+    count = count > 0 && count <= 100 && typeof count === 'number' ? count : 10;
+    return this.questionRepository.query(
+      `SELECT * FROM user TABLESAMPLE BERNOULLI(${count})`
+    );
+  }
+
+  getFreshRandomBatch(count: number, id: number): Promise<Question[]> {
+    count = count > 0 && count <= 100 && typeof count === 'number' ? count : 10;
+    return this.questionRepository.query(
+      `SELECT * FROM user WHERE id =! :id TABLESAMPLE BERNOULLI(:count)`,
+      [count, id]
+    );
   }
 }

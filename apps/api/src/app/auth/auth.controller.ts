@@ -9,6 +9,7 @@ import {
   Redirect,
   Res,
   HttpCode,
+  UsePipes,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -31,6 +32,8 @@ import ReqWithUser from './reqWithUser.interface';
 import JwtRefreshGuard from './guards/jwt-refresh-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
+import { JoiValidationPipe } from '../validation.pipe';
+import { loginFormData, signupFormData } from '@libs/shared-types';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -39,8 +42,8 @@ export class AuthController {
     private readonly authService: AuthService
   ) {}
 
-  //@ApiBearerAuth()
-  //@UseGuards(LocalAuthGuard)
+  @UsePipes(new JoiValidationPipe(loginFormData))
+  @UseGuards(LocalAuthGuard)
   @HttpCode(200) //nestjs default for POST is 201
   @Post('login')
   @ApiOperation({
@@ -65,6 +68,7 @@ export class AuthController {
     //Set RefreshToken and add it the User
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
   }
+
   @UseGuards(JwtAuthGuard)
   @Post('log-out')
   @HttpCode(200)
@@ -76,6 +80,8 @@ export class AuthController {
     res.cookie(...(await this.authService.getLogoutCookie('Refresh')));
     res.cookie(...(await this.authService.getLogoutCookie('Authentication')));
   }
+
+  @UsePipes(new JoiValidationPipe(signupFormData))
   @Post('signup')
   @ApiOperation({
     summary: 'Signup with password, email and username',
@@ -139,6 +145,7 @@ export class AuthController {
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
     res.redirect('http://localhost:4200/me');
   }
+
   @UseGuards(JwtRefreshGuard)
   @Get('refresh')
   async refresh(
