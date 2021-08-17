@@ -22,7 +22,7 @@ type Question {
   correctAnswer: String!
   incorrectAnswers: [String!]!
   language: String!
-  author: Int!
+  authorId: Int
 }
 
 type Query {
@@ -34,6 +34,7 @@ type Mutation {
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
   removeQuestion(id: Int!): String!
+  removeAllQuestions: String!
 }
 
 input CreateQuestionInput {
@@ -72,7 +73,7 @@ input CreateQuestionInput {
   Language of the question. Defaults to "english" | example "german"
   """
   language: String!
-  userId: Int!
+  authorId: Int!
 }
 
 input UpdateQuestionInput {
@@ -111,7 +112,7 @@ input UpdateQuestionInput {
   Language of the question. Defaults to "english" | example "german"
   """
   language: String
-  userId: Int
+  authorId: Int
 
   """Unique Identifier | example: 1"""
   id: Int!

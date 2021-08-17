@@ -21,10 +21,12 @@ export class QuestionResolver {
     private readonly userService: UserService
   ) {}
 
-  @ResolveField()
-  async author(@Parent() question: Question) {
-    return question.author;
-  }
+  /*   @ResolveField('author', (returns) => Int)
+  async getAuthor(@Parent() question: Question) {
+    return this.questionService.getAuthorId(question.id);
+    return this.userService.findOneById(question.author.id);
+  } */
+
   @Mutation(() => Question)
   createQuestion(
     @Args('createQuestionInput') createQuestionInput: CreateQuestionInput
@@ -54,7 +56,12 @@ export class QuestionResolver {
 
   @Mutation(() => String)
   async removeQuestion(@Args('id', { type: () => Int }) id: number) {
-    await this.questionService.remove(id);
-    return 'deleted';
+    const result = await this.questionService.remove(id);
+    return `deleted question with id:$ {id} with the following result: ${result}`;
+  }
+
+  @Mutation(() => String)
+  async removeAllQuestions() {
+    return this.questionService.removeAll();
   }
 }

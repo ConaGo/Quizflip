@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { CreateQuestionInput } from './dto/create-question.input';
 import { UpdateQuestionInput } from './dto/update-question.input';
@@ -15,10 +16,20 @@ export class QuestionService {
   ) {}
 
   async create(createQuestionInput: CreateQuestionInput): Promise<Question> {
-    const { userId, ...rest } = createQuestionInput;
-    const author = await this.userService.findOneById(userId);
-    const question = { author, ...rest };
-    return this.questionRepository.save(question);
+    //TODO extract userid from request
+    const { authorId, ...rest } = createQuestionInput;
+    const user = await this.userService.findOneById(authorId);
+    const question = await this.questionRepository.save(rest);
+    await this.questionRepository
+      .createQueryBuilder()
+      .relation(Question, 'author')
+      .of(question.id)
+      .set(authorId);
+    return question;
+  }
+
+  async getAuthorId(id: number): Promise<number> {
+    return (await this.questionRepository.findOne(id)).authorId;
   }
 
   findAll() {
@@ -46,6 +57,13 @@ export class QuestionService {
     return this.questionRepository.delete(id);
   }
 
+  async removeAll() {
+    const questions = await this.questionRepository.find();
+    questions.forEach((q) => {
+      this.remove(q.id);
+    });
+    return `done deleting ${questions.length} questions`;
+  }
   async getRandomBatch(count: number): Promise<Question[]> {
     count = count > 0 && count <= 100 && typeof count === 'number' ? count : 10;
     return this.questionRepository.query(

@@ -56,5 +56,5 @@ export class CreateQuestionInput {
   readonly language: Language;
 
   @Field(() => Int)
-  readonly userId;
+  readonly authorId: number;
 }

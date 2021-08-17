@@ -19,6 +19,7 @@ const BooleanQuestionForm = () => {
     correctAnswer: '',
     incorrectAnswers: [],
     language: 'english',
+    authorId: 1,
   };
   const {
     isSuccess,

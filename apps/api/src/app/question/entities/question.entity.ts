@@ -6,6 +6,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -85,10 +86,15 @@ export class Question {
   @Column({ default: 'english' })
   language: Language;
 
-  @Field((type) => Int)
-  @OneToOne(() => User, { nullable: true })
+  @ManyToOne(() => User, { nullable: true })
   @JoinColumn()
   author: User;
+
+  //this column gets set automatically by typorm for the ManyToOne user relationship
+  //it is explicitly set in this entity to expose it for graphql-queries
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  authorId: number;
 
   //This many to Many relationships holds stats about how often the user interacted and answered a particular question
   @OneToMany(

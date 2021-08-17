@@ -29,6 +29,7 @@ export class CreateQuestionDto {
   readonly correctAnswer: string;
   readonly incorrectAnswers: string[];
   readonly language: Language;
+  readonly authorId: number;
 }
 export const createQuestionFormData = Joi.object<CreateQuestionDto>({
   type: Joi.string()
@@ -48,4 +49,5 @@ export const createQuestionFormData = Joi.object<CreateQuestionDto>({
   language: Joi.string()
     .valid(...ALanguage)
     .required(),
+  authorId: Joi.number().required(),
 });

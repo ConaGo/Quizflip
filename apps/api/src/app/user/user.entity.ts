@@ -9,7 +9,6 @@ import { UserToQuestionStats } from '../question/entities/userToQuestionStats.en
 @Entity('user')
 export class User {
   @ApiProperty({ example: 1, description: 'Entity-Unique Identifier' })
-  @Exclude()
   @Field(() => Int, { description: 'Entity-Unique Identifier | example: 1' })
   @PrimaryGeneratedColumn()
   id: number;

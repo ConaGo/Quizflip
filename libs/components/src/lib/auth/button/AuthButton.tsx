@@ -114,7 +114,7 @@ export const AuthButton: FC<
       css = _classes.google;
       icon = (
         <Icon>
-          <img src="google-icon.svg" alt="G" className={_classes.img}></img>
+          <img src="/google-icon.svg" alt="G" className={_classes.img}></img>
         </Icon>
       );
       break;

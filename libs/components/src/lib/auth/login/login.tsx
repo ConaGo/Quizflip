@@ -83,7 +83,7 @@ export function Login({ setFormType }: LoginProps) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <img alt={'books'} className={classes.img} src="book-small.jpg"></img>
+      <img alt={'books'} className={classes.img} src="/book-small.jpg"></img>
       <DialogTitle id="form-dialog-title">
         <div>
           <Typography variant="h4" align="center">
