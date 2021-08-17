@@ -28,7 +28,7 @@ import {
 } from '@libs/shared-types';
 import { AuthButton } from '../button/AuthButton';
 
-import useForm from '../../hooks/useForm';
+import { useForm } from '../../hooks/useForm';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -82,7 +82,7 @@ export function Signup({ setFormType }: SignupProps) {
       password: '',
     },
     signupFormData,
-    'signup',
+    'auth/signup',
     'web'
   );
   const classes = useStyles();

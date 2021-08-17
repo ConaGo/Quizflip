@@ -22,22 +22,21 @@ type Question {
   correctAnswer: String!
   incorrectAnswers: [String!]!
   language: String!
+  author: Int!
 }
 
 type Query {
+  questions: [Question!]!
   question(id: Int!): Question!
 }
 
 type Mutation {
   createQuestion(createQuestionInput: CreateQuestionInput!): Question!
   updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
-  removeQuestion(id: Int!): Question!
+  removeQuestion(id: Int!): String!
 }
 
 input CreateQuestionInput {
-  """Unique Identifier | example: 1"""
-  id: Int!
-
   """Type of the question | examples: "boolean", "multiple" """
   type: String!
 
@@ -73,11 +72,10 @@ input CreateQuestionInput {
   Language of the question. Defaults to "english" | example "german"
   """
   language: String!
+  userId: Int!
 }
 
 input UpdateQuestionInput {
-  id: Int!
-
   """Type of the question | examples: "boolean", "multiple" """
   type: String
 
@@ -113,4 +111,8 @@ input UpdateQuestionInput {
   Language of the question. Defaults to "english" | example "german"
   """
   language: String
+  userId: Int
+
+  """Unique Identifier | example: 1"""
+  id: Int!
 }

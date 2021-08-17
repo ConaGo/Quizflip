@@ -19,8 +19,9 @@ import {
 } from '@material-ui/core';
 
 import { FormType, loginFormData } from '@libs/shared-types';
+
 import { AuthButton } from '../button/AuthButton';
-import useForm from '../../hooks/useForm';
+import { useForm } from '../../hooks/useForm';
 import { blue } from '@material-ui/core/colors';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,7 +77,7 @@ export function Login({ setFormType }: LoginProps) {
       password: '',
     },
     loginFormData,
-    'login',
+    'auth/login',
     'web'
   );
   const classes = useStyles();

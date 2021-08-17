@@ -10,9 +10,6 @@ import {
 
 @InputType()
 export class CreateQuestionInput {
-  @Field(() => Int, { description: 'Unique Identifier | example: 1' })
-  id: number;
-
   @Field(() => String, {
     description: 'Type of the question | examples: "boolean", "multiple" ',
   })
@@ -57,4 +54,7 @@ export class CreateQuestionInput {
       'Language of the question. Defaults to "english" | example "german"',
   })
   readonly language: Language;
+
+  @Field(() => Int)
+  readonly userId;
 }

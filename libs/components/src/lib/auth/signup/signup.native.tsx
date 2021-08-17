@@ -9,7 +9,7 @@ import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
 import { Navigation, FormType, signupFormData } from '@libs/shared-types';
 
-import useForm from '../../hooks/useForm';
+import { useForm } from '../../hooks/useForm';
 interface SignupProps {
   navigation: Navigation;
   setFormType: Dispatch<SetStateAction<FormType>>;

@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateQuestionDto } from '../legacy/question/dto/create-question.dto';
-import { UpdateQuestionDto } from '../legacy/question/dto/update-question.dto';
+import { UserService } from '../user/user.service';
 import { CreateQuestionInput } from './dto/create-question.input';
 import { UpdateQuestionInput } from './dto/update-question.input';
 import { Question } from './entities/question.entity';
@@ -11,10 +10,15 @@ import { Question } from './entities/question.entity';
 export class QuestionService {
   constructor(
     @InjectRepository(Question)
-    private readonly questionRepository: Repository<Question>
+    private readonly questionRepository: Repository<Question>,
+    private readonly userService: UserService
   ) {}
+
   async create(createQuestionInput: CreateQuestionInput): Promise<Question> {
-    return this.questionRepository.save(createQuestionInput);
+    const { userId, ...rest } = createQuestionInput;
+    const author = await this.userService.findOneById(userId);
+    const question = { author, ...rest };
+    return this.questionRepository.save(question);
   }
 
   findAll() {

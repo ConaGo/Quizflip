@@ -1,19 +1,13 @@
 import { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
 import Joi from 'joi';
-import {
-  DTO,
-  FormType,
-  loginFormData,
-  signupFormData,
-  recoveryFormData,
-} from '@libs/shared-types';
+import { DTO } from '@libs/shared-types';
 import axios from 'axios';
 type NativeOrWeb = 'native' | 'web';
-const useForm = (
+export const useForm = (
   defaultDto: DTO,
   validationObject: Joi.ObjectSchema,
-  url: string,
-  nativeOrWeb: NativeOrWeb
+  url = 'graphql',
+  nativeOrWeb: NativeOrWeb = 'web'
 ): {
   handlers: Record<string, Handler>;
   validator: () => void;
@@ -81,15 +75,19 @@ const useForm = (
         : 'http://localhost:3070';
     if (!errs) {
       try {
-        const response = await axios({
-          method: 'post',
-          url: url,
-          data: dto,
-          baseURL: baseUrl,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        let response;
+        if (url === 'graphql') {
+        } else {
+          response = await axios({
+            method: 'post',
+            url: url,
+            data: dto,
+            baseURL: baseUrl,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+        }
         setIsSuccess(true);
         setIsLoading(false);
         await sleep(800);
@@ -121,8 +119,6 @@ const useForm = (
     isFailed,
   };
 };
-
-export default useForm;
 
 //Input Handlers have slightly different call signatures
 //on React vs React-Native so we have to account for this

@@ -8,7 +8,7 @@ import TextInput from '../../core.native/TextInput';
 import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
 import { Navigation, FormType, loginFormData } from '@libs/shared-types';
-import useForm from '../../hooks/useForm';
+import { useForm } from '../../hooks/useForm';
 import useTry from '../../hooks/useTry';
 import axios from 'axios';
 

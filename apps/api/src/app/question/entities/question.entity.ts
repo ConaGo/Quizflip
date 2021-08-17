@@ -1,13 +1,30 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { classToPlain, Exclude } from 'class-transformer';
 import { UserToQuestionStats } from './userToQuestionStats.entity';
+import { User } from '../../user/user.entity';
 type QuestionType = 'boolean' | 'multiple';
 type QuestionDifficulty = 'easy' | 'medium' | 'hard';
-type QuestionTag = 'Sports' | 'Entertainment' | 'Animals' | 'Geography';
-type QuestionSubTagEntertainment = 'Board Games' | 'Video Games' | 'Film';
+type QuestionTag =
+  | 'Sports'
+  | 'Entertainment'
+  | 'Animals'
+  | 'Geography'
+  | string;
+type QuestionSubTagEntertainment =
+  | 'Board Games'
+  | 'Video Games'
+  | 'Film'
+  | string;
 type QuestionSubTag = QuestionSubTagEntertainment;
 type Language = 'english' | 'german';
 export {
@@ -67,6 +84,11 @@ export class Question {
   @Field()
   @Column({ default: 'english' })
   language: Language;
+
+  @Field((type) => Int)
+  @OneToOne(() => User, { nullable: true })
+  @JoinColumn()
+  author: User;
 
   //This many to Many relationships holds stats about how often the user interacted and answered a particular question
   @OneToMany(
