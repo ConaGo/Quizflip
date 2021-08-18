@@ -1,26 +1,25 @@
-import { GraphQLClient, gql } from 'graphql-request';
 import { createQuestionFormData, CreateQuestionDto } from '@libs/shared-types';
 import { useForm } from '@libs/components';
 import { Button } from '@material-ui/core';
 import { useState } from 'react';
-import axios from 'axios';
+import {
+  CREATE_QUESTION,
+  client,
+  DELETE_ALL_QUESTIONS,
+} from '@libs/data-access';
+import { useQuery, useMutation } from '@apollo/client';
 
 export const QuestionAdmin = () => {
-  const endpoint = 'http://localhost:3070/graphql';
-
-  const graphQLClient = new GraphQLClient(endpoint, { fetch: axios });
-
-  const mutationCreateQuestion = gql`
-    mutation createQuestion($input: CreateQuestionInput!) {
-      createQuestion(createQuestionInput: $input) {
-        type
-      }
-    }
-  `;
+  const [createQuestion] = useMutation(CREATE_QUESTION);
+  const [deletAllQuestions] = useMutation(DELETE_ALL_QUESTIONS);
+  const [loading, setLoading] = useState({
+    createQuestion: false,
+    deleteAllQuestions: false,
+  });
   const postQuestion = async (e) => {
     const tags = e.category.split(': ');
 
-    const i: CreateQuestionDto = {
+    const input: CreateQuestionDto = {
       type: e.type,
       category: tags[0],
       tags: tags[1] ? tags[1] : [],
@@ -32,32 +31,23 @@ export const QuestionAdmin = () => {
       authorId: 1,
     };
 
-    const data = await graphQLClient.request(mutationCreateQuestion, {
-      input: i,
-    });
+    const data = await createQuestion({ variables: { input: input } });
     console.log(JSON.stringify(data, undefined, 2));
   };
 
-  const handlePostQuestionToDb = (start: number, end: number) => {
-    fetch('/question.json')
-      .then((response) => response.json())
-      .then(async (json) => {
-        for (let i = start; i < end; i++) {
-          await postQuestion(json[i]);
-        }
-      });
+  const handlePostQuestionToDb = async (start: number, end: number) => {
+    setLoading({ ...loading, createQuestion: true });
+    const json = await (await fetch('/question.json')).json();
+    for (let i = start; i < end; i++) {
+      await postQuestion(json[i]);
+    }
+    setLoading({ ...loading, createQuestion: false });
   };
 
-  const mutationDeleteAllQuestions = gql`
-    mutation {
-      removeAllQuestions
-    }
-  `;
-
-  const handleDeleteAllQuestions = () => {
-    graphQLClient.request(mutationDeleteAllQuestions).then((data) => {
-      console.log(JSON.stringify(data, undefined, 2));
-    });
+  const handleDeleteAllQuestions = async () => {
+    setLoading({ ...loading, deleteAllQuestions: true });
+    await deletAllQuestions();
+    setLoading({ ...loading, deleteAllQuestions: false });
   };
 
   const defaultValues: CreateQuestionDto = {

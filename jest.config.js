@@ -5,5 +5,6 @@ module.exports = {
     '<rootDir>/libs/shared-types',
     '<rootDir>/apps/rnapp',
     '<rootDir>/libs/components',
+    '<rootDir>/libs/data-access',
   ],
 };

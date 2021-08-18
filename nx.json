@@ -25,6 +25,9 @@
     "components": {
       "tags": []
     },
+    "data-access": {
+      "tags": []
+    },
     "rnapp": {
       "tags": []
     },
