@@ -51,17 +51,17 @@ export class Question {
   type: QuestionType;
 
   @Field(() => [String], {
-    description: 'Main Tags ( no commas allowed ) | example: "Sports" ',
+    description: 'Category of the Question | example: "Sports" ',
   })
-  @Column({ type: 'simple-array', nullable: true })
-  tags: QuestionTag[];
+  @Column({ nullable: true })
+  category: string;
 
   @Field(() => [String], {
     description:
-      'Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
+      'Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
   })
   @Column({ type: 'simple-array', nullable: true })
-  subTags?: QuestionSubTag[];
+  tags?: QuestionSubTag[];
 
   @Field()
   @Column()

@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
 import Joi from 'joi';
 import { DTO } from '@libs/shared-types';
 import axios from 'axios';
+import { GraphQLClient, gql } from 'graphql-request';
+
 type NativeOrWeb = 'native' | 'web';
 export const useForm = (
   defaultDto: DTO,
@@ -77,6 +79,20 @@ export const useForm = (
       try {
         let response;
         if (url === 'graphql') {
+          const endpoint = 'http://localhost:3070/graphql';
+
+          const graphQLClient = new GraphQLClient(endpoint);
+          const mutationCreateQuestion = gql`
+            mutation createQuestion($input: CreateQuestionInput!) {
+              createQuestion(createQuestionInput: $input) {
+                type
+              }
+            }
+          `;
+          const data = await graphQLClient.request(mutationCreateQuestion, {
+            input: dto,
+          });
+          console.log(data);
         } else {
           response = await axios({
             method: 'post',

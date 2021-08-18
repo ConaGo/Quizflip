@@ -33,12 +33,6 @@ const UserOverview = ({ ssrData }) => {
   console.log(process.env);
   return (
     <>
-      <Button>
-        <Link href="/admin/user">user</Link>
-      </Button>
-      <Button>
-        <Link href="/admin/question">question</Link>
-      </Button>
       <button onClick={clickHandler}>Refetch Users</button>
       <ul>
         {actualData &&

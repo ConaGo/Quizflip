@@ -3,11 +3,12 @@ import { createQuestionFormData, CreateQuestionDto } from '@libs/shared-types';
 import { useForm } from '@libs/components';
 import { Button } from '@material-ui/core';
 import { useState } from 'react';
+import axios from 'axios';
 
 export const QuestionAdmin = () => {
   const endpoint = 'http://localhost:3070/graphql';
 
-  const graphQLClient = new GraphQLClient(endpoint);
+  const graphQLClient = new GraphQLClient(endpoint, { fetch: axios });
 
   const mutationCreateQuestion = gql`
     mutation createQuestion($input: CreateQuestionInput!) {
@@ -16,13 +17,13 @@ export const QuestionAdmin = () => {
       }
     }
   `;
-  const postQuestion = (e) => {
+  const postQuestion = async (e) => {
     const tags = e.category.split(': ');
 
     const i: CreateQuestionDto = {
       type: e.type,
-      tags: [tags[0]],
-      subTags: tags[1] ? tags[1] : [],
+      category: tags[0],
+      tags: tags[1] ? tags[1] : [],
       difficulty: e.difficulty,
       question: e.question,
       correctAnswer: e.correct_answer,
@@ -31,17 +32,18 @@ export const QuestionAdmin = () => {
       authorId: 1,
     };
 
-    graphQLClient.request(mutationCreateQuestion, { input: i }).then((data) => {
-      console.log(JSON.stringify(data, undefined, 2));
+    const data = await graphQLClient.request(mutationCreateQuestion, {
+      input: i,
     });
+    console.log(JSON.stringify(data, undefined, 2));
   };
 
-  const handleGetQuestionToDb = (start: number, end: number) => {
+  const handlePostQuestionToDb = (start: number, end: number) => {
     fetch('/question.json')
       .then((response) => response.json())
-      .then((json) => {
+      .then(async (json) => {
         for (let i = start; i < end; i++) {
-          postQuestion(json[i]);
+          await postQuestion(json[i]);
         }
       });
   };
@@ -57,10 +59,11 @@ export const QuestionAdmin = () => {
       console.log(JSON.stringify(data, undefined, 2));
     });
   };
+
   const defaultValues: CreateQuestionDto = {
     type: 'boolean',
+    category: '',
     tags: [],
-    subTags: [],
     difficulty: 'medium',
     question: '',
     correctAnswer: '',
@@ -75,7 +78,7 @@ export const QuestionAdmin = () => {
     handlers,
     onSubmit,
     errors,
-  } = useForm(defaultValues, createQuestionFormData, 'login', 'web');
+  } = useForm(defaultValues, createQuestionFormData);
   const [counter, setCounter] = useState(0);
   console.log(handlers);
   return (
@@ -83,7 +86,7 @@ export const QuestionAdmin = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => handleGetQuestionToDb(0, 4050)}
+        onClick={() => handlePostQuestionToDb(0, 4050)}
       >
         seed all 4050 question into db
       </Button>
@@ -91,7 +94,7 @@ export const QuestionAdmin = () => {
         variant="contained"
         color="primary"
         onClick={() => {
-          handleGetQuestionToDb(counter, counter + 10);
+          handlePostQuestionToDb(counter, counter + 10);
           setCounter(counter + 10);
         }}
       >
@@ -101,7 +104,7 @@ export const QuestionAdmin = () => {
         variant="contained"
         color="primary"
         onClick={() => {
-          handleGetQuestionToDb(counter, counter + 1);
+          handlePostQuestionToDb(counter, counter + 1);
           setCounter(counter + 1);
         }}
       >

@@ -1,8 +1,7 @@
 import { useForm } from '@libs/components';
 import { createQuestionFormData, CreateQuestionDto } from '@libs/shared-types';
-import axios from 'axios';
 import { useState } from 'react';
-import { GraphQLClient, gql } from 'graphql-request';
+import { Typography, Button, TextField } from '@material-ui/core';
 type QuestionType = 'boolean' | 'multiple';
 export const QuestionForm = () => {
   const [type, setType] = useState<QuestionType>('multiple');
@@ -12,8 +11,8 @@ export const QuestionForm = () => {
 const BooleanQuestionForm = () => {
   const defaultValues: CreateQuestionDto = {
     type: 'boolean',
+    category: '',
     tags: [],
-    subTags: [],
     difficulty: 'medium',
     question: '',
     correctAnswer: '',
@@ -28,7 +27,12 @@ const BooleanQuestionForm = () => {
     handlers,
     onSubmit,
     errors,
-  } = useForm(defaultValues, createQuestionFormData, 'login', 'web');
+  } = useForm(defaultValues, createQuestionFormData);
   console.log(handlers);
-  return <h1>CreatorHub</h1>;
+  return (
+    <>
+      <Typography variant="h4">Create A New Question</Typography>
+      <TextField label="Category"></TextField>
+    </>
+  );
 };

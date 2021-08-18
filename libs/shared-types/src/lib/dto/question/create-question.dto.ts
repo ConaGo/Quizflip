@@ -4,8 +4,17 @@ export type QuestionType = 'boolean' | 'multiple';
 export const AQuestionType = ['boolean', 'multiple'];
 export type QuestionDifficulty = 'easy' | 'medium' | 'hard';
 export const AQuestionDifficulty = ['easy', 'medium', 'hard'];
-export type QuestionTag = 'Sports' | 'Entertainment' | 'Animals' | 'Geography';
-export const AQuestionTag = ['Sports', 'Entertainment', 'Animals', 'Geography'];
+export type QuestionCategory =
+  | 'Sports'
+  | 'Entertainment'
+  | 'Animals'
+  | 'Geography';
+export const AQuestionCategory = [
+  'Sports',
+  'Entertainment',
+  'Animals',
+  'Geography',
+];
 export type QuestionSubTagEntertainment =
   | 'Board Games'
   | 'Video Games'
@@ -15,15 +24,13 @@ export const AQuestionSubTagEntertainment = [
   'Video Games',
   'Film',
 ];
-export type QuestionSubTag = QuestionSubTagEntertainment;
-export const AQuestionSubTag = [...AQuestionSubTagEntertainment];
 export type Language = 'english' | 'german';
 export const ALanguage = ['english', 'german'];
 
 export class CreateQuestionDto {
   readonly type: QuestionType;
-  readonly tags: QuestionTag[];
-  readonly subTags?: QuestionSubTag[];
+  readonly category: string;
+  readonly tags?: string[];
   readonly difficulty: QuestionDifficulty;
   readonly question: string;
   readonly correctAnswer: string;
@@ -35,11 +42,10 @@ export const createQuestionFormData = Joi.object<CreateQuestionDto>({
   type: Joi.string()
     .valid(...AQuestionType)
     .required(),
-  tags: Joi.array()
-    .items(Joi.string().valid(...AQuestionTag))
+  category: Joi.string()
     .required()
-    .messages({ 'string.empty': 'please provide at least one tag' }),
-  subTags: Joi.array().items(Joi.string().valid(...AQuestionSubTag)),
+    .messages({ 'string.empty': 'please provide a category' }),
+  tags: Joi.array().items(Joi.string()),
   difficulty: Joi.string()
     .valid(...AQuestionDifficulty)
     .required(),

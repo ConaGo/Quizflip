@@ -7,12 +7,6 @@ export {
   AQuestionType,
   //QuestionDifficulty,
   AQuestionDifficulty,
-  //QuestionTag,
-  AQuestionTag,
-  //QuestionSubTagEntertainment,
-  AQuestionSubTagEntertainment,
-  //QuestionSubTag,
-  AQuestionSubTag,
   //Language,
   ALanguage,
 } from './dto/question/create-question.dto';

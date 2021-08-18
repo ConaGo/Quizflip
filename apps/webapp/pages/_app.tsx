@@ -7,7 +7,7 @@ import NavBar from '../src/components/NavBar';
 import Head from 'next/head';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { withProviders } from '@libs/components';
-
+import { DevNavBar } from '../src/components/DevNavBar';
 //Adding _retry to type
 interface AxiosErrorWithRetry extends AxiosError {
   config: AxiosRequestConfigWithRetry;
@@ -64,6 +64,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         {typeof window === 'undefined' ? null : (
           <>
             <NavBar></NavBar>
+            <DevNavBar></DevNavBar>
             <Component {...pageProps} />
           </>
         )}

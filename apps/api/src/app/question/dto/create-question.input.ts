@@ -15,19 +15,18 @@ export class CreateQuestionInput {
   })
   readonly type: QuestionType;
 
-  @Field(() => [String], {
-    description:
-      'At least one tag is needed to categorize the question ( no commas allowed ) | example: "Sports" ',
+  @Field({
+    description: 'The category for this question | example: "Sports" ',
   })
-  readonly tags: QuestionTag[];
+  readonly category: string;
 
   @IsOptional()
   @Field(() => [String], {
     nullable: true,
     description:
-      'Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
+      'Optional tags that can be more granular than the category ( no commas allowed ) | example: "Board Games" ',
   })
-  readonly subTags?: QuestionSubTag[];
+  readonly tags?: string[];
 
   @Field(() => String, {
     description: 'The percieved difficulty of this question',

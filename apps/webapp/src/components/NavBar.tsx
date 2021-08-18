@@ -9,6 +9,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AuthModal from './auth/AuthModal';
 
 import { FormType } from '@libs/shared-types';
+import Link from 'next/link';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,7 +48,9 @@ export default function NavBar() {
             color="inherit"
             aria-label="menu"
           >
-            <MenuIcon />
+            <Link href="/admin">
+              <MenuIcon />
+            </Link>
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             News

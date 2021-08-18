@@ -27,13 +27,6 @@ export class QuestionResolver {
     return this.userService.findOneById(question.author.id);
   } */
 
-  @Mutation(() => Question)
-  createQuestion(
-    @Args('createQuestionInput') createQuestionInput: CreateQuestionInput
-  ) {
-    return this.questionService.create(createQuestionInput);
-  }
-
   @Query(() => [Question], { name: 'questions' })
   findAll() {
     return this.questionService.findAll();
@@ -42,6 +35,18 @@ export class QuestionResolver {
   @Query(() => Question, { name: 'question' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.questionService.findOne(id);
+  }
+
+  @Query(() => [String], { name: 'tags' })
+  findAllTags() {
+    return this.questionService.findAllTags();
+  }
+
+  @Mutation(() => Question)
+  createQuestion(
+    @Args('createQuestionInput') createQuestionInput: CreateQuestionInput
+  ) {
+    return this.questionService.create(createQuestionInput);
   }
 
   @Mutation(() => Question)

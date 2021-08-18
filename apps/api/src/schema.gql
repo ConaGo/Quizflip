@@ -10,13 +10,13 @@ type Question {
   """Type of the question | example: "boolean" """
   type: String!
 
-  """Main Tags ( no commas allowed ) | example: "Sports" """
-  tags: [String!]!
+  """Category of the Question | example: "Sports" """
+  category: [String!]!
 
   """
-  Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
+  Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
   """
-  subTags: [String!]!
+  tags: [String!]!
   difficulty: String!
   question: String!
   correctAnswer: String!
@@ -28,6 +28,7 @@ type Question {
 type Query {
   questions: [Question!]!
   question(id: Int!): Question!
+  tags: [String!]!
 }
 
 type Mutation {
@@ -41,15 +42,13 @@ input CreateQuestionInput {
   """Type of the question | examples: "boolean", "multiple" """
   type: String!
 
-  """
-  At least one tag is needed to categorize the question ( no commas allowed ) | example: "Sports" 
-  """
-  tags: [String!]!
+  """The category for this question | example: "Sports" """
+  category: String!
 
   """
-  Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
+  Optional tags that can be more granular than the category ( no commas allowed ) | example: "Board Games" 
   """
-  subTags: [String!]
+  tags: [String!]
 
   """The percieved difficulty of this question"""
   difficulty: String!
@@ -80,15 +79,13 @@ input UpdateQuestionInput {
   """Type of the question | examples: "boolean", "multiple" """
   type: String
 
-  """
-  At least one tag is needed to categorize the question ( no commas allowed ) | example: "Sports" 
-  """
-  tags: [String!]
+  """The category for this question | example: "Sports" """
+  category: String
 
   """
-  Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
+  Optional tags that can be more granular than the category ( no commas allowed ) | example: "Board Games" 
   """
-  subTags: [String!]
+  tags: [String!]
 
   """The percieved difficulty of this question"""
   difficulty: String

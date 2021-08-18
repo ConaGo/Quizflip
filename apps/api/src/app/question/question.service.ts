@@ -28,10 +28,6 @@ export class QuestionService {
     return question;
   }
 
-  async getAuthorId(id: number): Promise<number> {
-    return (await this.questionRepository.findOne(id)).authorId;
-  }
-
   findAll() {
     return this.questionRepository.find();
   }
@@ -67,15 +63,19 @@ export class QuestionService {
   async getRandomBatch(count: number): Promise<Question[]> {
     count = count > 0 && count <= 100 && typeof count === 'number' ? count : 10;
     return this.questionRepository.query(
-      `SELECT * FROM user TABLESAMPLE BERNOULLI(${count})`
+      `SELECT * FROM question TABLESAMPLE BERNOULLI(${count})`
     );
   }
 
   getFreshRandomBatch(count: number, id: number): Promise<Question[]> {
     count = count > 0 && count <= 100 && typeof count === 'number' ? count : 10;
     return this.questionRepository.query(
-      `SELECT * FROM user WHERE id =! :id TABLESAMPLE BERNOULLI(:count)`,
+      'SELECT * FROM question WHERE id =! :id TABLESAMPLE BERNOULLI(:count)',
       [count, id]
     );
+  }
+
+  findAllTags(): Promise<string[]> {
+    return this.questionRepository.query('SELECT tags');
   }
 }
