@@ -6,13 +6,15 @@ import {
   CREATE_QUESTION,
   client,
   DELETE_ALL_QUESTIONS,
+  GET_ALL_CATEGORIES,
 } from '@libs/data-access';
 import { useQuery, useMutation } from '@apollo/client';
 
 export const QuestionAdmin = () => {
   const [createQuestion] = useMutation(CREATE_QUESTION);
-  const [deletAllQuestions] = useMutation(DELETE_ALL_QUESTIONS);
-  const [loading, setLoading] = useState({
+  const [deleteAllQuestions] = useMutation(DELETE_ALL_QUESTIONS);
+  const { data, loading, error } = useQuery(GET_ALL_CATEGORIES);
+  const [loadingState, setloadingState] = useState({
     createQuestion: false,
     deleteAllQuestions: false,
   });
@@ -36,21 +38,20 @@ export const QuestionAdmin = () => {
   };
 
   const handlePostQuestionToDb = async (start: number, end: number) => {
-    setLoading({ ...loading, createQuestion: true });
+    setloadingState({ ...loadingState, createQuestion: true });
     const json = await (await fetch('/question.json')).json();
     for (let i = start; i < end; i++) {
       await postQuestion(json[i]);
     }
-    setLoading({ ...loading, createQuestion: false });
+    setloadingState({ ...loadingState, createQuestion: false });
   };
 
   const handleDeleteAllQuestions = async () => {
-    setLoading({ ...loading, deleteAllQuestions: true });
-    await deletAllQuestions();
-    setLoading({ ...loading, deleteAllQuestions: false });
+    setloadingState({ ...loadingState, deleteAllQuestions: true });
+    await deleteAllQuestions();
+    setloadingState({ ...loadingState, deleteAllQuestions: false });
   };
-
-  const defaultValues: CreateQuestionDto = {
+  /*   const defaultValues: CreateQuestionDto = {
     type: 'boolean',
     category: '',
     tags: [],
@@ -64,21 +65,25 @@ export const QuestionAdmin = () => {
   const {
     isSuccess,
     isFailed,
-    isLoading,
+    loadingState,
     handlers,
     onSubmit,
     errors,
-  } = useForm(defaultValues, createQuestionFormData);
+  } = useForm(defaultValues, createQuestionFormData); */
   const [counter, setCounter] = useState(0);
-  console.log(handlers);
   return (
     <>
+      <p>{JSON.stringify(data)}</p>
+      <p>{error?.message}</p>
+      <p>{loading}</p>
       <Button
         variant="contained"
         color="primary"
         onClick={() => handlePostQuestionToDb(0, 4050)}
       >
-        seed all 4050 question into db
+        {loadingState.createQuestion
+          ? 'Loading...'
+          : 'seed all 4050 question into db'}
       </Button>
       <Button
         variant="contained"
@@ -88,7 +93,9 @@ export const QuestionAdmin = () => {
           setCounter(counter + 10);
         }}
       >
-        seed questions {counter} - {counter + 10} into db
+        {loadingState.createQuestion
+          ? 'Loading...'
+          : 'seed questions ' + counter + ' - ' + (counter + 10) + 'into db'}
       </Button>
       <Button
         variant="contained"
@@ -98,14 +105,18 @@ export const QuestionAdmin = () => {
           setCounter(counter + 1);
         }}
       >
-        seed question {counter} into db
+        {loadingState.createQuestion
+          ? 'Loading...'
+          : 'seed questions ' + counter + 'into db'}
       </Button>
       <Button
         variant="contained"
         color="primary"
-        onClick={handleDeleteAllQuestions}
+        onClick={() => handleDeleteAllQuestions()}
       >
-        delete all Questions
+        {loadingState.deleteAllQuestions
+          ? 'Loading...'
+          : 'delete all Questions'}
       </Button>
     </>
   );

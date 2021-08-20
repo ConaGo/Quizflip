@@ -6,7 +6,6 @@ import { darkTheme, lightTheme } from '../src/styles/muiTheme';
 import NavBar from '../src/components/NavBar';
 import Head from 'next/head';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { withProviders } from '@libs/components';
 import { DevNavBar } from '../src/components/DevNavBar';
 import { ApolloProvider } from '@apollo/client';
 import { client } from '@libs/data-access';
@@ -78,4 +77,4 @@ function MyApp({ Component, pageProps }: AppProps) {
     </ApolloProvider>
   );
 }
-export default withProviders(MyApp);
+export default MyApp;

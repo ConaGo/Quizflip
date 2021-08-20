@@ -21,11 +21,10 @@ export class QuestionResolver {
     private readonly userService: UserService
   ) {}
 
-  /*   @ResolveField('author', (returns) => Int)
-  async getAuthor(@Parent() question: Question) {
-    return this.questionService.getAuthorId(question.id);
-    return this.userService.findOneById(question.author.id);
-  } */
+  @ResolveField('categories', () => [String])
+  async findAllCategories2() {
+    return this.questionService.findAllCategories();
+  }
 
   @Query(() => [Question], { name: 'questions' })
   findAll() {
@@ -37,9 +36,9 @@ export class QuestionResolver {
     return this.questionService.findOne(id);
   }
 
-  @Query(() => [String], { name: 'tags' })
-  findAllTags() {
-    return this.questionService.findAllTags();
+  @Query(() => [String], { name: 'categories' })
+  findAllCategories() {
+    return this.questionService.findAllCategories();
   }
 
   @Mutation(() => Question)

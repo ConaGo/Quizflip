@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 export function withProviders<P>(WrappedComponent: React.ComponentType<P>) {
@@ -12,4 +12,4 @@ export function withProviders<P>(WrappedComponent: React.ComponentType<P>) {
     );
   };
   return wrapper;
-}
+} */

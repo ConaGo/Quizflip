@@ -13,3 +13,9 @@ export const DELETE_ALL_QUESTIONS = gql`
     removeAllQuestions
   }
 `;
+
+export const GET_ALL_CATEGORIES = gql`
+  query {
+    categories
+  }
+`;

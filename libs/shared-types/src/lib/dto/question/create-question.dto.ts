@@ -38,22 +38,28 @@ export class CreateQuestionDto {
   readonly language: Language;
   readonly authorId: number;
 }
-export const createQuestionFormData = Joi.object<CreateQuestionDto>({
-  type: Joi.string()
-    .valid(...AQuestionType)
-    .required(),
-  category: Joi.string()
-    .required()
-    .messages({ 'string.empty': 'please provide a category' }),
-  tags: Joi.array().items(Joi.string()),
-  difficulty: Joi.string()
-    .valid(...AQuestionDifficulty)
-    .required(),
-  question: Joi.string().required(),
-  correctAnswer: Joi.string().required(),
-  incorrectAnswers: Joi.array().items(Joi.string()),
-  language: Joi.string()
-    .valid(...ALanguage)
-    .required(),
-  authorId: Joi.number().required(),
-});
+export const tagsValidator = Joi.array()
+  .unique()
+  .items(Joi.string().alphanum().min(3).max(15));
+export const createQuestionFormData: Joi.object<CreateQuestionDto> = Joi.object<CreateQuestionDto>(
+  {
+    type: Joi.string()
+      .valid(...AQuestionType)
+      .required(),
+    category: Joi.string().required().messages({
+      'string.base': 'please provide a category',
+      'string.empty': 'please provide a category',
+    }),
+    tags: tagsValidator,
+    difficulty: Joi.string()
+      .valid(...AQuestionDifficulty)
+      .required(),
+    question: Joi.string().required(),
+    correctAnswer: Joi.string().required(),
+    incorrectAnswers: Joi.array().items(Joi.string()),
+    language: Joi.string()
+      .valid(...ALanguage)
+      .required(),
+    authorId: Joi.number().required(),
+  }
+);

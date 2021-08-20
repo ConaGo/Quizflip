@@ -75,7 +75,11 @@ export class QuestionService {
     );
   }
 
-  findAllTags(): Promise<string[]> {
-    return this.questionRepository.query('SELECT tags');
+  async findAllCategories(): Promise<string[]> {
+    const res = await this.questionRepository.query(
+      'SELECT array_agg(DISTINCT category) FROM question'
+    );
+    console.log(res);
+    return res[0].array_agg;
   }
 }

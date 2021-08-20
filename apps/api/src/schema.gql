@@ -23,12 +23,13 @@ type Question {
   incorrectAnswers: [String!]!
   language: String!
   authorId: Int
+  categories: [String!]!
 }
 
 type Query {
   questions: [Question!]!
   question(id: Int!): Question!
-  tags: [String!]!
+  categories: [String!]!
 }
 
 type Mutation {
