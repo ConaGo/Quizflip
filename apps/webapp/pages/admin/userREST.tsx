@@ -1,52 +1,50 @@
 import { Typography, Button } from '@material-ui/core';
 import Link from 'next/link';
-import {
-  GET_ALL_USERS,
-  GET_USER,
-  client,
-  DELETE_USER_BY_EMAIL,
-} from '@libs/data-access';
-import {
-  ApolloError,
-  DocumentNode,
-  useMutation,
-  useQuery,
-  useLazyQuery,
-} from '@apollo/client';
 
+import useAxios from 'axios-hooks';
+import axios from 'axios';
 export async function getServerSideProps() {
   // Fetch data from external API
-  const { data } = await client.query({ query: GET_ALL_USERS });
-
-  const ssrData = data;
+  const res = await axios({
+    method: 'get',
+    url: '/user/',
+  });
+  const ssrData = res.data;
   // Pass data to the page via props
   return { props: { ssrData } };
 }
 const UserOverview = ({ ssrData }) => {
-  console.log(ssrData);
-  const [getUsers, getUsersState] = useLazyQuery(GET_ALL_USERS);
-  let { users } = ssrData;
-
+  let actualData = ssrData;
+  const [{ data, loading, error }, refetch] = useAxios(
+    {
+      method: 'get',
+      url: '/user/',
+      baseURL: 'http://localhost:3070',
+    },
+    { manual: true }
+  );
   const clickHandler = () => {
-    getUsers();
-    users = getUsersState.data;
+    refetch();
+    actualData = data;
+    console.log(data);
   };
+
+  console.log(ssrData);
+  console.log(process.env);
   return (
     <>
       <button onClick={clickHandler}>Refetch Users</button>
       <ul>
-        {users &&
-          users.map((user) => {
+        {actualData &&
+          actualData.map((user) => {
             return (
               <li key={user.email}>
-                {user.id}
-                {',  '}
                 {user.email}
                 {',  '}
                 {user.name}
                 <DeleteButton
                   email={user.email}
-                  onClick={getUsers}
+                  onClick={refetch}
                 ></DeleteButton>
               </li>
             );
@@ -60,13 +58,20 @@ interface DeleteButtonProps {
   onClick: () => void;
 }
 const DeleteButton = ({ email, onClick }: DeleteButtonProps) => {
-  const [
-    deleteUser,
-    { loading, data, error },
-  ] = useMutation(DELETE_USER_BY_EMAIL, { variables: { email: email } });
+  const [{ data, loading, error }, refetch] = useAxios(
+    {
+      method: 'delete',
+      url: '/user',
+      baseURL: 'http://localhost:3070',
+      params: {
+        email: email,
+      },
+    },
+    { manual: true }
+  );
   const handleDelete = async () => {
     try {
-      await deleteUser();
+      await refetch();
     } catch (err) {
       console.log(err);
     }

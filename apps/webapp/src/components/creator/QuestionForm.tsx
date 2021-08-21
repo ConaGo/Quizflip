@@ -4,7 +4,13 @@ import {
   CreateQuestionDto,
   AQuestionDifficulty,
 } from '@libs/shared-types';
-import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import {
   CREATE_QUESTION,
   useForm,
@@ -36,10 +42,11 @@ import AddIcon from '@material-ui/icons/Add';
 import { Autocomplete } from '@material-ui/lab';
 import { ClassNameMap, mergeClasses } from '@material-ui/styles';
 
-import Joi from 'joi';
-
 type QuestionType = 'boolean' | 'multiple';
-export const QuestionForm = ({ categories }) => {
+interface QuestionFormProps {
+  categories: string[];
+}
+export const QuestionForm = ({ categories }: QuestionFormProps) => {
   const classes = useStyles();
   const [type, setType] = useState<QuestionType>('multiple');
   return (
@@ -71,17 +78,24 @@ const useStyles = makeStyles((theme: Theme) =>
     noPadding: {
       padding: 0,
     },
+    //positiones label a bit further down when input is filled or user types
+    //this prevents it from getting cut off
     popoverLabel: {
       '&.Mui-focused': {
         position: 'absolute',
         top: '0.3rem',
       },
+      '&.MuiFormLabel-filled': {
+        position: 'absolute',
+        top: '0.3rem',
+      },
     },
-    img: {
-      maxHeight: 240,
-      maxWidth: 520,
-      alignSelf: 'center',
-      overflow: 'hidden',
+    //position errortext inside the input field
+    helperText: {
+      '& p': {
+        position: 'absolute',
+        bottom: '0.1rem',
+      },
     },
     container: {
       display: 'flex',
@@ -89,36 +103,33 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       overflow: 'hidden',
     },
-    header: {
-      marginBottom: 0,
-    },
-    unstyledButton: {
-      textTransform: 'none',
-    },
-    passwordForgot: {
-      alignSelf: 'right',
-    },
-    input: {
-      '& p': {
-        position: 'absolute',
-        bottom: '-2em',
-      },
-      marginBottom: '2em',
-    },
   })
 );
-const BooleanQuestionForm = ({ categories }) => {
+const BooleanQuestionForm = ({ categories }: QuestionFormProps) => {
+  //Automatically set the incorrectAnswers field
+  useEffect(() => {
+    if (
+      values.correctAnswer === 'True' &&
+      values.incorrectAnswers[0] !== 'False'
+    )
+      handlers.incorrectAnswers(['False']);
+    else if (
+      values.correctAnswer === 'False' &&
+      values.incorrectAnswers[0] !== 'True'
+    )
+      handlers.incorrectAnswers(['True']);
+  });
   const classes = useStyles();
   const defaultValues: CreateQuestionDto = {
     type: 'boolean',
-    category: categories[0],
+    category: categories.length > 0 ? categories[0] : '',
     tags: [],
     difficulty: 'medium',
     question: '',
-    correctAnswer: '',
+    correctAnswer: 'True',
     incorrectAnswers: [],
     language: 'english',
-    authorId: 1,
+    authorId: 2,
   };
   const { dto, handlers, onSubmit, errors, loading, error } = useForm(
     defaultValues,
@@ -135,9 +146,14 @@ const BooleanQuestionForm = ({ categories }) => {
   return (
     //<div className={classes.container}>
     <>
+      {error?.graphQLErrors[0]?.message}
+      {error?.extraInfo}
+
       <Typography variant="h4">Create A New Question</Typography>
-      <CategoryInput {...inputProps}></CategoryInput>
-      <DifficultyInput {...inputProps}></DifficultyInput>
+      <QuestionInput {...inputProps} />
+      <BooleanInput {...inputProps} />
+      <CategoryInput {...inputProps} />
+      <DifficultyInput {...inputProps} />
       <TagsInput {...inputProps} />
       <Button onClick={onSubmit}>Submit Question</Button>
     </>
@@ -150,7 +166,59 @@ interface InputProps {
   handlers: HandlerObject<CreateQuestionDto>;
   errors: ErrorObject<CreateQuestionDto>;
   categories?: string[];
+  number?: number;
 }
+const AnswerInput = ({ values, handlers, errors, number }: InputProps) => {
+  return (
+    <TextField
+      label={number === 0 ? `Correct answer` : `Incorrect answer no. ${number}`}
+    ></TextField>
+  );
+};
+const BooleanInput = ({ values, handlers, errors, number }: InputProps) => {
+  return (
+    <RadioGroup
+      row
+      aria-label="selection true/false"
+      name="selection-true-false"
+      value={values.correctAnswer}
+      onChange={(event) => handlers.correctAnswer(event.target.value)}
+      /*       {
+        if (event.target.value === 'True') {
+          handlers.correctAnswer('True');
+          handlers.incorrectAnswers(['False']);
+        }
+        if (event.target.value === 'False') {
+          handlers.correctAnswer('False');
+          handlers.incorrectAnswers(['True']);
+        }
+        console.log(values);
+        console.log(errors);
+        console.log(event.target.value);
+        console.log(event.target.value === 'False');
+      }} */
+    >
+      {CheckBox('True')}
+      {CheckBox('False')}
+    </RadioGroup>
+  );
+};
+const QuestionInput = ({ values, handlers, errors }: InputProps) => {
+  return (
+    <TextField
+      id="question-textfield"
+      label="The Question"
+      variant="outlined"
+      multiline
+      rows={4}
+      maxRows={8}
+      value={values.question}
+      onChange={(event) => handlers.question(event.target.value)}
+      error={!!errors.question}
+      helperText={errors.question}
+    />
+  );
+};
 const CategoryInput = ({
   values,
   handlers,
@@ -159,11 +227,11 @@ const CategoryInput = ({
 }: InputProps) => {
   return (
     <Autocomplete
-      id="Category-select"
+      id="category-select"
       options={categories}
       getOptionLabel={(option) => option}
       value={values.category}
-      onChange={(event, newValue) => handlers.category(newValue)}
+      onChange={(_, newValue) => handlers.category(newValue)}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -179,7 +247,7 @@ const CategoryInput = ({
 const CheckBox = (value: string) => {
   return (
     <FormControlLabel
-      key={'CheckBox' + value}
+      key={'CheckBox-' + value}
       value={value}
       control={<Radio />}
       label={capitalizeAllWords(value)}
@@ -191,8 +259,8 @@ const DifficultyInput = ({ values, handlers }: InputProps) => {
   return (
     <RadioGroup
       row
-      aria-label="gender"
-      name="gender1"
+      aria-label="selection difficulty"
+      name="select-difficulty"
       value={values.difficulty}
       onChange={(event) => handlers.difficulty(event.target.value)}
     >
@@ -238,7 +306,7 @@ const TagsInput = ({ values, handlers, errors }: InputProps) => {
         id="add-tag-menu"
         aria-controls="tag-select"
         aria-haspopup="true"
-        //className={classes.menu}
+        className={classes.helperText}
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}

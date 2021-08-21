@@ -21,11 +21,6 @@ export class QuestionResolver {
     private readonly userService: UserService
   ) {}
 
-  @ResolveField('categories', () => [String])
-  async findAllCategories2() {
-    return this.questionService.findAllCategories();
-  }
-
   @Query(() => [Question], { name: 'questions' })
   findAll() {
     return this.questionService.findAll();
@@ -36,22 +31,18 @@ export class QuestionResolver {
     return this.questionService.findOne(id);
   }
 
-  @Query(() => [String], { name: 'categories' })
+  @Query(() => [String], { name: 'categories', nullable: true })
   findAllCategories() {
     return this.questionService.findAllCategories();
   }
 
   @Mutation(() => Question)
-  createQuestion(
-    @Args('createQuestionInput') createQuestionInput: CreateQuestionInput
-  ) {
+  createQuestion(@Args('input') createQuestionInput: CreateQuestionInput) {
     return this.questionService.create(createQuestionInput);
   }
 
   @Mutation(() => Question)
-  updateQuestion(
-    @Args('updateQuestionInput') updateQuestionInput: UpdateQuestionInput
-  ) {
+  updateQuestion(@Args('input') updateQuestionInput: UpdateQuestionInput) {
     return this.questionService.update(
       updateQuestionInput.id,
       updateQuestionInput

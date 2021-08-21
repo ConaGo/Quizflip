@@ -1,12 +1,19 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { AuthType } from '../auth/dto/user.social.data';
 import { classToPlain, Exclude } from 'class-transformer';
-import { Field, Int } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { UserToQuestionStats } from '../question/entities/userToQuestionStats.entity';
 
 @Entity('user')
+@ObjectType({ description: 'Multiple choice and true/false Questions' })
 export class User {
   @ApiProperty({ example: 1, description: 'Entity-Unique Identifier' })
   @Field(() => Int, { description: 'Entity-Unique Identifier | example: 1' })
@@ -51,7 +58,7 @@ export class User {
   @Column({ default: '' })
   socialId: string;
 
-  @ManyToMany(
+  @OneToMany(
     () => UserToQuestionStats,
     (userToQuestionStats) => userToQuestionStats.user
   )

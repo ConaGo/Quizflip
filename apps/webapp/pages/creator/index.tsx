@@ -17,6 +17,6 @@ interface CreatorHubProps {
   categories: string[];
 }
 const CreatorHub = ({ categories }: CreatorHubProps) => {
-  return <QuestionForm categories={categories}></QuestionForm>;
+  return <QuestionForm categories={categories || ['Example']}></QuestionForm>;
 };
 export default CreatorHub;

@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const CREATE_QUESTION = gql`
   mutation createQuestion($input: CreateQuestionInput!) {
-    createQuestion(createQuestionInput: $input) {
+    createQuestion(input: $input) {
       type
     }
   }

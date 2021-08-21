@@ -30,7 +30,7 @@ export const QuestionAdmin = () => {
       correctAnswer: e.correct_answer,
       incorrectAnswers: e.incorrect_answers,
       language: 'english',
-      authorId: 1,
+      authorId: 2,
     };
 
     const data = await createQuestion({ variables: { input: input } });
@@ -51,25 +51,6 @@ export const QuestionAdmin = () => {
     await deleteAllQuestions();
     setloadingState({ ...loadingState, deleteAllQuestions: false });
   };
-  /*   const defaultValues: CreateQuestionDto = {
-    type: 'boolean',
-    category: '',
-    tags: [],
-    difficulty: 'medium',
-    question: '',
-    correctAnswer: '',
-    incorrectAnswers: [],
-    language: 'english',
-    authorId: 1,
-  };
-  const {
-    isSuccess,
-    isFailed,
-    loadingState,
-    handlers,
-    onSubmit,
-    errors,
-  } = useForm(defaultValues, createQuestionFormData); */
   const [counter, setCounter] = useState(0);
   return (
     <>

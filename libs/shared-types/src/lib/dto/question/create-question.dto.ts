@@ -40,7 +40,18 @@ export class CreateQuestionDto {
 }
 export const tagsValidator = Joi.array()
   .unique()
-  .items(Joi.string().alphanum().min(3).max(15));
+  .items(
+    Joi.string()
+      .alphanum()
+      .min(3)
+      .message('at least 3 characters long')
+      .max(15)
+      .message('maximum is 15 characters')
+  )
+  .messages({
+    'string.base': 'please provide a tag',
+    'string.empty': 'please provide a tag',
+  });
 export const createQuestionFormData: Joi.object<CreateQuestionDto> = Joi.object<CreateQuestionDto>(
   {
     type: Joi.string()

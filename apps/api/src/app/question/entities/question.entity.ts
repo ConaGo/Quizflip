@@ -47,13 +47,13 @@ export class Question {
   @Field({
     description: 'Type of the question | example: "boolean" ',
   })
-  @Column()
+  @Column({ nullable: false })
   type: QuestionType;
 
   @Field(() => [String], {
     description: 'Category of the Question | example: "Sports" ',
   })
-  @Column({ nullable: true })
+  @Column({ nullable: false })
   category: string;
 
   @Field(() => [String], {
@@ -64,29 +64,30 @@ export class Question {
   tags?: QuestionSubTag[];
 
   @Field()
-  @Column()
+  @Column({ nullable: false })
   difficulty: QuestionDifficulty;
 
   @Field()
-  @Column()
+  @Column({ nullable: false })
   question: string;
 
   @Field()
-  @Column()
+  @Column({ nullable: false })
   correctAnswer: string;
 
   @Field(() => [String])
   @Column({
     type: 'text',
     array: true,
+    nullable: false,
   })
   incorrectAnswers: string[];
 
   @Field()
-  @Column({ default: 'english' })
+  @Column({ default: 'english', nullable: false })
   language: Language;
 
-  @ManyToOne(() => User, { nullable: true })
+  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
   @JoinColumn()
   author: User;
 

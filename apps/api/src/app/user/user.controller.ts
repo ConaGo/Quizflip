@@ -16,9 +16,7 @@ import ReqWithUser from '../auth/reqWithUser.interface';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('/me')
@@ -35,6 +33,6 @@ export class UserController {
   @Delete()
   deleteUser(@Query('email') email: string) {
     console.log(email);
-    return this.userService.deleteOne(email);
+    return this.userService.removeOneByEmail(email);
   }
 }

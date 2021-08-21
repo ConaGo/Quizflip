@@ -25,7 +25,7 @@ export function useForm<T>(
 } {
   //Initialize state object
   const [dto, setDto] = useState<T>(defaultDto);
-  console.log(dto);
+
   //Dynamically create Error object from formtype
   const defaultErrors: { [x: string]: string } = {};
   for (const [key] of Object.entries(dto)) {
@@ -61,7 +61,8 @@ export function useForm<T>(
   const onSubmit = async () => {
     if (await validate()) {
       try {
-        mutate({ variables: dto });
+        console.log(dto);
+        mutate({ variables: { input: dto } });
       } catch (err) {
         console.log(err);
       }
@@ -80,12 +81,6 @@ export function useForm<T>(
   };
 }
 
-//Input Handlers have slightly different call signatures
-//on React vs React-Native so we have to account for this
-/* export type WebHandler = (e: ChangeEvent<HTMLInputElement>) => void;
-export type NativeHandler = (text: string) => void;
-export type StringArrayHandler = (array: string[]) => void;
-export type Handler = WebHandler | NativeHandler | StringArrayHandler; */
 export type Handler = (value: unknown) => void;
 function getHandlers<T>(
   obj: T,

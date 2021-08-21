@@ -23,18 +23,31 @@ type Question {
   incorrectAnswers: [String!]!
   language: String!
   authorId: Int
-  categories: [String!]!
+}
+
+"""Multiple choice and true/false Questions"""
+type User {
+  """Entity-Unique Identifier | example: 1"""
+  id: Int!
+
+  """Unique e-mail | example: nest@js.com"""
+  email: String!
+  name: String!
 }
 
 type Query {
+  users: [User!]!
+  user(id: Int!): User!
   questions: [Question!]!
   question(id: Int!): Question!
-  categories: [String!]!
+  categories: [String!]
 }
 
 type Mutation {
-  createQuestion(createQuestionInput: CreateQuestionInput!): Question!
-  updateQuestion(updateQuestionInput: UpdateQuestionInput!): Question!
+  removeUserById(id: Int!): String!
+  removeUserByEmail(email: String!): String!
+  createQuestion(input: CreateQuestionInput!): Question!
+  updateQuestion(input: UpdateQuestionInput!): Question!
   removeQuestion(id: Int!): String!
   removeAllQuestions: String!
 }

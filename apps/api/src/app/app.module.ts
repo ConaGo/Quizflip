@@ -37,7 +37,7 @@ import { UserToQuestionStats } from './question/entities/userToQuestionStats.ent
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'apps/api/src/schema.gql'),
-      include: [QuestionModule],
+      include: [QuestionModule, UserModule],
     }),
     //for Postgres Database Connection
     //TODO-PRODUCTION for production set synchronize to false

@@ -33,7 +33,7 @@ export class UserService {
     }
     return user;
   }
-  async remove(id: string): Promise<DeleteResult> {
+  async remove(id: number): Promise<DeleteResult> {
     return this.userRepository.delete(id);
   }
   async create(signupDto: SignupDto): Promise<User> {
@@ -77,10 +77,10 @@ export class UserService {
       authType: authType,
     });
   }
-  async deleteOne(email: string): Promise<User> {
+  async removeOneByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ email: email });
     if (user) {
-      return this.userRepository.remove(user);
+      return this.userRepository.softRemove(user);
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }
