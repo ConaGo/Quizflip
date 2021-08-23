@@ -11,7 +11,7 @@ import {
   HttpCode,
   UsePipes,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -20,7 +20,6 @@ import { GithubAuthGuard } from './guards/github-auth.guard';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import {
-  ApiBearerAuth,
   ApiOperation,
   ApiOkResponse,
   ApiUnauthorizedResponse,

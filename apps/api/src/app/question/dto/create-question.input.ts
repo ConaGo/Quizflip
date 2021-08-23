@@ -1,10 +1,7 @@
-import { IsOptional, Length, MaxLength } from 'class-validator';
 import { InputType, Int, Field } from '@nestjs/graphql';
 import {
   Language,
   QuestionDifficulty,
-  QuestionSubTag,
-  QuestionTag,
   QuestionType,
 } from '../entities/question.entity';
 
@@ -20,7 +17,6 @@ export class CreateQuestionInput {
   })
   readonly category: string;
 
-  @IsOptional()
   @Field(() => [String], {
     nullable: true,
     description:

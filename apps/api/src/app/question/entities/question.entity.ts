@@ -4,13 +4,9 @@ import {
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
-  OneToOne,
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
-import { IsEmail, Length } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { classToPlain, Exclude } from 'class-transformer';
 import { UserToQuestionStats } from './userToQuestionStats.entity';
 import { User } from '../../user/user.entity';
 type QuestionType = 'boolean' | 'multiple';

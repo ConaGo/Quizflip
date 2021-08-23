@@ -3,6 +3,8 @@ import {
   createQuestionFormData,
   CreateQuestionDto,
   AQuestionDifficulty,
+  QuestionType,
+  AQuestionType,
 } from '@libs/shared-types';
 import {
   ChangeEvent,
@@ -36,19 +38,75 @@ import {
   Menu,
   ListItemIcon,
   IconButton,
+  Tabs,
+  Tab,
+  TextareaAutosize,
+  InputLabel,
 } from '@material-ui/core';
 import { PlusOne } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import { Autocomplete } from '@material-ui/lab';
 import { ClassNameMap, mergeClasses } from '@material-ui/styles';
 
-type QuestionType = 'boolean' | 'multiple';
 interface QuestionFormProps {
   categories: string[];
+  type: QuestionType;
+}
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
 }
 export const QuestionForm = ({ categories }: QuestionFormProps) => {
   const classes = useStyles();
   const [type, setType] = useState<QuestionType>('multiple');
+  const handleTypeChange = (
+    event: React.ChangeEvent,
+    newValue: QuestionType
+  ) => {
+    const newType = AQuestionType[newValue];
+    setType(newType);
+    if (newType === 'multiple') {
+      console.log('first');
+      setDto({ ...dto, incorrectAnswers: ['', '', ''], correctAnswer: '' });
+    } else if (newType === 'boolean') {
+      console.log('second');
+      if (dto.correctAnswer !== 'True' && dto.correctAnswer !== 'False') {
+        handlers.correctAnswer('True');
+      }
+      if (dto.correctAnswer === 'True' && dto.incorrectAnswers[0] !== 'False')
+        handlers.incorrectAnswers(['False']);
+      else if (
+        dto.correctAnswer === 'False' &&
+        dto.incorrectAnswers[0] !== 'True'
+      )
+        handlers.incorrectAnswers(['True']);
+    }
+  };
+  const defaultValues: CreateQuestionDto = {
+    type: 'boolean',
+    category: categories.length > 0 ? categories[0] : '',
+    tags: [],
+    difficulty: 'medium',
+    question: '',
+    correctAnswer: '',
+    incorrectAnswers: ['', '', ''],
+    language: 'english',
+    authorId: 2,
+  };
+  const { setDto, dto, handlers, onSubmit, errors, loading, error } = useForm(
+    defaultValues,
+    createQuestionFormData,
+    CREATE_QUESTION
+  );
+  const inputProps: InputProps = {
+    setDto,
+    dto,
+    handlers,
+    errors,
+    categories,
+  };
   return (
     <Grid
       container
@@ -57,7 +115,21 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
       spacing={2}
     >
       <Paper elevation={10} className={classes.paper}>
-        <BooleanQuestionForm categories={categories}></BooleanQuestionForm>
+        <Tabs
+          value={AQuestionType.indexOf(type)}
+          onChange={handleTypeChange}
+          aria-label="question-type-tab-select"
+        >
+          <Tab label="True Or False" {...a11yProps(1)} />
+          <Tab label="Multiple Choice" {...a11yProps(0)} />
+        </Tabs>
+        <Typography variant="h4">Create A New Question</Typography>
+        <QuestionInput {...inputProps}></QuestionInput>
+        {typeSwitch(type, inputProps)}
+        <CategoryInput {...inputProps} />
+        <DifficultyInput {...inputProps} />
+        <TagsInput {...inputProps} />
+        <Button onClick={onSubmit}>Submit Question</Button>
       </Paper>
     </Grid>
   );
@@ -78,7 +150,7 @@ const useStyles = makeStyles((theme: Theme) =>
     noPadding: {
       padding: 0,
     },
-    //positiones label a bit further down when input is filled or user types
+    //positiones label a bit further down when input is filled or the user types
     //this prevents it from getting cut off
     popoverLabel: {
       '&.Mui-focused': {
@@ -105,132 +177,114 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-const BooleanQuestionForm = ({ categories }: QuestionFormProps) => {
-  //Automatically set the incorrectAnswers field
-  useEffect(() => {
-    if (
-      values.correctAnswer === 'True' &&
-      values.incorrectAnswers[0] !== 'False'
-    )
-      handlers.incorrectAnswers(['False']);
-    else if (
-      values.correctAnswer === 'False' &&
-      values.incorrectAnswers[0] !== 'True'
-    )
-      handlers.incorrectAnswers(['True']);
-  });
-  const classes = useStyles();
-  const defaultValues: CreateQuestionDto = {
-    type: 'boolean',
-    category: categories.length > 0 ? categories[0] : '',
-    tags: [],
-    difficulty: 'medium',
-    question: '',
-    correctAnswer: 'True',
-    incorrectAnswers: [],
-    language: 'english',
-    authorId: 2,
-  };
-  const { dto, handlers, onSubmit, errors, loading, error } = useForm(
-    defaultValues,
-    createQuestionFormData,
-    CREATE_QUESTION
-  );
-  const values = dto;
-  const inputProps: InputProps = {
-    values,
-    handlers,
-    errors,
-    categories,
-  };
-  return (
-    //<div className={classes.container}>
-    <>
-      {error?.graphQLErrors[0]?.message}
-      {error?.extraInfo}
-
-      <Typography variant="h4">Create A New Question</Typography>
-      <QuestionInput {...inputProps} />
-      <BooleanInput {...inputProps} />
-      <CategoryInput {...inputProps} />
-      <DifficultyInput {...inputProps} />
-      <TagsInput {...inputProps} />
-      <Button onClick={onSubmit}>Submit Question</Button>
-    </>
-    //</div>
-  );
+const typeSwitch = (type: QuestionType, inputProps: InputProps) => {
+  switch (type) {
+    case 'multiple':
+      return <MultipleChoiceInput {...inputProps} />;
+    case 'boolean':
+      return <BooleanInput {...inputProps} />;
+    default:
+      return null;
+  }
 };
-
 interface InputProps {
-  values: CreateQuestionDto;
+  setDto: Dispatch<SetStateAction<CreateQuestionDto>>;
+  dto: CreateQuestionDto;
   handlers: HandlerObject<CreateQuestionDto>;
   errors: ErrorObject<CreateQuestionDto>;
   categories?: string[];
   number?: number;
 }
-const AnswerInput = ({ values, handlers, errors, number }: InputProps) => {
+const MultipleChoiceInput = (inputProps: InputProps) => {
+  return (
+    <>
+      <CorrectAnswerInput {...inputProps} number={0}></CorrectAnswerInput>
+      <IncorrectAnswerInput {...inputProps} number={1}></IncorrectAnswerInput>
+      <IncorrectAnswerInput {...inputProps} number={2}></IncorrectAnswerInput>
+      <IncorrectAnswerInput {...inputProps} number={3}></IncorrectAnswerInput>
+    </>
+  );
+};
+const CorrectAnswerInput = ({ dto, handlers, errors }: InputProps) => {
   return (
     <TextField
-      label={number === 0 ? `Correct answer` : `Incorrect answer no. ${number}`}
+      label="Correct answer"
+      value={dto.correctAnswer}
+      onChange={(e) => handlers.correctAnswer(e.target.value)}
+      error={!!errors.correctAnswer}
+      helperText={errors.correctAnswer}
     ></TextField>
   );
 };
-const BooleanInput = ({ values, handlers, errors, number }: InputProps) => {
+const IncorrectAnswerInput = ({
+  setDto,
+  dto,
+  handlers,
+  errors,
+  number = 0,
+}: InputProps) => {
+  return (
+    <TextField
+      label={`Incorrect answer no. ${number}`}
+      value={dto.incorrectAnswers[number]}
+      onChange={(e) => {
+        console.log(dto.correctAnswer);
+        const newIncorrectAnswers = dto.incorrectAnswers.slice();
+        newIncorrectAnswers[number] = e.target.value;
+        handlers.incorrectAnswers(newIncorrectAnswers);
+      }}
+    ></TextField>
+  );
+};
+const BooleanInput = ({ setDto, dto }: InputProps) => {
   return (
     <RadioGroup
       row
       aria-label="selection true/false"
       name="selection-true-false"
-      value={values.correctAnswer}
-      onChange={(event) => handlers.correctAnswer(event.target.value)}
-      /*       {
+      value={dto.correctAnswer}
+      onChange={(event) => {
         if (event.target.value === 'True') {
-          handlers.correctAnswer('True');
-          handlers.incorrectAnswers(['False']);
+          setDto({
+            ...dto,
+            correctAnswer: 'True',
+            incorrectAnswers: ['False'],
+          });
+        } else {
+          setDto({
+            ...dto,
+            correctAnswer: 'False',
+            incorrectAnswers: ['True'],
+          });
         }
-        if (event.target.value === 'False') {
-          handlers.correctAnswer('False');
-          handlers.incorrectAnswers(['True']);
-        }
-        console.log(values);
-        console.log(errors);
-        console.log(event.target.value);
-        console.log(event.target.value === 'False');
-      }} */
+      }}
     >
       {CheckBox('True')}
       {CheckBox('False')}
     </RadioGroup>
   );
 };
-const QuestionInput = ({ values, handlers, errors }: InputProps) => {
+const QuestionInput = ({ dto, handlers, errors }: InputProps) => {
   return (
     <TextField
       id="question-textfield"
       label="The Question"
       variant="outlined"
       multiline
-      rows={4}
-      maxRows={8}
-      value={values.question}
+      value={dto.question}
       onChange={(event) => handlers.question(event.target.value)}
       error={!!errors.question}
       helperText={errors.question}
     />
   );
 };
-const CategoryInput = ({
-  values,
-  handlers,
-  errors,
-  categories,
-}: InputProps) => {
+const CategoryInput = ({ dto, handlers, errors, categories }: InputProps) => {
   return (
     <Autocomplete
       id="category-select"
       options={categories}
       getOptionLabel={(option) => option}
-      value={values.category}
+      value={dto.category}
       onChange={(_, newValue) => handlers.category(newValue)}
       renderInput={(params) => (
         <TextField
@@ -255,20 +309,20 @@ const CheckBox = (value: string) => {
     />
   );
 };
-const DifficultyInput = ({ values, handlers }: InputProps) => {
+const DifficultyInput = ({ dto, handlers }: InputProps) => {
   return (
     <RadioGroup
       row
       aria-label="selection difficulty"
       name="select-difficulty"
-      value={values.difficulty}
+      value={dto.difficulty}
       onChange={(event) => handlers.difficulty(event.target.value)}
     >
       {AQuestionDifficulty.map((option) => CheckBox(option))}
     </RadioGroup>
   );
 };
-const TagsInput = ({ values, handlers, errors }: InputProps) => {
+const TagsInput = ({ dto, handlers }: InputProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [focus, setFocus] = useState(false);
@@ -286,20 +340,20 @@ const TagsInput = ({ values, handlers, errors }: InputProps) => {
     setError('');
   };
   const handleAdd = () => {
-    const errs = tagsValidator.validate([...values.tags, value]).error;
+    const errs = tagsValidator.validate([...dto.tags, value]).error;
     setError(errs ? errs.message : '');
 
     if (!errs) {
       handleClose();
-      handlers.tags([...values.tags, capitalizeAllWords(value.toLowerCase())]);
+      handlers.tags([...dto.tags, capitalizeAllWords(value.toLowerCase())]);
     }
   };
   return (
     <>
-      {values.tags.map((tag) => {
-        return Tag(tag, handlers.tags, values.tags, classes);
+      {dto.tags.map((tag) => {
+        return Tag(tag, handlers.tags, dto.tags, classes);
       })}
-      {values.tags.length < 10 ? (
+      {dto.tags.length < 10 ? (
         <Chip deleteIcon={<AddIcon />} onDelete={handleClick} />
       ) : null}
       <Menu
@@ -336,7 +390,7 @@ const TagsInput = ({ values, handlers, errors }: InputProps) => {
 const Tag = (
   name: string,
   handler: Handler,
-  values: string[],
+  dto: string[],
   classes: ClassNameMap
 ) => {
   return (
@@ -344,7 +398,7 @@ const Tag = (
       className={classes.chip}
       key={'chip-' + name}
       label={name}
-      onDelete={() => handler(values.filter((e) => e !== name))}
+      onDelete={() => handler(dto.filter((e) => e !== name))}
     ></Chip>
   );
 };

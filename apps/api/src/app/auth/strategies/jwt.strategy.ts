@@ -23,6 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: TokenPayload) {
+    //TODO - use identification through id
     return this.userService.findOneNameOrEmail(payload.name);
   }
 }

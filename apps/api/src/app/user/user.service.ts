@@ -80,7 +80,7 @@ export class UserService {
   async removeOneByEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({ email: email });
     if (user) {
-      return this.userRepository.softRemove(user);
+      return this.userRepository.remove(user);
     }
     throw new HttpException('User not found', HttpStatus.NOT_FOUND);
   }

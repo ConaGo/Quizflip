@@ -8,12 +8,14 @@ export type ErrorObject<T> = {
 export type HandlerObject<T> = {
   [K in keyof T]: Handler;
 };
+export type Handler = (value: unknown) => void;
 
 export function useForm<T>(
   defaultDto: T,
   validationObject: Joi.ObjectSchema<T>,
   mutation: DocumentNode
 ): {
+  setDto: Dispatch<SetStateAction<T>>;
   dto: T;
   handlers: HandlerObject<T>;
   validate: () => Promise<boolean>;
@@ -70,6 +72,7 @@ export function useForm<T>(
   };
 
   return {
+    setDto,
     dto,
     handlers,
     validate,
@@ -81,7 +84,6 @@ export function useForm<T>(
   };
 }
 
-export type Handler = (value: unknown) => void;
 function getHandlers<T>(
   obj: T,
   setter: Dispatch<SetStateAction<T>>
