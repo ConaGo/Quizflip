@@ -2,7 +2,7 @@ import * as Joi from 'joi';
 import { join } from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -15,6 +15,8 @@ import { User } from './user/user.entity';
 import { Question } from './question/entities/question.entity';
 import { QuestionModule } from './question/question.module';
 import { UserToQuestionStats } from './question/entities/userToQuestionStats.entity';
+import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { LoggingPlugin } from './graphql/logging.plugin';
 
 @Module({
   imports: [
@@ -38,6 +40,13 @@ import { UserToQuestionStats } from './question/entities/userToQuestionStats.ent
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'apps/api/src/schema.gql'),
       include: [QuestionModule, UserModule],
+      formatError: (error: GraphQLError) => {
+        const graphQLFormattedError: GraphQLFormattedError = {
+          message: error.extensions.exception.response.message || error.message,
+        };
+        console.log(graphQLFormattedError);
+        return graphQLFormattedError;
+      },
     }),
     //for Postgres Database Connection
     //TODO-PRODUCTION for production set synchronize to false

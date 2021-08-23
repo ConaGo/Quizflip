@@ -11,12 +11,12 @@ type Question {
   type: String!
 
   """Category of the Question | example: "Sports" """
-  category: [String!]!
+  category: String!
 
   """
   Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
   """
-  tags: [String!]!
+  tags: [String!]
   difficulty: String!
   question: String!
   correctAnswer: String!
@@ -41,12 +41,14 @@ type Query {
   questions: [Question!]!
   question(id: Int!): Question!
   categories: [String!]
+  randomQuestions(count: Int!): [Question!]
 }
 
 type Mutation {
   removeUserById(id: Int!): String!
   removeUserByEmail(email: String!): String!
   createQuestion(input: CreateQuestionInput!): Question!
+  createQuestions(input: [CreateQuestionInput!]!): [Question!]!
   updateQuestion(input: UpdateQuestionInput!): Question!
   removeQuestion(id: Int!): String!
   removeAllQuestions: String!

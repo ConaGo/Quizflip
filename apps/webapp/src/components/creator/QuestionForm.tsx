@@ -50,7 +50,6 @@ import { ClassNameMap, mergeClasses } from '@material-ui/styles';
 
 interface QuestionFormProps {
   categories: string[];
-  type: QuestionType;
 }
 function a11yProps(index: number) {
   return {

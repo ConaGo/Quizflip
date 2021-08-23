@@ -18,7 +18,9 @@ export class QuestionService {
   async create(createQuestionInput: CreateQuestionInput): Promise<Question> {
     //TODO extract userid from request
     const { authorId, ...rest } = createQuestionInput;
-    const user = await this.userService.findOneById(authorId);
+
+    //Throws if user is not found
+    await this.userService.findOneById(authorId);
     const question = await this.questionRepository.save(rest);
     await this.questionRepository
       .createQueryBuilder()
@@ -26,6 +28,33 @@ export class QuestionService {
       .of(question.id)
       .set(authorId);
     return question;
+  }
+  async createMany(
+    createQuestionInput: CreateQuestionInput[]
+  ): Promise<Question[]> {
+    //TODO extract userid from request
+    const { authorId } = createQuestionInput[0];
+
+    //Throws if user is not found
+    await this.userService.findOneById(authorId);
+
+    //Save Questions
+    const questionArray = createQuestionInput.map((element) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { authorId, ...rest } = element;
+      return rest;
+    });
+    const questions = await this.questionRepository.save(questionArray);
+    console.log(questions);
+    //Add Author-Relation
+    createQuestionInput.forEach(async (element, i) => {
+      await this.questionRepository
+        .createQueryBuilder()
+        .relation(Question, 'author')
+        .of(questions[i].id)
+        .set(authorId);
+    });
+    return questions;
   }
 
   findAll() {
@@ -62,9 +91,12 @@ export class QuestionService {
   }
   async getRandomBatch(count: number): Promise<Question[]> {
     count = count > 0 && count <= 100 && typeof count === 'number' ? count : 10;
-    return this.questionRepository.query(
-      `SELECT * FROM question TABLESAMPLE BERNOULLI(${count})`
+    const res = await this.questionRepository.query(
+      `SELECT * FROM question TABLESAMPLE BERNOULLI(1)`
+      //[count]
     );
+    console.log(res);
+    return res;
   }
 
   getFreshRandomBatch(count: number, id: number): Promise<Question[]> {

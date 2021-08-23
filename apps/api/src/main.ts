@@ -8,11 +8,12 @@ import { AppModule } from './app/app.module';
 import { LoggingInterceptor } from './logging.interceptor';
 import { useRequestLogging } from './logging.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
+import { json } from 'body-parser';
 declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(json({ limit: '50mb' }));
   //TODO-production: remove CORS
   app.enableCors({ credentials: true });
   //swagger setup

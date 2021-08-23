@@ -7,24 +7,27 @@ import {
   client,
   DELETE_ALL_QUESTIONS,
   GET_ALL_CATEGORIES,
+  CREATE_QUESTIONS,
 } from '@libs/data-access';
 import { useQuery, useMutation } from '@apollo/client';
 
 export const QuestionAdmin = () => {
   const [createQuestion] = useMutation(CREATE_QUESTION);
+  const [createQuestions, { error }] = useMutation(CREATE_QUESTIONS);
+
   const [deleteAllQuestions] = useMutation(DELETE_ALL_QUESTIONS);
-  const { data, loading, error } = useQuery(GET_ALL_CATEGORIES);
+  const { data, loading } = useQuery(GET_ALL_CATEGORIES);
   const [loadingState, setloadingState] = useState({
     createQuestion: false,
     deleteAllQuestions: false,
   });
-  const postQuestion = async (e) => {
+  const formatQuestion = (e) => {
     const tags = e.category.split(': ');
 
-    const input: CreateQuestionDto = {
+    const ret: CreateQuestionDto = {
       type: e.type,
       category: tags[0],
-      tags: tags[1] ? tags[1] : [],
+      tags: tags[1] ? [tags[1]] : [],
       difficulty: e.difficulty,
       question: e.question,
       correctAnswer: e.correct_answer,
@@ -32,17 +35,57 @@ export const QuestionAdmin = () => {
       language: 'english',
       authorId: 2,
     };
-
+    return ret;
+  };
+  const postQuestion = async (e) => {
+    const input = formatQuestion(e);
     const data = await createQuestion({ variables: { input: input } });
     console.log(JSON.stringify(data, undefined, 2));
   };
-
   const handlePostQuestionToDb = async (start: number, end: number) => {
     setloadingState({ ...loadingState, createQuestion: true });
     const json = await (await fetch('/question.json')).json();
     for (let i = start; i < end; i++) {
       await postQuestion(json[i]);
     }
+    setloadingState({ ...loadingState, createQuestion: false });
+  };
+  const handlePostManyQuestionToDb = async () => {
+    setloadingState({ ...loadingState, createQuestion: true });
+
+    const json = await (await fetch('/question.json')).json();
+    const input = json.map((e) => formatQuestion(e));
+    console.log(input[0]);
+    const res = await createQuestions({
+      variables: {
+        input: [
+          {
+            type: 'boolean',
+            category: 'Entertainment',
+            tags: ['Board Games'],
+            difficulty: 'easy',
+            question: 'Snakes and Ladders was originally created in India?',
+            correctAnswer: 'True',
+            incorrectAnswers: ['False'],
+            language: 'english',
+            authorId: 2,
+          },
+          {
+            type: 'boolean',
+            category: 'Entertainment',
+            tags: ['Board Games'],
+            difficulty: 'easy',
+            question: 'Snakes and Ladders was originally created in India?',
+            correctAnswer: 'True',
+            incorrectAnswers: ['False'],
+            language: 'english',
+            authorId: 2,
+          },
+        ],
+      },
+    });
+    console.log(error);
+
     setloadingState({ ...loadingState, createQuestion: false });
   };
 
@@ -60,7 +103,7 @@ export const QuestionAdmin = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => handlePostQuestionToDb(0, 4050)}
+        onClick={() => handlePostManyQuestionToDb()}
       >
         {loadingState.createQuestion
           ? 'Loading...'

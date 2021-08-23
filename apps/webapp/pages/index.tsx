@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { ThemeProvider, Checkbox } from '@material-ui/core';
 import { darkTheme, lightTheme } from '../src/styles/muiTheme';
 import NavBar from '../src/components/NavBar';
-
+import { SoloQuestionGame } from '@libs/components';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 export default function Home() {
@@ -19,13 +19,13 @@ export default function Home() {
                 <Link to="/">Home</Link>
               </li>
               <li>
-                <Link to="/about">About</Link>
+                <Link to="/Game">Play a Quick Game</Link>
               </li>
             </ul>
 
             <Switch>
-              <Route path="/about">
-                <h2>About</h2>
+              <Route path="/Game">
+                <SoloQuestionGame />
               </Route>
               <Route path="/">
                 <h2>Home</h2>

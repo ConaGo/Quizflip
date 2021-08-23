@@ -36,7 +36,9 @@ export {
 @Entity('question')
 @ObjectType({ description: 'Multiple choice and true/false Questions' })
 export class Question {
-  @Field(() => Int, { description: 'Unique Identifier | example: 1' })
+  @Field(() => Int, {
+    description: 'Unique Identifier | example: 1',
+  })
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -46,18 +48,19 @@ export class Question {
   @Column({ nullable: false })
   type: QuestionType;
 
-  @Field(() => [String], {
+  @Field(() => String, {
     description: 'Category of the Question | example: "Sports" ',
   })
   @Column({ nullable: false })
   category: string;
 
   @Field(() => [String], {
+    nullable: true,
     description:
       'Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
   })
   @Column({ type: 'simple-array', nullable: true })
-  tags?: QuestionSubTag[];
+  tags?: string[];
 
   @Field()
   @Column({ nullable: false })

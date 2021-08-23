@@ -36,9 +36,22 @@ export class QuestionResolver {
     return this.questionService.findAllCategories();
   }
 
+  @Query(() => [Question], { name: 'randomQuestions', nullable: true })
+  getRandomQuestions(@Args('count', { type: () => Int }) count: number) {
+    return this.questionService.getRandomBatch(count);
+  }
+
   @Mutation(() => Question)
   createQuestion(@Args('input') createQuestionInput: CreateQuestionInput) {
     return this.questionService.create(createQuestionInput);
+  }
+
+  @Mutation(() => [Question])
+  createQuestions(
+    @Args('input', { type: () => [CreateQuestionInput] })
+    createQuestionInput: CreateQuestionInput[]
+  ) {
+    return this.questionService.createMany(createQuestionInput);
   }
 
   @Mutation(() => Question)
