@@ -13,6 +13,9 @@ export const DevNavBar = () => {
       <Button>
         <Link href="/creator">creator</Link>
       </Button>
+      <Button>
+        <Link href="/">home</Link>
+      </Button>
     </p>
   );
 };

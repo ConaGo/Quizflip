@@ -7,6 +7,7 @@ import {
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
+import { BaseEntity } from '../../typeorm/base.entity';
 import { UserToQuestionStats } from './userToQuestionStats.entity';
 import { User } from '../../user/user.entity';
 type QuestionType = 'boolean' | 'multiple';
@@ -35,7 +36,7 @@ export {
 
 @Entity('question')
 @ObjectType({ description: 'Multiple choice and true/false Questions' })
-export class Question {
+export class Question extends BaseEntity {
   @Field(() => Int, {
     description: 'Unique Identifier | example: 1',
   })
@@ -59,7 +60,7 @@ export class Question {
     description:
       'Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
   })
-  @Column({ type: 'simple-array', nullable: true })
+  @Column({ type: 'text', array: true, nullable: true })
   tags?: string[];
 
   @Field()

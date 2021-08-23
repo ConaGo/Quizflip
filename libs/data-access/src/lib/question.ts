@@ -8,7 +8,7 @@ export const CREATE_QUESTION = gql`
   }
 `;
 export const CREATE_QUESTIONS = gql`
-  mutation createQuestions($input: [CreateQuestionInput]!) {
+  mutation createQuestions($input: [CreateQuestionInput!]!) {
     createQuestions(input: $input) {
       type
     }
@@ -28,7 +28,7 @@ export const GET_ALL_CATEGORIES = gql`
 `;
 
 export const GET_RANDOM_QUESTIONS = gql`
-  query getRandomQuestions($count: number) {
+  query getRandomQuestions($count: Int!) {
     randomQuestions(count: $count) {
       id
       type

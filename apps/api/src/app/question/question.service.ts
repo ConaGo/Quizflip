@@ -90,17 +90,24 @@ export class QuestionService {
     return `done deleting ${questions.length} questions`;
   }
   async getRandomBatch(count: number): Promise<Question[]> {
+    //Documentation on performantly getting a truly random batch
+    //https://www.2ndquadrant.com/en/blog/tablesample-and-other-methods-for-getting-random-tuples/
     count = count > 0 && count <= 100 && typeof count === 'number' ? count : 10;
+    //TODO automate database setup
+    /* await this.questionRepository.query(
+      'CREATE EXTENSION tsm_system_rows'
+    ); */
     const res = await this.questionRepository.query(
-      `SELECT * FROM question TABLESAMPLE BERNOULLI(1)`
-      //[count]
+      `SELECT * FROM question TABLESAMPLE SYSTEM_ROWS($1)`,
+      [count]
     );
     console.log(res);
     return res;
   }
 
-  getFreshRandomBatch(count: number, id: number): Promise<Question[]> {
+  async getFreshRandomBatch(count: number, id: number): Promise<Question[]> {
     count = count > 0 && count <= 100 && typeof count === 'number' ? count : 10;
+    await this.questionRepository.query('CREATE EXTENSION system_rows');
     return this.questionRepository.query(
       'SELECT * FROM question WHERE id =! :id TABLESAMPLE BERNOULLI(:count)',
       [count, id]

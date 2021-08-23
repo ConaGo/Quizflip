@@ -40,13 +40,6 @@ import { LoggingPlugin } from './graphql/logging.plugin';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'apps/api/src/schema.gql'),
       include: [QuestionModule, UserModule],
-      formatError: (error: GraphQLError) => {
-        const graphQLFormattedError: GraphQLFormattedError = {
-          message: error.extensions.exception.response.message || error.message,
-        };
-        console.log(graphQLFormattedError);
-        return graphQLFormattedError;
-      },
     }),
     //for Postgres Database Connection
     //TODO-PRODUCTION for production set synchronize to false

@@ -3,19 +3,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Entity,
 } from 'typeorm';
 
-import * as t from '@nestjs/typeorm';
-/**
- * Core fields of entity
- *
- * @export
- * @abstract
- * @class Core
- */
-//TODO set as abstract class and inherit with all entities
-export abstract class CoreEntity {
+export abstract class BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

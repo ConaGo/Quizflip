@@ -13,6 +13,7 @@ declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  //TODO-production: adjust limit
   app.use(json({ limit: '50mb' }));
   //TODO-production: remove CORS
   app.enableCors({ credentials: true });

@@ -11,10 +11,11 @@ import { AuthType } from '../auth/dto/user.social.data';
 import { classToPlain, Exclude } from 'class-transformer';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { UserToQuestionStats } from '../question/entities/userToQuestionStats.entity';
+import { BaseEntity } from '../typeorm/base.entity';
 
 @Entity('user')
 @ObjectType({ description: 'Multiple choice and true/false Questions' })
-export class User {
+export class User extends BaseEntity {
   @ApiProperty({ example: 1, description: 'Entity-Unique Identifier' })
   @Field(() => Int, { description: 'Entity-Unique Identifier | example: 1' })
   @PrimaryGeneratedColumn()
@@ -65,6 +66,7 @@ export class User {
   public userToQuestionStats!: UserToQuestionStats;
 
   constructor(partial: Partial<User>) {
+    super();
     Object.assign(this, partial);
   }
 
