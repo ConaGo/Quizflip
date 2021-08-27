@@ -1,28 +1,15 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  JoinColumn,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { IsEmail, Length } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { classToPlain, Exclude, Expose } from 'class-transformer';
+import { shuffle, merge } from 'lodash';
 import { BaseEntity } from '../../typeorm/base.entity';
 import { UserToQuestionStats } from './userToQuestionStats.entity';
-import { User } from '../../user/user.entity';
 type QuestionType = 'boolean' | 'multiple';
 type QuestionDifficulty = 'easy' | 'medium' | 'hard';
-type QuestionTag =
-  | 'Sports'
-  | 'Entertainment'
-  | 'Animals'
-  | 'Geography'
-  | string;
-type QuestionSubTagEntertainment =
-  | 'Board Games'
-  | 'Video Games'
-  | 'Film'
-  | string;
+type QuestionTag = 'Sports' | 'Entertainment' | 'Animals' | 'Geography';
+type QuestionSubTagEntertainment = 'Board Games' | 'Video Games' | 'Film';
 type QuestionSubTag = QuestionSubTagEntertainment;
 type Language = 'english' | 'german';
 export {
@@ -37,70 +24,68 @@ export {
 @Entity('question')
 @ObjectType({ description: 'Multiple choice and true/false Questions' })
 export class Question extends BaseEntity {
-  @Field(() => Int, {
-    description: 'Unique Identifier | example: 1',
-  })
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Field({
     description: 'Type of the question | example: "boolean" ',
   })
-  @Column({ nullable: false })
+  @Column()
   type: QuestionType;
 
-  @Field(() => String, {
-    description: 'Category of the Question | example: "Sports" ',
+  @Field(() => [String], {
+    description: 'Main Tags ( no commas allowed ) | example: "Sports" ',
   })
-  @Column({ nullable: false })
-  category: string;
+  @Column({ type: 'simple-array', nullable: true })
+  tags: QuestionTag[];
 
   @Field(() => [String], {
-    nullable: true,
     description:
-      'Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
+      'Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
   })
-  @Column({ type: 'text', array: true, nullable: true })
-  tags?: string[];
+  @Column({ type: 'simple-array', nullable: true })
+  subTags?: QuestionSubTag[];
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   difficulty: QuestionDifficulty;
 
   @Field()
-  @Column({ nullable: false })
+  @Column()
   question: string;
 
-  @Field()
-  @Column({ nullable: false })
-  correctAnswer: string;
-
   @Field(() => [String])
+  @Exclude()
   @Column({
     type: 'text',
     array: true,
-    nullable: false,
+  })
+  correctAnswers: [string];
+
+  @Field(() => [String])
+  @Exclude()
+  @Column({
+    type: 'text',
+    array: true,
   })
   incorrectAnswers: string[];
 
   @Field()
-  @Column({ default: 'english', nullable: false })
+  @Column({ default: 'english' })
   language: Language;
 
-  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
-  @JoinColumn()
-  author: User;
+  @Field(() => [String])
+  @Expose()
+  //Returns an array with all possible answers in random order
+  get answers(): string[] {
+    return shuffle(merge(this.correctAnswers, this.incorrectAnswers));
+  }
 
-  //this column gets set automatically by typorm for the ManyToOne user relationship
-  //it is explicitly set in this entity to expose it for graphql-queries
-  @Field(() => Int, { nullable: true })
-  @Column({ nullable: true })
-  authorId: number;
-
-  //This many to Many relationships holds stats about how often the user interacted and answered a particular question
   @OneToMany(
     () => UserToQuestionStats,
-    (userToQuestionStats) => userToQuestionStats.user
+    (userToQuestionStats) => userToQuestionStats.question
   )
-  public userToQuestionStats!: UserToQuestionStats[];
+  userToQuestionStats: UserToQuestionStats;
+  //This constructor is necessary for the Exclude decorator
+  constructor(partial: Partial<Question>) {
+    super();
+    Object.assign(this, partial);
+  }
 }

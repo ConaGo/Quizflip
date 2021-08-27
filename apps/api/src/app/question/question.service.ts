@@ -6,7 +6,7 @@ import { UserService } from '../user/user.service';
 import { CreateQuestionInput } from './dto/create-question.input';
 import { UpdateQuestionInput } from './dto/update-question.input';
 import { Question } from './entities/question.entity';
-
+import { difference } from 'lodash';
 @Injectable()
 export class QuestionService {
   constructor(
@@ -61,12 +61,13 @@ export class QuestionService {
     return this.questionRepository.find();
   }
 
-  async check(id: number, answer: string): Promise<boolean> {
+  async check(id: number, answers: string[]): Promise<boolean> {
     const question = await this.questionRepository.findOne(id);
     if (!question) throw new NotFoundException();
-    else {
-      return question.correctAnswer === answer;
-    }
+    const sameLength = question.correctAnswers.length === answers.length;
+    const sameAnswers =
+      difference(answers, question.correctAnswers).length === 0;
+    return sameLength && sameAnswers;
   }
   findOne(id: number) {
     return this.questionRepository.findOne(id);

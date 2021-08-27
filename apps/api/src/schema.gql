@@ -10,19 +10,19 @@ type Question {
   """Type of the question | example: "boolean" """
   type: String!
 
-  """Category of the Question | example: "Sports" """
-  category: String!
+  """Main Tags ( no commas allowed ) | example: "Sports" """
+  tags: [String!]!
 
   """
-  Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
+  Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
   """
-  tags: [String!]
+  subTags: [String!]!
   difficulty: String!
   question: String!
-  correctAnswer: String!
+  correctAnswers: [String!]!
   incorrectAnswers: [String!]!
   language: String!
-  authorId: Int
+  answers: [String!]!
 }
 
 """Multiple choice and true/false Questions"""

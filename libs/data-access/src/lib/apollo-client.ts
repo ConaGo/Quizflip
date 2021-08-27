@@ -5,4 +5,5 @@ import { ApolloClient, InMemoryCache } from '@apollo/client';
 export const client = new ApolloClient({
   uri: process.env.NX_GRAPHQL_URI || 'http://localhost:3070/graphql',
   cache: new InMemoryCache(),
+  credentials: 'include',
 });

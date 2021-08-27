@@ -17,6 +17,7 @@ import { QuestionModule } from './question/question.module';
 import { UserToQuestionStats } from './question/entities/userToQuestionStats.entity';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { LoggingPlugin } from './graphql/logging.plugin';
+import { DriverQuestion } from './question/entities/driverQuestion';
 
 @Module({
   imports: [
@@ -53,7 +54,7 @@ import { LoggingPlugin } from './graphql/logging.plugin';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         //can be set explicitly or automatic
-        entities: [User, Question, UserToQuestionStats],
+        entities: [User, Question, DriverQuestion, UserToQuestionStats],
         //entities: [__dirname + '/../**/*.entity.ts'],
         synchronize: true,
       }),
