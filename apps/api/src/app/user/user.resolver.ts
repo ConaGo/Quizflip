@@ -11,7 +11,7 @@ import { UserService } from './user.service';
 import { QuestionService } from '../question/question.service';
 import { Question } from '../question/entities/question.entity';
 
-import { User } from '../user/user.entity';
+import { User } from '../user/entities/user.entity';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/graphQL-jwt-auth.guard';
 

@@ -1,15 +1,32 @@
 import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { classToPlain, Exclude, Expose } from 'class-transformer';
 import { shuffle, merge } from 'lodash';
 import { BaseEntity } from '../../typeorm/base.entity';
 import { UserToQuestionStats } from './userToQuestionStats.entity';
+import { User } from '../../user/entities/user.entity';
 type QuestionType = 'boolean' | 'multiple';
 type QuestionDifficulty = 'easy' | 'medium' | 'hard';
-type QuestionTag = 'Sports' | 'Entertainment' | 'Animals' | 'Geography';
-type QuestionSubTagEntertainment = 'Board Games' | 'Video Games' | 'Film';
+type QuestionTag =
+  | 'Sports'
+  | 'Entertainment'
+  | 'Animals'
+  | 'Geography'
+  | string;
+type QuestionSubTagEntertainment =
+  | 'Board Games'
+  | 'Video Games'
+  | 'Film'
+  | string;
 type QuestionSubTag = QuestionSubTagEntertainment;
 type Language = 'english' | 'german';
 export {
@@ -27,49 +44,48 @@ export class Question extends BaseEntity {
   @Field({
     description: 'Type of the question | example: "boolean" ',
   })
-  @Column()
+  @Column({ nullable: false })
   type: QuestionType;
 
-  @Field(() => [String], {
-    description: 'Main Tags ( no commas allowed ) | example: "Sports" ',
+  @Field(() => String, {
+    description: 'Category of the Question | example: "Sports" ',
   })
-  @Column({ type: 'simple-array', nullable: true })
-  tags: QuestionTag[];
+  @Column({ nullable: false })
+  category: string;
 
   @Field(() => [String], {
+    nullable: true,
     description:
-      'Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
+      'Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" ',
   })
-  @Column({ type: 'simple-array', nullable: true })
-  subTags?: QuestionSubTag[];
+  @Column({ type: 'text', array: true, nullable: true })
+  tags?: string[];
 
   @Field()
-  @Column()
+  @Column({ nullable: false })
   difficulty: QuestionDifficulty;
 
   @Field()
-  @Column()
+  @Column({ nullable: false })
   question: string;
 
   @Field(() => [String])
   @Exclude()
   @Column({
+    nullable: false,
     type: 'text',
     array: true,
   })
-  correctAnswers: [string];
+  correctAnswers: string[];
 
   @Field(() => [String])
   @Exclude()
   @Column({
+    nullable: false,
     type: 'text',
     array: true,
   })
   incorrectAnswers: string[];
-
-  @Field()
-  @Column({ default: 'english' })
-  language: Language;
 
   @Field(() => [String])
   @Expose()
@@ -78,10 +94,20 @@ export class Question extends BaseEntity {
     return shuffle(merge(this.correctAnswers, this.incorrectAnswers));
   }
 
-  @OneToMany(
-    () => UserToQuestionStats,
-    (userToQuestionStats) => userToQuestionStats.question
-  )
+  @Field()
+  @Column({ default: 'english', nullable: false })
+  language: Language;
+
+  @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn()
+  author: User;
+
+  //this column gets set automatically by typorm for the ManyToOne user relationship
+  //it is explicitly set in this entity to expose it for graphql-queries
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  authorId: number;
+
   userToQuestionStats: UserToQuestionStats;
   //This constructor is necessary for the Exclude decorator
   constructor(partial: Partial<Question>) {

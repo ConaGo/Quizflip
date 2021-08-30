@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import * as argon2 from 'argon2';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { SignupDto } from '../auth/dto/signup.dto';
 import SocialSignupData, { AuthType } from '../auth/dto/user.social.data';
 import { ServerErrorException } from '../exceptions/serverError.exception';

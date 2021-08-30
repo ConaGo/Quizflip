@@ -33,7 +33,7 @@ export class CreateQuestionDto {
   readonly tags?: string[];
   readonly difficulty: QuestionDifficulty;
   readonly question: string;
-  readonly correctAnswer: string;
+  readonly correctAnswers: string[];
   readonly incorrectAnswers: string[];
   readonly language: Language;
   readonly authorId: number;
@@ -66,8 +66,8 @@ export const createQuestionFormData: Joi.object<CreateQuestionDto> = Joi.object<
       .valid(...AQuestionDifficulty)
       .required(),
     question: Joi.string().required(),
-    correctAnswer: Joi.string().required(),
-    incorrectAnswers: Joi.array().items(Joi.string()),
+    correctAnswer: Joi.array().required().items(Joi.string()),
+    incorrectAnswers: Joi.array().required().items(Joi.string()),
     language: Joi.string()
       .valid(...ALanguage)
       .required(),

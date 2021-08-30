@@ -11,7 +11,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 
-import { User } from './user/user.entity';
+import { User } from './user/entities/user.entity';
 import { Question } from './question/entities/question.entity';
 import { QuestionModule } from './question/question.module';
 import { UserToQuestionStats } from './question/entities/userToQuestionStats.entity';
@@ -19,6 +19,7 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { LoggingPlugin } from './graphql/logging.plugin';
 import { DriverQuestion } from './question/entities/driverQuestion';
 
+import { ormconfig } from './typeorm/ormconfig';
 @Module({
   imports: [
     //Setup env variables validation
@@ -36,6 +37,12 @@ import { DriverQuestion } from './question/entities/driverQuestion';
         JWT_EXPIRATION_MINUTES: Joi.number().required(),
         JWT_REFRESH_SECRET: Joi.string().required(),
         JWT_REFRESH_EXPIRATION_MINUTES: Joi.number().required(),
+
+        GOOGLE_ID: Joi.string().required(),
+        GOOGLE_SECRET: Joi.string().required(),
+
+        GITHUB_ID: Joi.string().required(),
+        GITHUB_SECRET: Joi.string().required(),
       }),
     }),
     GraphQLModule.forRoot({
@@ -46,18 +53,7 @@ import { DriverQuestion } from './question/entities/driverQuestion';
     //TODO-PRODUCTION for production set synchronize to false
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        //can be set explicitly or automatic
-        entities: [User, Question, DriverQuestion, UserToQuestionStats],
-        //entities: [__dirname + '/../**/*.entity.ts'],
-        synchronize: true,
-      }),
+      useFactory: ormconfig,
     }),
     AuthModule,
     UserModule,

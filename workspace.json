@@ -65,6 +65,34 @@
             "jestConfig": "apps/api/jest.config.js",
             "passWithNoTests": true
           }
+        },
+        "drop-db": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "cwd": "apps/api/src",
+            "command": "ts-node --project=../tsconfig.app.json ../../../node_modules/typeorm/cli.js schema:drop"
+          }
+        },
+        "sync-db": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "cwd": "apps/api/src",
+            "command": "ts-node --project=../tsconfig.app.json ../../../node_modules/typeorm/cli.js schema:sync"
+          }
+        },
+        "seed-db": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "cwd": "apps/api/src",
+            "command": "ts-node --project=../tsconfig.app.json ../../../node_modules/typeorm-seeding/dist/cli.js seed"
+          }
+        },
+        "setup-db": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "cwd": "apps/api/src",
+            "command": "nx run api:drop-db && nx run api:sync-db && nx run api:seed-db"
+          }
         }
       }
     },

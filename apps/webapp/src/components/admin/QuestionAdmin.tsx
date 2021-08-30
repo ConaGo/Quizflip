@@ -30,7 +30,7 @@ export const QuestionAdmin = () => {
       tags: tags[1] ? [tags[1]] : [],
       difficulty: e.difficulty,
       question: e.question,
-      correctAnswer: e.correct_answer,
+      correctAnswers: [e.correct_answer],
       incorrectAnswers: e.incorrect_answers,
       language: 'english',
       authorId: 2,

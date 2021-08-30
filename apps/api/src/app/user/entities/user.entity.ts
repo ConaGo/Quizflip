@@ -7,20 +7,15 @@ import {
 } from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { AuthType } from '../auth/dto/user.social.data';
+import { AuthType } from '../../auth/dto/user.social.data';
 import { classToPlain, Exclude } from 'class-transformer';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { UserToQuestionStats } from '../question/entities/userToQuestionStats.entity';
-import { BaseEntity } from '../typeorm/base.entity';
+import { UserToQuestionStats } from '../../question/entities/userToQuestionStats.entity';
+import { BaseEntity } from '../../typeorm/base.entity';
 
 @Entity('user')
 @ObjectType({ description: 'Multiple choice and true/false Questions' })
 export class User extends BaseEntity {
-  @ApiProperty({ example: 1, description: 'Entity-Unique Identifier' })
-  @Field(() => Int, { description: 'Entity-Unique Identifier | example: 1' })
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @ApiProperty({
     example: 'name@provider.com',
     description: 'Unique user-email',

@@ -5,7 +5,7 @@ import * as argon2 from 'argon2';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from '@libs/shared-types';
 import SocialSignupData, { SocialType } from './dto/user.social.data';
-import { User } from '../user/user.entity';
+import { User } from '../user/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

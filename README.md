@@ -1,27 +1,57 @@
 # LearnitMonorepo
 
-## The api
+### The api
+
+## nx commands
+
+To use these command install ts-node globally
+
+```shell
+npm install -g ts-node
+```
+
+Commands
+
+```shell
+#drop database
+nx run api:drop-db
+#synchronize entity-definitions into db
+nx run api:sync-db
+#seed database with data defined in *.entity.factory.ts files
+#and seeders defined in *.seed.ts files
+nx run api:seed-db
+
+```
+
+## setup
 
 # Postgres notes
 
 1. Install postgres
-2. Login as postgres user 
+2. Login as postgres user
+
 ```shell
 sudo su - postgres
 ```
+
 3. Login to psql shell
+
 ```shell
 psql
 ```
+
 4. Create a new user with password
+
 ```shell
 create user bob with superuser password 'admin';
 ```
-5. Install pgadmin4 as described [here](https://www.pgadmin.org/download/pgadmin-4-apt/) 
+
+5. Install pgadmin4 as described [here](https://www.pgadmin.org/download/pgadmin-4-apt/)
 6. Open pgadmin4
 7. Click on 'Add New Server'
 8. Give the server an arbitrary name
 9. On connection tab enter the following
+
 ```
 Hostname/ Address : localhost
 Port : 5432
@@ -29,8 +59,9 @@ Maintenance database : postgres (always)
 Username :  **bob** (the username youve chosen at 4.)
 Password : admin (or any password you chose at 4.)
 ```
+
 10. You are done. If it doesnt work yet please refer to the comprehensive answer to the following stackoverflow question
-https://stackoverflow.com/questions/53267642/create-new-local-server-in-pgadmin
+    https://stackoverflow.com/questions/53267642/create-new-local-server-in-pgadmin
 
 ## The webapp
 

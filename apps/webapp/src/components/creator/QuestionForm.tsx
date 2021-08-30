@@ -68,16 +68,22 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
     setType(newType);
     if (newType === 'multiple') {
       console.log('first');
-      setDto({ ...dto, incorrectAnswers: ['', '', ''], correctAnswer: '' });
+      setDto({ ...dto, incorrectAnswers: ['', '', ''], correctAnswers: [''] });
     } else if (newType === 'boolean') {
       console.log('second');
-      if (dto.correctAnswer !== 'True' && dto.correctAnswer !== 'False') {
-        handlers.correctAnswer('True');
+      if (
+        dto.correctAnswers[0] !== 'True' &&
+        dto.correctAnswers[0] !== 'False'
+      ) {
+        handlers.correctAnswers(['True']);
       }
-      if (dto.correctAnswer === 'True' && dto.incorrectAnswers[0] !== 'False')
+      if (
+        dto.correctAnswers[0] === 'True' &&
+        dto.incorrectAnswers[0] !== 'False'
+      )
         handlers.incorrectAnswers(['False']);
       else if (
-        dto.correctAnswer === 'False' &&
+        dto.correctAnswers[0] === 'False' &&
         dto.incorrectAnswers[0] !== 'True'
       )
         handlers.incorrectAnswers(['True']);
@@ -89,7 +95,7 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
     tags: [],
     difficulty: 'medium',
     question: '',
-    correctAnswer: '',
+    correctAnswers: [''],
     incorrectAnswers: ['', '', ''],
     language: 'english',
     authorId: 2,
@@ -208,10 +214,10 @@ const CorrectAnswerInput = ({ dto, handlers, errors }: InputProps) => {
   return (
     <TextField
       label="Correct answer"
-      value={dto.correctAnswer}
-      onChange={(e) => handlers.correctAnswer(e.target.value)}
-      error={!!errors.correctAnswer}
-      helperText={errors.correctAnswer}
+      value={dto.correctAnswers[0]}
+      onChange={(e) => handlers.correctAnswers([e.target.value])}
+      error={!!errors.correctAnswers}
+      helperText={errors.correctAnswers}
     ></TextField>
   );
 };
@@ -227,7 +233,7 @@ const IncorrectAnswerInput = ({
       label={`Incorrect answer no. ${number}`}
       value={dto.incorrectAnswers[number]}
       onChange={(e) => {
-        console.log(dto.correctAnswer);
+        console.log(dto.correctAnswers);
         const newIncorrectAnswers = dto.incorrectAnswers.slice();
         newIncorrectAnswers[number] = e.target.value;
         handlers.incorrectAnswers(newIncorrectAnswers);
@@ -241,18 +247,18 @@ const BooleanInput = ({ setDto, dto }: InputProps) => {
       row
       aria-label="selection true/false"
       name="selection-true-false"
-      value={dto.correctAnswer}
+      value={dto.correctAnswers[0]}
       onChange={(event) => {
         if (event.target.value === 'True') {
           setDto({
             ...dto,
-            correctAnswer: 'True',
+            correctAnswers: ['True'],
             incorrectAnswers: ['False'],
           });
         } else {
           setDto({
             ...dto,
-            correctAnswer: 'False',
+            correctAnswers: ['False'],
             incorrectAnswers: ['True'],
           });
         }

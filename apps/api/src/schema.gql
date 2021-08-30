@@ -10,24 +10,25 @@ type Question {
   """Type of the question | example: "boolean" """
   type: String!
 
-  """Main Tags ( no commas allowed ) | example: "Sports" """
-  tags: [String!]!
+  """Category of the Question | example: "Sports" """
+  category: String!
 
   """
-  Optional subtags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
+  Optional tags that can be more granular than tags and correspond to a particular tag ( no commas allowed ) | example: "Board Games" 
   """
-  subTags: [String!]!
+  tags: [String!]
   difficulty: String!
   question: String!
   correctAnswers: [String!]!
   incorrectAnswers: [String!]!
-  language: String!
   answers: [String!]!
+  language: String!
+  authorId: Int
 }
 
 """Multiple choice and true/false Questions"""
 type User {
-  """Entity-Unique Identifier | example: 1"""
+  """Unique Identifier | example: 1"""
   id: Int!
 
   """Unique e-mail | example: nest@js.com"""
