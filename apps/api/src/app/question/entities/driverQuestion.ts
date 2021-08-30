@@ -8,10 +8,10 @@ export class DriverQuestion extends Question {
   @Field(() => String, {
     description: 'type of the question | example: image | video | simple ',
   })
-  @Column()
+  @Column({ nullable: true })
   driverQuestionType: DriveQuestionType;
 
   @Field(() => String, { description: 'path to the static file' })
-  @Column()
+  @Column({ nullable: true })
   mediaPath: string;
 }

@@ -66,6 +66,12 @@
             "passWithNoTests": true
           }
         },
+        "test-watch": {
+          "builder": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "yarn affected:test --all --parallel --maxParallel 10 --watch"
+          }
+        },
         "drop-db": {
           "builder": "@nrwl/workspace:run-commands",
           "options": {

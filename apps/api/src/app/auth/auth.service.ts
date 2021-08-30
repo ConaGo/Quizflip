@@ -25,22 +25,15 @@ export class AuthService {
     return null;
   }
 
-  //DEPRECATED
   async signup(signupDto: SignupDto) {
-    //REMOVE
-    await sleep(1999);
-    const user = await this.userService.create(signupDto);
-    return user ? user : null;
+    return await this.userService.create(signupDto);
   }
 
-  //DEPRECATED
   async login(loginDto: LoginDto) {
-    //REMOVE
-    await sleep(1999);
     const user = await this.userService.findOneNameOrEmail(
       loginDto.nameOrEmail
     );
-    return user ? user : null;
+    return user;
   }
 
   async socialLoginOrSignup(authType: SocialType, user: any) {
@@ -53,7 +46,6 @@ export class AuthService {
     let _user = await this.userService.findSocial(authType, user.socialId);
     if (!_user) {
       const socialSignupData = new SocialSignupData(authType, user);
-      console.log(socialSignupData);
       _user = await this.userService.createSocial(socialSignupData);
     }
     return _user;

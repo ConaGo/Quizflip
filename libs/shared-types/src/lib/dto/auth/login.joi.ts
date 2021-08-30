@@ -1,7 +1,8 @@
 import Joi from '../../joi.extensions';
 import { LoginDto } from './login.dto';
+import * as BaseJoi from 'joi';
 
-export const loginFormData = Joi.object<LoginDto>({
+export const loginFormData = BaseJoi.object<LoginDto>({
   nameOrEmail: Joi.string().required().messages({
     'string.empty': 'please provide a username or e-mail',
   }),

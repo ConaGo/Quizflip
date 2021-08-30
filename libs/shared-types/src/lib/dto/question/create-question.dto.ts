@@ -1,4 +1,5 @@
 import Joi from '../../joi.extensions';
+import * as BaseJoi from 'joi';
 
 export type QuestionType = 'boolean' | 'multiple';
 export const AQuestionType = ['boolean', 'multiple'];
@@ -52,25 +53,23 @@ export const tagsValidator = Joi.array()
     'string.base': 'please provide a tag',
     'string.empty': 'please provide a tag',
   });
-export const createQuestionFormData: Joi.object<CreateQuestionDto> = Joi.object<CreateQuestionDto>(
-  {
-    type: Joi.string()
-      .valid(...AQuestionType)
-      .required(),
-    category: Joi.string().required().messages({
-      'string.base': 'please provide a category',
-      'string.empty': 'please provide a category',
-    }),
-    tags: tagsValidator,
-    difficulty: Joi.string()
-      .valid(...AQuestionDifficulty)
-      .required(),
-    question: Joi.string().required(),
-    correctAnswer: Joi.array().required().items(Joi.string()),
-    incorrectAnswers: Joi.array().required().items(Joi.string()),
-    language: Joi.string()
-      .valid(...ALanguage)
-      .required(),
-    authorId: Joi.number().required(),
-  }
-);
+export const createQuestionFormData = BaseJoi.object<CreateQuestionDto>({
+  type: Joi.string()
+    .valid(...AQuestionType)
+    .required(),
+  category: Joi.string().required().messages({
+    'string.base': 'please provide a category',
+    'string.empty': 'please provide a category',
+  }),
+  tags: tagsValidator,
+  difficulty: Joi.string()
+    .valid(...AQuestionDifficulty)
+    .required(),
+  question: Joi.string().required(),
+  correctAnswers: Joi.array().required().items(Joi.string()),
+  incorrectAnswers: Joi.array().required().items(Joi.string()),
+  language: Joi.string()
+    .valid(...ALanguage)
+    .required(),
+  authorId: Joi.number().required(),
+});

@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { AppModule } from '../app.module';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from '../user/user.entity';
+import { User } from '../user/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 
@@ -33,6 +33,7 @@ describe('AuthService', () => {
         }
       }),
       createSocial: jest.fn(() => userEntityMock),
+      findSocial: jest.fn(),
     };
     const jwtServiceMock = {
       sign: jest.fn(() => 'imAnAccessToken'),
@@ -47,7 +48,7 @@ describe('AuthService', () => {
           signOptions: { expiresIn: '60s' },
         }),
       ],
-      providers: [AuthService, JwtService],
+      providers: [AuthService, JwtService, UserService],
     })
       .overrideProvider(UserService)
       .useValue(userServiceMock)
@@ -77,24 +78,10 @@ describe('AuthService', () => {
       expect(userService.create).toBeCalledWith(signupUserMock);
     });
   });
-
   const loginUserMock: LoginDto = {
     nameOrEmail: 'mutoe@foxmail.com',
     password: 'TU246zert*',
   };
-  describe('login', () => {
-    it('should get the user given a LoginDto and sign a jwt with name and id', async () => {
-      await service.login(loginUserMock);
-
-      expect(userService.findOneNameOrEmail).toBeCalledWith(
-        loginUserMock.nameOrEmail
-      );
-      expect(jwtService.sign).toBeCalledWith({
-        name: userEntityMock.name,
-        sub: userEntityMock.id,
-      });
-    });
-  });
   describe('validateUser', () => {
     it('should get the user given a LoginDto, verify the password and return a stripped version of the user', async () => {
       const strippedUser = await service.validateUser(
@@ -112,18 +99,24 @@ describe('AuthService', () => {
     const googleDataMock = {
       firstName: 'hans',
       email: 'hans@hansi.de',
+      socialId: 'socialid',
     };
     it('should call findOneNameOrEmail', async () => {
       await service.socialLoginOrSignup('google', googleDataMock);
-      expect(userService.findOneNameOrEmail).toHaveBeenCalledWith(
-        googleDataMock.email
+      expect(userService.findSocial).toHaveBeenCalledWith(
+        'google',
+        googleDataMock.socialId
       );
     });
     it('should call createSocial if findOneNameOrEmail does not find the user', async () => {
+      jest.spyOn(userService, 'findSocial').mockResolvedValue(null);
       await service.socialLoginOrSignup('google', googleDataMock);
       expect(userService.createSocial).toHaveBeenCalledTimes(2);
     });
     it('should not call createSocial if findOneNameOrEmail does find the user', async () => {
+      jest
+        .spyOn(userService, 'findSocial')
+        .mockResolvedValue({ name: 'hans', email: 'hans@hansi.de' } as User);
       await service.socialLoginOrSignup('google', userEntityMock);
       expect(userService.createSocial).toHaveBeenCalledTimes(2);
     });
