@@ -9,11 +9,13 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 describe('AuthService', () => {
   let service: AuthService;
   let userService: UserService;
-  let jwtService: JwtService;
+  //let jwtService: JwtService;
   const userEntityMock = {
     id: 2,
     email: 'mutoe@foxmail.com',
@@ -43,9 +45,15 @@ describe('AuthService', () => {
         AppModule,
         UserModule,
         AuthModule,
-        JwtModule.register({
-          secret: `${process.env.JWT_SECRET}`,
-          signOptions: { expiresIn: '60s' },
+        JwtModule.registerAsync({
+          imports: [ConfigModule],
+          inject: [ConfigService],
+          useFactory: async (configService: ConfigService) => ({
+            secret: configService.get('JWT_SECRET'),
+            signOptions: {
+              expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`,
+            },
+          }),
         }),
       ],
       providers: [AuthService, JwtService, UserService],
@@ -61,7 +69,7 @@ describe('AuthService', () => {
 
     service = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
-    jwtService = module.get<JwtService>(JwtService);
+    //jwtService = module.get<JwtService>(JwtService);
   });
   const signupUserMock: SignupDto = {
     email: 'mutoe@foxmail.com',
@@ -120,12 +128,15 @@ describe('AuthService', () => {
       await service.socialLoginOrSignup('google', userEntityMock);
       expect(userService.createSocial).toHaveBeenCalledTimes(2);
     });
-    it('should return an access_token', async () => {
-      const response = await service.socialLoginOrSignup(
-        'google',
-        userEntityMock
+    it('should throw if the authguard does not provide a user', async () => {
+      expect(
+        async () => await service.socialLoginOrSignup('google', null)
+      ).rejects.toThrow(
+        new HttpException(
+          'Authentication was refused by provider',
+          HttpStatus.UNAUTHORIZED
+        )
       );
-      expect(response).toBeDefined();
     });
   });
 });

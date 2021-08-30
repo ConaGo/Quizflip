@@ -10,7 +10,10 @@ To use these command install ts-node globally
 npm install -g ts-node
 ```
 
-Commands
+# Commands
+
+-Database
+logs can be found in root/ormlogs.log
 
 ```shell
 #drop database
@@ -20,6 +23,18 @@ nx run api:sync-db
 #seed database with data defined in *.entity.factory.ts files
 #and seeders defined in *.seed.ts files
 nx run api:seed-db
+
+```
+
+-Test
+
+```shell
+#run all test suites in watch mode
+nx run api:test-watch
+#run test of specific project
+nx test api
+nx test webapp
+#etc..
 
 ```
 

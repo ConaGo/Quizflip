@@ -1,8 +1,5 @@
 //This configuration is necessary for typeorm cli commands
-
-//nx run api:drop-db
-//runs
-//schema:drop
+//Todo merge with other config at ./app/Typeorm/ormconfig
 const config = {
   type: 'postgres',
   host: process.env.DB_HOST,

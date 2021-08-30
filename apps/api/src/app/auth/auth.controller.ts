@@ -48,14 +48,6 @@ export class AuthController {
   @ApiOperation({
     summary: 'Authentication with password and email/username',
   })
-  @ApiOkResponse({
-    status: 200,
-    schema: {
-      example: {
-        access_token: 'ey....',
-      },
-    },
-  })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res) {
     //res.setHeader('Access-Control-Allow-Credentials', true);
@@ -84,13 +76,6 @@ export class AuthController {
   @Post('signup')
   @ApiOperation({
     summary: 'Signup with password, email and username',
-  })
-  @ApiCreatedResponse({
-    schema: {
-      example: {
-        access_token: 'ey....',
-      },
-    },
   })
   @ApiBadRequestResponse({
     schema: {

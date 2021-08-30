@@ -7,11 +7,14 @@ import { SignupDto } from '../auth/dto/signup.dto';
 import SocialSignupData, { AuthType } from '../auth/dto/user.social.data';
 import { ServerErrorException } from '../exceptions/serverError.exception';
 import { PostgresErrorCode } from 'pg';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService
   ) {}
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -86,18 +89,40 @@ export class UserService {
   }
   async addRefreshToken(refreshToken: string, userId: number) {
     const user = await this.findOneById(userId);
-    const newRefreshToken = await argon2.hash(refreshToken);
+    const date = new Date();
+    //concat with date to save expiration time
+    const newRefreshToken = (await argon2.hash(refreshToken)) + date.toString();
     await this.userRepository.update(userId, {
       refreshTokenHashes: [...user.refreshTokenHashes, newRefreshToken],
     });
   }
+
+  //checks if the given token is saved in the user object
+  //also checks if tokens of the user are not expired and updates the hasharray on the user
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
     const user = await this.findOneById(userId);
+    const newHashes = [];
+    let returnValue = null;
     for (let i = user.refreshTokenHashes.length - 1; i >= 0; i--) {
-      if (await argon2.verify(user.refreshTokenHashes[i], refreshToken))
-        return user;
+      const token = user.refreshTokenHashes[i];
+      if (!this.isTokenExpired(token)) {
+        newHashes.push(token);
+        if (await argon2.verify(token, refreshToken)) returnValue = user;
+      }
     }
+    await this.userRepository.update(user, { refreshTokenHashes: newHashes });
+    return returnValue;
   }
+  private isTokenExpired = (token: string) => {
+    const hash = token.substring(0, argon2.defaults.hashLength);
+    const date = Date.parse(token.substring(argon2.defaults.hashLength));
+    const now = new Date();
+    console.log(hash, date);
+    return (
+      now.getTime() - date >
+      this.configService.get('JWT_REFRESH_EXPIRATION_MINUTES') * 1000 * 60
+    );
+  };
   async removeRefreshToken(refreshToken: string, user: User) {
     const oldRefreshToken = await argon2.hash(refreshToken);
     const newRefreshTokenHashes = user.refreshTokenHashes.filter(
