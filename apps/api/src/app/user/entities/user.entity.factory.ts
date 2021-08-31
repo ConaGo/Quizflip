@@ -4,20 +4,25 @@ import { Factory, Seeder, define } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import * as argon2 from 'argon2';
 
-define(User, (faker: typeof Faker, context: { authType }) => {
+define(User, (faker: typeof Faker, context: { authType; role }) => {
   let userData;
+  const authType = context.authType;
+  const role = context.role ? context.role : 'admin';
   const name = faker.name.findName();
-  if (context.authType === 'local') {
-    userData = {
-      email: Faker.internet.email(name),
-      name: faker.internet.userName(name),
-      passwordHash: argon2.hash(faker.internet.password()),
-    };
+  if (authType === 'local') {
+    if (role === 'admin')
+      userData = {
+        email: Faker.internet.email(name),
+        name: faker.internet.userName(name),
+        passwordHash: argon2.hash(faker.internet.password()),
+        authType: authType,
+        role: role,
+      };
   } else {
     userData = {
       email: faker.internet.email(name),
       name: faker.internet.userName(name),
-      authType: context.authType,
+      authType: authType,
       socialId: Faker.datatype.uuid(),
     };
   }

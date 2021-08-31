@@ -61,7 +61,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('log-out')
+  @Post('logout')
   @HttpCode(200)
   async logOut(
     @Req() req: ReqWithUser,

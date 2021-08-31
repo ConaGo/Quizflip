@@ -1,5 +1,3 @@
-import * as fs from 'fs';
-
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import { Question } from './question.entity';

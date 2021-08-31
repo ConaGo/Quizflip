@@ -13,6 +13,8 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { UserToQuestionStats } from '../../question/entities/userToQuestionStats.entity';
 import { BaseEntity } from '../../typeorm/base.entity';
 
+export type Role = 'user' | 'creator' | 'moderator' | 'admin';
+
 @Entity('user')
 @ObjectType({ description: 'Multiple choice and true/false Questions' })
 export class User extends BaseEntity {
@@ -53,6 +55,9 @@ export class User extends BaseEntity {
   @Exclude()
   @Column({ default: '' })
   socialId: string;
+
+  @Column({ default: 'user' })
+  role: Role;
 
   @OneToMany(
     () => UserToQuestionStats,
