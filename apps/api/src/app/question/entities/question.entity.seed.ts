@@ -21,7 +21,7 @@ const formatQuestion = (e, id) => {
   };
   return ret;
 };
-export default class CreateUsers implements Seeder {
+export default class CreateQuestion implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<any> {
     const data = JSON.parse(
       fs.readFileSync('./app/question/entities/question.json').toString()

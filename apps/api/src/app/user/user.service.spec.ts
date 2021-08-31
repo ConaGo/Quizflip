@@ -78,7 +78,7 @@ describe('UserService', () => {
     name: Faker.internet.userName(),
     email: Faker.internet.email(),
     authType: 'google',
-    socialId: 'hsadkjsadk',
+    socialId: Faker.internet.password(),
   };
   it('should be defined', () => {
     expect(service).toBeDefined();

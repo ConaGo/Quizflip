@@ -4,6 +4,12 @@
 
 ## nx commands
 
+Starting the api
+
+```shell
+nx run api:serve
+```
+
 To use these command install ts-node globally
 
 ```shell
@@ -23,6 +29,8 @@ nx run api:sync-db
 #seed database with data defined in *.entity.factory.ts files
 #and seeders defined in *.seed.ts files
 nx run api:seed-db
+#run all three command above
+nx run api:setup-db
 
 ```
 
