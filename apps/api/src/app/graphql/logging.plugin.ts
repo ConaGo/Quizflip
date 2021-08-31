@@ -6,7 +6,7 @@ import {
   GraphQLRequestContext,
 } from 'apollo-server-plugin-base';
 
-//import this plugin in the providers array of the module where your resolver lives
+//import this plugin in the providers array of the module where the resolver lives
 @Plugin()
 export class LoggingPlugin implements ApolloServerPlugin {
   requestDidStart(): GraphQLRequestListener {

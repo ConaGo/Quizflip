@@ -1,9 +1,10 @@
 import { ConfigService } from '@nestjs/config';
 import { ConnectionOptions } from 'typeorm';
-import { DriverQuestion } from '../question/entities/driverQuestion';
+import { DriverQuestion } from '../question/entities/driverQuestion.entity';
 import { Question } from '../question/entities/question.entity';
 import { UserToQuestionStats } from '../question/entities/userToQuestionStats.entity';
 import { User } from '../user/entities/user.entity';
+//import {User UserToQuestionStats, Question, DriverQuestion} from '../'
 
 export const ormconfig: (configService: ConfigService) => ConnectionOptions = (
   configService
