@@ -60,7 +60,7 @@ export class QuestionService {
     return questions;
   }
 
-  findAll() {
+  findAll(): Promise<Question[]> {
     return this.questionRepo.find();
   }
 
@@ -72,7 +72,8 @@ export class QuestionService {
       difference(answers, question.correctAnswers).length === 0;
     return sameLength && sameAnswers;
   }
-  findOne(id: number) {
+  async findOne(id: number): Promise<Question> {
+    console.log(await this.questionRepo.findOne(id));
     return this.questionRepo.findOne(id);
   }
 
@@ -93,6 +94,7 @@ export class QuestionService {
     });
     return `done deleting ${questions.length} questions`;
   }
+
   async getRandomBatch(count: number): Promise<Question[]> {
     //Documentation on performantly getting a truly random batch
     //https://www.2ndquadrant.com/en/blog/tablesample-and-other-methods-for-getting-random-tuples/
@@ -101,12 +103,10 @@ export class QuestionService {
     /* await this.questionRepo.query(
       'CREATE EXTENSION tsm_system_rows'
     ); */
-    const res = await this.questionRepo.query(
+    return this.questionRepo.query(
       `SELECT * FROM question TABLESAMPLE SYSTEM_ROWS($1)`,
       [count]
     );
-    console.log(res);
-    return res;
   }
 
   async getFreshRandomBatch(count: number, id: number): Promise<Question[]> {

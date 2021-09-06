@@ -69,7 +69,7 @@ const trans = (r: number, s: number) =>
 
 const AnimatedPaper = animated(Paper);
 interface QuestionCardProps {
-  questions: CreateQuestionDto[];
+  questions: any;
 }
 const QuestionCards = ({ questions }: QuestionCardProps) => {
   const classes = useStyles();
@@ -99,10 +99,14 @@ const QuestionCards = ({ questions }: QuestionCardProps) => {
             <Typography variant="h4">
               {unescape(questions[i].question)}
             </Typography>
-            <Button>{questions[i].correctAnswer}</Button>
-            <Button>{questions[i].incorrectAnswers[0]}</Button>
-            <Button>{questions[i].incorrectAnswers[1]}</Button>
-            <Button>{questions[i].incorrectAnswers[2]}</Button>
+            <Button>{questions[i].correctAnswers}</Button>
+            <Button>{questions[i].incorrectAnswers}</Button>
+            <Button>{questions[i].incorrectAnswers}</Button>
+            <Button>{questions[i].incorrectAnswers}</Button>
+            <Button>{questions[i].answers[1]}</Button>
+            <Button>{questions[i].answers[2]}</Button>
+            <Button>{questions[i].answers[3]}</Button>
+            <Button>{questions[i].answers[4]}</Button>
             <div className={classes.card}></div>
           </AnimatedPaper>
         </animated.div>

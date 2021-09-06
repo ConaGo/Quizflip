@@ -35,8 +35,7 @@ export const GET_RANDOM_QUESTIONS = gql`
       category
       tags
       question
-      correctAnswer
-      incorrectAnswers
+      answers
     }
   }
 `;

@@ -13,6 +13,10 @@ import { CreateQuestionInput } from './dto/create-question.input';
 import { UpdateQuestionInput } from './dto/update-question.input';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
+import { merge, shuffle } from 'lodash';
+import { UseGuards } from '@nestjs/common';
+import { GqlAuthGuard } from '../auth/guards/graphQL-jwt-auth.guard';
+import { CurrentUser } from '../decorators/graphQL-GetUser';
 
 @Resolver(() => Question)
 export class QuestionResolver {
@@ -20,10 +24,22 @@ export class QuestionResolver {
     private readonly questionService: QuestionService,
     private readonly userService: UserService
   ) {}
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @ResolveField('answers', (_type) => [String])
+  getAnswers(@Parent() question: Question): string[] {
+    return shuffle(merge(question.correctAnswers, question.incorrectAnswers));
+  }
   @Query(() => [Question], { name: 'questions' })
   findAll() {
     return this.questionService.findAll();
+  }
+
+  @Query(() => Boolean, { name: 'answerQuestion' })
+  answerQuestion(
+    @Args('id', { type: () => Int }) id: number,
+    @Args('answers', { type: () => [String] }) answers: string[]
+  ) {
+    return this.questionService.check(id, answers);
   }
 
   @Query(() => Question, { name: 'question' })
@@ -35,9 +51,13 @@ export class QuestionResolver {
   findAllCategories() {
     return this.questionService.findAllCategories();
   }
-
+  @UseGuards(GqlAuthGuard)
   @Query(() => [Question], { name: 'randomQuestions', nullable: true })
-  getRandomQuestions(@Args('count', { type: () => Int }) count: number) {
+  getRandomQuestions(
+    @Args('count', { type: () => Int }) count: number,
+    @CurrentUser() user: User
+  ) {
+    console.log(user.id);
     return this.questionService.getRandomBatch(count);
   }
 

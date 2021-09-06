@@ -1,5 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+#auto generated schema file
+/apps/api/src/schema.gql
+
 #Driver Question Data
 /apps/api/src/app/question/entities/driverquestion.data/*
 

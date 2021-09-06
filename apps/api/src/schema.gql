@@ -19,11 +19,10 @@ type Question {
   tags: [String!]
   difficulty: String!
   question: String!
-  correctAnswers: [String!]!
-  incorrectAnswers: [String!]!
-  answers: [String!]!
   language: String!
+  author: User!
   authorId: Int
+  answers: [String!]!
 }
 
 """Multiple choice and true/false Questions"""
@@ -40,6 +39,7 @@ type Query {
   users: [User!]!
   user(id: Int!): User!
   questions: [Question!]!
+  answerQuestion(answers: [String!]!, id: Int!): Boolean!
   question(id: Int!): Question!
   categories: [String!]
   randomQuestions(count: Int!): [Question!]

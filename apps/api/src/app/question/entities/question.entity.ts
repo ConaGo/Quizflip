@@ -69,7 +69,6 @@ export class Question extends BaseEntity {
   @Column({ nullable: false })
   question: string;
 
-  @Field(() => [String])
   @Exclude()
   @Column({
     nullable: false,
@@ -78,7 +77,6 @@ export class Question extends BaseEntity {
   })
   correctAnswers: string[];
 
-  @Field(() => [String])
   @Exclude()
   @Column({
     nullable: false,
@@ -87,7 +85,6 @@ export class Question extends BaseEntity {
   })
   incorrectAnswers: string[];
 
-  @Field(() => [String])
   @Expose()
   //Returns an array with all possible answers in random order
   get answers(): string[] {
@@ -98,6 +95,8 @@ export class Question extends BaseEntity {
   @Column({ default: 'english', nullable: false })
   language: Language;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @Field((_type) => User)
   @ManyToOne(() => User, { onDelete: 'SET NULL', nullable: true })
   @JoinColumn()
   author: User;
@@ -108,7 +107,10 @@ export class Question extends BaseEntity {
   @Column({ nullable: true })
   authorId: number;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  //@Field((_type) => UserToQuestionStats)
   userToQuestionStats: UserToQuestionStats;
+
   //This constructor is necessary for the Exclude decorator
   constructor(partial: Partial<Question>) {
     super();

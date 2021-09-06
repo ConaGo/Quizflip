@@ -1,16 +1,29 @@
-import { User } from './user.entity';
+import { Role, User } from './user.entity';
 import * as Faker from 'faker';
 import { Factory, Seeder, define } from 'typeorm-seeding';
 import { Connection } from 'typeorm';
 import * as argon2 from 'argon2';
-
-define(User, (faker: typeof Faker, context: { authType; role }) => {
+import { AuthType } from '../../auth/dto/user.social.data';
+interface IUserContext {
+  authType: AuthType;
+  role: Role;
+  password: string;
+  email: string;
+}
+define(User, (faker: typeof Faker, context: IUserContext) => {
+  const { authType, role, password, email } = context;
   let userData;
-  const authType = context.authType;
-  const role = context.role ? context.role : 'admin';
   const name = faker.name.findName();
   if (authType === 'local') {
     if (role === 'admin')
+      userData = {
+        email: email,
+        name: faker.internet.userName(name),
+        passwordHash: argon2.hash(password),
+        authType: authType,
+        role: role,
+      };
+    else {
       userData = {
         email: Faker.internet.email(name),
         name: faker.internet.userName(name),
@@ -18,6 +31,7 @@ define(User, (faker: typeof Faker, context: { authType; role }) => {
         authType: authType,
         role: role,
       };
+    }
   } else {
     userData = {
       email: faker.internet.email(name),

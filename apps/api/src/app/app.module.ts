@@ -11,13 +11,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 
-import { User } from './user/entities/user.entity';
-import { Question } from './question/entities/question.entity';
 import { QuestionModule } from './question/question.module';
 import { UserToQuestionStats } from './question/entities/userToQuestionStats.entity';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { LoggingPlugin } from './graphql/logging.plugin';
-import { DriverQuestion } from './question/entities/driverQuestion';
 
 import { ormconfig } from './typeorm/ormconfig';
 @Module({
