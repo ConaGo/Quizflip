@@ -10,6 +10,7 @@ import {
   Res,
   HttpCode,
   UsePipes,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -49,15 +50,15 @@ export class AuthController {
     summary: 'Authentication with password and email/username',
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res) {
-    //res.setHeader('Access-Control-Allow-Credentials', true);
+  async login(@Req() req: ReqWithUser, @Res({ passthrough: true }) res) {
     const user = await this.userService.findOneNameOrEmail(
-      loginDto.nameOrEmail
+      req.body.nameOrEmail
     );
     //Set jwt
     res.cookie(...(await this.authService.getJwtCookie(user)));
     //Set RefreshToken and add it the User
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -101,7 +102,6 @@ export class AuthController {
     @Req() req: ReqWithUser,
     @Res({ passthrough: true }) res: Response
   ) {
-    //res.setHeader('Access-Control-Allow-Credentials', true);
     const user = await this.authService.socialLoginOrSignup('google', req.user);
     //Set jwt
     res.cookie(...(await this.authService.getJwtCookie(user)));

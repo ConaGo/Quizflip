@@ -78,6 +78,7 @@ export class AuthService {
       httpOnly: true,
       path: '/',
     };
+    console.log(user.id);
     await this.userService.addRefreshToken(token, user.id);
     return [name, token, options];
   }

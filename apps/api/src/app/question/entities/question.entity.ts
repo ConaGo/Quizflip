@@ -113,7 +113,7 @@ export class Question extends BaseEntity {
 
   //This constructor is necessary for the Exclude decorator
   constructor(partial: Partial<Question>) {
-    super();
+    super({});
     Object.assign(this, partial);
   }
 }

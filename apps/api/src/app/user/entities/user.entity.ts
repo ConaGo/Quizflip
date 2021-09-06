@@ -66,7 +66,7 @@ export class User extends BaseEntity {
   public userToQuestionStats!: UserToQuestionStats;
 
   constructor(partial: Partial<User>) {
-    super();
+    super({});
     Object.assign(this, partial);
   }
 

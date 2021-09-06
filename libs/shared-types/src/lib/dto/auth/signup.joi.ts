@@ -1,4 +1,5 @@
 import Joi from '../../joi.extensions';
+import { passwordValidator } from './password.joi';
 
 export const signupFormData = Joi.object({
   email: Joi.string()
@@ -9,8 +10,8 @@ export const signupFormData = Joi.object({
       'string.empty': 'please provide an e-mail',
     }),
   name: Joi.profanity()
-    .alphanum()
-    .message('please use only numbers, letters and no whitspace')
+    .pattern(new RegExp('^[a-zA-Z0-9_. ]{3,30}$'))
+    .message('please use only numbers, letters and . or _ ')
     .min(3)
     .message('must be between 3 and 15 characters long')
     .max(30)
@@ -19,12 +20,7 @@ export const signupFormData = Joi.object({
     .messages({
       'string.empty': 'please provide a username',
     }),
-  password: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
-    .required()
-    .messages({
-      'string.empty': 'please provide a password',
-    }),
+  password: passwordValidator,
   /*   repeat_password: Joi.any()
     .equal(Joi.ref('password'))
     .required()

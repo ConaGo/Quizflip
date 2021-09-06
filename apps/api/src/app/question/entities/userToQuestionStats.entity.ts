@@ -25,7 +25,7 @@ export class UserToQuestionStats extends BaseEntity {
 
   //This constructor is necessary for the Exclude decorator
   constructor(partial: Partial<UserToQuestionStats>) {
-    super();
+    super({});
     Object.assign(this, partial);
   }
 }

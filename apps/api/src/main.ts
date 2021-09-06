@@ -1,6 +1,6 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import * as morgan from 'morgan';
 import morganBody from 'morgan-body';
 import * as cookieParser from 'cookie-parser';
@@ -9,7 +9,6 @@ import { LoggingInterceptor } from './logging.interceptor';
 import { useRequestLogging } from './logging.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { json } from 'body-parser';
-declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,8 +16,9 @@ async function bootstrap() {
   app.use(json({ limit: '50mb' }));
   //TODO-production: remove CORS
   app.enableCors({ credentials: true });
+
   //swagger setup
-  const config = new DocumentBuilder()
+  /*   const config = new DocumentBuilder()
     .setTitle('Learnit Digital API')
     .setDescription(
       'Description of the API Endpoints for the Learnit.Digital Web-App'
@@ -28,10 +28,10 @@ async function bootstrap() {
     .addTag('User')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document); */
 
   app.use(cookieParser());
-
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   //logger setup
   //app.useGlobalInterceptors(new LoggingInterceptor());
   //useRequestLogging(app);
@@ -42,14 +42,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  console.log(configService.get(''));
   await app.listen(configService.get('API_PORT'));
-  //hot reload via npm run start:dev:hot
-  //stripable
-  if (module.hot) {
-    module.hot.accept();
-    module.hot.dispose(() => app.close());
-  }
 }
 bootstrap().then(() =>
   console.log('Service listening 👍: ', process.env.API_PORT)

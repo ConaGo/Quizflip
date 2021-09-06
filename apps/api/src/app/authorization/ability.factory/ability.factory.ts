@@ -20,7 +20,7 @@ type Subjects = InferSubjects<typeof Question | typeof User> | 'all';
 export type AppAbility = Ability<[Action, Subjects]>;
 
 @Injectable()
-export class CaslAbilityFactory {
+export class AbilityFactory {
   createForUser(user: User) {
     const { can, cannot, build } = new AbilityBuilder<
       Ability<[Action, Subjects]>
