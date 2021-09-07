@@ -34,6 +34,7 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 import { JoiValidationPipe } from '../validation.pipe';
 import { loginFormData, signupFormData } from '@libs/shared-types';
+import { User } from '../indexes/entity.index';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -136,6 +137,7 @@ export class AuthController {
     @Req() req: ReqWithUser,
     @Res({ passthrough: true }) res: Response
   ) {
+    await this.userService.removeRefreshToken(req?.cookies?.Refresh, req.user);
     res.cookie(...(await this.authService.getJwtCookie(req.user)));
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(req.user)));
     return req.user;

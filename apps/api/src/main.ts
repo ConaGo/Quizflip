@@ -31,7 +31,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document); */
 
   app.use(cookieParser());
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  //app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   //logger setup
   //app.useGlobalInterceptors(new LoggingInterceptor());
   //useRequestLogging(app);
