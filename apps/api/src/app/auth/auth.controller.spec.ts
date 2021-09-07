@@ -1,21 +1,13 @@
 import { LoginDto, SignupDto } from '@libs/shared-types';
-import {
-  ClassSerializerInterceptor,
-  ExecutionContext,
-  INestApplication,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, INestApplication } from '@nestjs/common';
 import { User } from '../indexes/entity.index';
 import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JoiValidationPipe } from '../validation.pipe';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import * as Faker from 'faker';
-import { JwtModule, JwtService } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.strategy';
-import { doesNotReject } from 'node:assert';
-import { send } from 'node:process';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -115,12 +107,12 @@ describe('AuthController', () => {
     await app.init();
   });
 
-  it('should be defined', async () => {
+  it('app should be defined', async () => {
     expect(app).toBeDefined();
   });
   describe('auth/login', () => {
     describe('when called with valid data', () => {
-      it('find the user and correctly set auth cookies and return user without excluded fields', () => {
+      it('should call validateUser, correctly set auth cookies and return user without excluded fields', () => {
         return request(app.getHttpServer())
           .post('/auth/login')
           .send(loginUserMock)
