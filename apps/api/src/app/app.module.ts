@@ -17,6 +17,7 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { LoggingPlugin } from './graphql/logging.plugin';
 
 import { ormconfig } from './typeorm/ormconfig';
+
 @Module({
   imports: [
     //Setup env variables validation

@@ -31,6 +31,12 @@ In seiner ersten Iteration wird es für Mitwirkende die Möglichkeit geben multi
 - Frontend Web -> React(NextJs)
 - Frontend App -> React Native
 
+# Development Goals
+
+1. Maintain good test coverage
+2. Do not absctract to early - Make it work then refactor
+3. Develop mobile- and web-application in sync
+
 # Core Ideas
 
 The app lives in a monorepo and is bootstrapped, organized and commanded through Nx
@@ -71,69 +77,40 @@ This code sharing allows for very straightforward codechanges because the code r
 
 However, the app is still in its early days and the viability of this approach is not yet proven :)
 
+## The webapp
+
+The webapp uses the NextJS framework to benefit from
+
+- Bundle splitting with dynamic imports
+- Easy static and server side rendering
+- Nextjs Image component
+
+However, using NextJS ties the webapp to the inflexible routing solution provided.
+To still be able to reap all the benefits of an SPA the App bypasses NextJS routing system on certain parts. This approach is taken from [Colin McDonnell](https://github.com/colinhacks) and described in this [blogpost](https://colinhacks.com/essays/building-a-spa-with-nextjs)
+
 ## Current Features
 
 - Jwt-based authentication flow with refresh-functionality utilizing http-only cookies
 - Support for third-party authentication providers(Currently Google and Github)
 - Claim-based authorization utilizing [casl](https://casl.js.org/v5/en/)
-- Fully utilizing the power of Typescript with object-relational-mapping through typeorm and automated GraphQl-schema generation from decorated classes
+- Object-relational-mapping through typeorm and automated GraphQl-schema generation from decorated classes
 - Custom joi validation pipe
 - Automated database seeding utilizing factories and seeders
 - Good Test coverage of the backend
-
 - Login and register functionality for the webapp and the native App
 
 ---
 
-### The api
+# Project Setup
 
-## nx commands
+create an .env file and fill out the same variables as povided in the .env.example file.
 
-Starting the api
+create an .env-cmdrc file. In this file you can provide environment variable overrides for specific scenarios.
+An example is given in the .env-cmdrc.example file. To be able to run e2e-tests the "test" field has to override all variables for a test database that differ from the development DB specified in .env.
 
-```shell
-nx run api:serve
-```
+Setup test and development Postgres databases
 
-# Commands
-
-To use these command install ts-node globally
-
-```shell
-npm install -g ts-node
-```
-
-- Database
-  logs can be found in root/ormlogs.log
-
-```shell
-#drop database
-nx run api:drop-db
-#synchronize entity-definitions into db
-nx run api:sync-db
-#seed database with data defined in *.entity.factory.ts files
-#and seeders defined in *.seed.ts files
-nx run api:seed-db
-#run all three command above
-nx run api:setup-db
-
-```
-
-- Test
-
-```shell
-#run all test suites in watch mode
-nx run api:test-watch
-#run tests of a specific project
-nx test api
-nx test webapp
-#etc..
-
-```
-
-## setup
-
-# Postgres notes
+## Postgres notes
 
 1. Install postgres
 2. Login as postgres user
@@ -171,32 +148,63 @@ Password : admin (or any password you chose at 4.)
 10. You are done. If it doesnt work yet please refer to the comprehensive answer to the following stackoverflow question
     https://stackoverflow.com/questions/53267642/create-new-local-server-in-pgadmin
 
-## The webapp
+# Development
 
-The webapp uses the NextJS framework to benefit from
+## nx commands
 
-- Bundle splitting with dynamic imports
-- Easy static and server side rendering
-- Nextjs Image component
+### Starting the api
 
-However, using NextJS ties the webapp to the inflexible routing solution provided.
-To still be able to reap all the benefits of an SPA the App bypasses NextJS routing system on certain parts. This approach is taken from [Colin McDonnell](https://github.com/colinhacks) and described in this [blogpost](https://colinhacks.com/essays/building-a-spa-with-nextjs)
+```shell
+nx run api:serve
+```
 
-# required env variables
-
-- API_URL=http://localhost:3070
-- SIGNUP_ROUTE=auth/signup
-- LOGIN_ROUTE=auth/login
-
-# starting the webapp
+### Starting the webapp
 
 `nx run webapp:serve`
 
-# Starting the mobile app
+### Starting the mobile app
 
 `nx run-android rnapp`
 
-This project was generated using [Nx](https://nx.dev).
+# Commands
+
+To use these command install ts-node globally
+
+```shell
+npm install -g ts-node
+```
+
+### Database
+
+```shell
+#drop database
+nx run api:drop-db
+#synchronize entity-definitions into db
+nx run api:sync-db
+#seed database with data defined in *.entity.factory.ts files
+#and seeders defined in *.seed.ts files
+nx run api:seed-db
+#run all three command above
+nx run api:setup-db
+
+```
+
+- Database logs can be found in root/ormlogs.log
+- Note that seeding is done using the orm configuration in /apps/api/src/ormconfig.js
+
+## Testing
+
+```shell
+#run all test suites in watch mode
+nx run api:test-watch
+#run tests of a specific project
+nx test api
+nx test webapp
+#etc..
+
+```
+
+# NX documentation:
 
 <p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
 
@@ -272,15 +280,3 @@ Run `nx dep-graph` to see a diagram of the dependencies of your projects.
 ## Further help
 
 Visit the [Nx Documentation](https://nx.dev) to learn more.
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.

@@ -9,8 +9,11 @@ describe('e2e', () => {
       imports: [AppModule],
     }).compile();
 
-    const app = module.createNestApplication();
+    app = module.createNestApplication();
     await app.init();
+    console.log(process.env.DB_NAME);
   });
-  it('should be defined', async () => expect(app).toBeDefined());
+  it('should be defined', async () => {
+    expect(app).toBeDefined();
+  });
 });

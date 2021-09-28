@@ -64,6 +64,7 @@
     "cookie-parser": "^1.4.5",
     "core-js": "^3.6.5",
     "document-register-element": "1.13.1",
+    "env-cmd": "^10.1.0",
     "faker": "^5.5.3",
     "fast-text-encoding": "^1.0.3",
     "graphql": "^15.5.1",

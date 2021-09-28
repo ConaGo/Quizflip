@@ -11,6 +11,7 @@ ormlogs.log
 
 #environment file
 .env
+.env-cmdrc.json
 
 # compiled output
 /dist
