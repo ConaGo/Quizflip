@@ -6,5 +6,6 @@ module.exports = {
     '<rootDir>/apps/rnapp',
     '<rootDir>/libs/components',
     '<rootDir>/libs/data-access',
+    '<rootDir>/libs/mui',
   ],
 };

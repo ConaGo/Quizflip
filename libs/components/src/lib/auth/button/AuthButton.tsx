@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     root: {
       height: '3.2em',
-      background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+      //background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
       margin: '10px auto',
       borderRadius: '25px',
       padding: '10px 20px',
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: 'auto',
     },
     buttonSuccess: {
-      background: green[500],
+      background: theme.palette.success.main,
     },
     buttonLoading: {
       borderRadius: '50%',
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
       height: '4.2em',
     },
     buttonFail: {
-      background: red[900],
+      background: theme.palette.error.main,
     },
     buttonProgress: {
       color: theme.palette.secondary.main,

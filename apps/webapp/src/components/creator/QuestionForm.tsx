@@ -42,7 +42,9 @@ import {
   Tab,
   TextareaAutosize,
   InputLabel,
-} from '@material-ui/core';
+  Box,
+  CenterBox,
+} from '@libs/mui';
 import { PlusOne } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import { Autocomplete } from '@material-ui/lab';
@@ -113,30 +115,32 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
     categories,
   };
   return (
-    <Grid
-      container
-      justifyContent="center"
-      className={classes.container}
-      spacing={2}
-    >
-      <Paper elevation={10} className={classes.paper}>
-        <Tabs
-          value={AQuestionType.indexOf(type)}
-          onChange={handleTypeChange}
-          aria-label="question-type-tab-select"
-        >
-          <Tab label="True Or False" {...a11yProps(1)} />
-          <Tab label="Multiple Choice" {...a11yProps(0)} />
-        </Tabs>
+    <Paper elevation={10} className={classes.paper}>
+      <CenterBox>
         <Typography variant="h4">Create A New Question</Typography>
+      </CenterBox>
+      <Tabs
+        value={AQuestionType.indexOf(type)}
+        onChange={handleTypeChange}
+        aria-label="question-type-tab-select"
+      >
+        <Tab label="True Or False" {...a11yProps(1)} />
+        <Tab label="Multiple Choice" {...a11yProps(0)} />
+      </Tabs>
+      <Grid
+        container
+        justifyContent="center"
+        className={classes.container}
+        spacing={2}
+      >
         <QuestionInput {...inputProps}></QuestionInput>
         {typeSwitch(type, inputProps)}
         <CategoryInput {...inputProps} />
         <DifficultyInput {...inputProps} />
         <TagsInput {...inputProps} />
         <Button onClick={onSubmit}>Submit Question</Button>
-      </Paper>
-    </Grid>
+      </Grid>
+    </Paper>
   );
 };
 const useStyles = makeStyles((theme: Theme) =>

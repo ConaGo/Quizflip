@@ -15,10 +15,12 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@libs/data-access": ["libs/data-access/src/index.ts"],
+      "@learnit-monorepo/mui": ["libs/mui/src/index.ts"],
       "@libs/components": ["libs/components/src/index.ts"],
       "@libs/components/native": ["libs/components/src/index.native.ts"],
-      "@libs/shared-types": ["libs/shared-types/src/index.ts"]
+      "@libs/data-access": ["libs/data-access/src/index.ts"],
+      "@libs/shared-types": ["libs/shared-types/src/index.ts"],
+      "@libs/mui": ["libs/mui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

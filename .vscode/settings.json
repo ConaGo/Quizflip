@@ -1,0 +1,14 @@
+{
+  "launch": {
+    "configurations": [],
+    "compounds": []
+  },
+  "colorize.languages": [
+    "typescript",
+    "typescriptreact",
+    "javascriptreact",
+    "javascript",
+    "css",
+    "scss"
+  ]
+}

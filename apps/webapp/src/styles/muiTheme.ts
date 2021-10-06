@@ -1,6 +1,6 @@
 import { createTheme, ThemeOptions } from '@material-ui/core';
 
-export const paletteColorsDark = {
+/* export const paletteColorsDark = {
   primary: '#0f4c75',
   secondary: '#3282b8',
   error: '#E44C65',
@@ -14,15 +14,37 @@ export const paletteColorsLight = {
   error: '#E44C65',
   background: '#f9f9f9',
   text: '#050505',
+}; */
+
+export const paletteColorsDark = {
+  type: 'dark',
+  primary: {
+    main: '#038709',
+  },
+  secondary: {
+    main: '#a74ef7',
+  },
 };
 
+export const paletteColorsLight = {
+  type: 'light',
+  primary: {
+    main: '#038709',
+  },
+  secondary: {
+    main: '#7c1def',
+  },
+};
 const options = (dark: boolean): ThemeOptions => {
   const paletteColors = dark ? paletteColorsDark : paletteColorsLight;
   return {
     palette: {
       type: dark ? 'dark' : 'light',
       primary: {
-        main: paletteColors.primary,
+        main: paletteColors.primary.main,
+      },
+      secondary: {
+        main: paletteColors.secondary.main,
       },
 
       // ...
@@ -32,7 +54,7 @@ const options = (dark: boolean): ThemeOptions => {
         // Name of the rule
         root: {
           // Some CSS
-          background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+          //background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
           //borderRadius: 3,
           //border: 0,
           //color: 'white'
@@ -52,6 +74,7 @@ const options = (dark: boolean): ThemeOptions => {
         },
       },
     },
+    components: {},
   };
 };
 export const darkTheme = createTheme(options(true));
