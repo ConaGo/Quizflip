@@ -25,8 +25,6 @@ import {
   Button,
   TextField,
   MenuItem,
-  makeStyles,
-  createStyles,
   Theme,
   Chip,
   Paper,
@@ -44,11 +42,15 @@ import {
   InputLabel,
   Box,
   CenterBox,
+  Autocomplete,
 } from '@libs/mui';
-import { PlusOne } from '@material-ui/icons';
-import AddIcon from '@material-ui/icons/Add';
-import { Autocomplete } from '@material-ui/lab';
-import { ClassNameMap, mergeClasses } from '@material-ui/styles';
+import {
+  makeStyles,
+  createStyles,
+  ClassNameMap,
+  mergeClasses,
+} from '@libs/mui/styles';
+import { PlusOne, Add } from '@libs/mui/icons';
 
 interface QuestionFormProps {
   categories: string[];
@@ -363,7 +365,7 @@ const TagsInput = ({ dto, handlers }: InputProps) => {
         return Tag(tag, handlers.tags, dto.tags, classes);
       })}
       {dto.tags.length < 10 ? (
-        <Chip deleteIcon={<AddIcon />} onDelete={handleClick} />
+        <Chip deleteIcon={<Add />} onDelete={handleClick} />
       ) : null}
       <Menu
         id="add-tag-menu"
@@ -389,7 +391,7 @@ const TagsInput = ({ dto, handlers }: InputProps) => {
             onChange={(e) => setValue(e.target.value)}
           />
           <IconButton onClick={handleAdd}>
-            <AddIcon />
+            <Add />
           </IconButton>
         </MenuItem>
       </Menu>

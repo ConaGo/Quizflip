@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box } from '../index';
 import { ReactNode } from 'react';
 
 interface ICenterBox {

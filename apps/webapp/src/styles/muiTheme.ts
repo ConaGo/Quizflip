@@ -1,4 +1,4 @@
-import { createTheme, ThemeOptions } from '@material-ui/core';
+import { createTheme, ThemeOptions } from '@libs/mui';
 
 /* export const paletteColorsDark = {
   primary: '#0f4c75',
@@ -39,7 +39,7 @@ const options = (dark: boolean): ThemeOptions => {
   const paletteColors = dark ? paletteColorsDark : paletteColorsLight;
   return {
     palette: {
-      type: dark ? 'dark' : 'light',
+      mode: dark ? 'dark' : 'light',
       primary: {
         main: paletteColors.primary.main,
       },
@@ -49,32 +49,37 @@ const options = (dark: boolean): ThemeOptions => {
 
       // ...
     },
-    overrides: {
+    components: {
       MuiAppBar: {
         // Name of the rule
-        root: {
-          // Some CSS
-          //background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-          //borderRadius: 3,
-          //border: 0,
-          //color: 'white'
-          //height: 48,
-          //padding: '0 30px',
-          //boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)'
+        styleOverrides: {
+          root: {
+            // Some CSS
+            background: `linear-gradient(45deg, ${paletteColors.primary.main} 30%, ${paletteColors.secondary.main} 90%)`,
+            //borderRadius: 3,
+            //border: 0,
+            //color: 'white'
+            //height: 48,
+            //padding: '0 30px',
+            //boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)'
+          },
         },
       },
       MuiTypography: {
-        subtitle1: {
-          opacity: 0.9,
+        styleOverrides: {
+          subtitle1: {
+            opacity: 0.9,
+          },
         },
       },
       MuiFormControl: {
-        marginNormal: {
-          marginTop: 0,
+        styleOverrides: {
+          marginNormal: {
+            marginTop: 0,
+          },
         },
       },
     },
-    components: {},
   };
 };
 export const darkTheme = createTheme(options(true));

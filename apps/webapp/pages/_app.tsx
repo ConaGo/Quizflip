@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import React from 'react';
-import { CssBaseline, ThemeProvider } from '@material-ui/core';
+import { CssBaseline, ThemeProvider } from '@libs/mui';
 import { darkTheme, lightTheme } from '../src/styles/muiTheme';
 import NavBar from '../src/components/NavBar';
 import Head from 'next/head';

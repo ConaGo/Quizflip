@@ -1,6 +1,6 @@
 import { createQuestionFormData, CreateQuestionDto } from '@libs/shared-types';
 import { useForm } from '@libs/components';
-import { Button } from '@material-ui/core';
+import { Button } from '@libs/mui';
 import { useState } from 'react';
 import {
   CREATE_QUESTION,

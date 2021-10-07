@@ -169,6 +169,48 @@
         }
       }
     },
+    "mui-icons": {
+      "root": "libs/mui/icons",
+      "sourceRoot": "libs/mui/icons/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/mui/icons/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/mui/icons"],
+          "options": {
+            "jestConfig": "libs/mui/icons/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "mui-styles": {
+      "root": "libs/mui/styles",
+      "sourceRoot": "libs/mui/styles/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/mui/styles/**/*.{ts,tsx,js,jsx}"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/mui/styles"],
+          "options": {
+            "jestConfig": "libs/mui/styles/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "rnapp": {
       "root": "apps/rnapp",
       "sourceRoot": "apps/rnapp/src",

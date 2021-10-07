@@ -1,18 +1,10 @@
 import React, { FC } from 'react';
 import clsx from 'clsx';
-import { Button, Icon, CircularProgress, Fab } from '@material-ui/core';
-import { green, red, blue } from '@material-ui/core/colors';
-import GitHubIcon from '@material-ui/icons/GitHub';
-import CheckIcon from '@material-ui/icons/check';
-import CloseIcon from '@material-ui/icons/close';
+import { Button, Icon, CircularProgress, Fab } from '@libs/mui';
+import { GitHub, Check, Close } from '@libs/mui/icons';
+import { useTheme, createStyles, makeStyles, DefaultTheme } from '@mui/styles';
 
-import {
-  useTheme,
-  createStyles,
-  Theme,
-  makeStyles,
-} from '@material-ui/core/styles';
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     container: {
       height: '5.2em',
@@ -120,7 +112,7 @@ export const AuthButton: FC<
       break;
     case 'github':
       css = _classes.github;
-      icon = <GitHubIcon></GitHubIcon>;
+      icon = <GitHub></GitHub>;
       break;
     default:
       css = _classes.default;
@@ -128,8 +120,8 @@ export const AuthButton: FC<
   const renderContent = (children: React.ReactNode) => {
     if (isLoading)
       return <CircularProgress size={70} className={_classes.buttonProgress} />;
-    if (isSuccess) return <CheckIcon fontSize="large"></CheckIcon>;
-    if (isFailed) return <CloseIcon fontSize="large"></CloseIcon>;
+    if (isSuccess) return <Check fontSize="large"></Check>;
+    if (isFailed) return <Close fontSize="large"></Close>;
     return children;
   };
   return (

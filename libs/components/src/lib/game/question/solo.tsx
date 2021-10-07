@@ -1,23 +1,54 @@
+import { useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_RANDOM_QUESTIONS } from '@libs/data-access';
-import { CreateQuestionDto } from '@libs/shared-types';
+import { useSpring, animated, useSprings, interpolate } from 'react-spring';
+
+import { createStyles, makeStyles } from '@libs/mui/styles';
 import {
   LinearProgress,
   CircularProgress,
-  FormControlLabel,
   Switch,
   Slide,
   Paper,
   Fade,
   Theme,
-  makeStyles,
-  createStyles,
   Grid,
   Button,
   Typography,
-} from '@material-ui/core';
-import { useState } from 'react';
-import { useSpring, animated, useSprings, interpolate } from 'react-spring';
+} from '@libs/mui';
+
+import { GET_RANDOM_QUESTIONS } from '@libs/data-access';
+import { CreateQuestionDto } from '@libs/shared-types';
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    paper: {},
+    container: {},
+    card: { height: '300px', width: '140px', backgroundColor: 'green' },
+    cardi: {
+      backgroundColor: 'white',
+      backgroundSize: 'auto 85%',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center center',
+      width: '45vh',
+      maxWidth: '300px',
+      height: '85vh',
+      maxHeight: '570px',
+      willChange: 'transform',
+      borderRadius: '10px',
+      boxShadow:
+        '0 12.5px 100px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3)',
+    },
+    cardContainer: {
+      position: 'absolute',
+      width: '100vw',
+      height: '100vh',
+      willChange: 'transform',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  })
+);
 const unescape = (s: string) =>
   s.replace(/&quot;/g, '"').replace(/&#039;/g, '’');
 
@@ -25,14 +56,13 @@ interface QuestionFieldProps {
   question: string;
 }
 const QuestionField = ({ question }: QuestionFieldProps) => {
-  const classes = useStyles();
   const props = useSpring({
     config: { duration: 2000 },
     opacity: 1,
     from: { opacity: 0 },
   });
   return (
-    <AnimatedPaper style={props} elevation={4} className={classes.paper}>
+    <AnimatedPaper style={props} elevation={4}>
       <Typography variant="h5">{unescape(question)}</Typography>
     </AnimatedPaper>
   );
@@ -45,7 +75,7 @@ const Question = ({ question }: QuestionProps) => {
   return (
     <Paper elevation={6}>
       <Typography variant="h4">{unescape(question.question)}</Typography>
-      <Button>{question.correctAnswer}</Button>
+      <Button>{question.correctAnswers[0]}</Button>
       <Button>{question.incorrectAnswers[0]}</Button>
       <Button>{question.incorrectAnswers[1]}</Button>
       <Button>{question.incorrectAnswers[2]}</Button>
@@ -156,37 +186,6 @@ export const SoloQuestionGame = () => {
     </Grid>
   );
 };
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {},
-    container: {},
-    card: { height: '300px', width: '140px', backgroundColor: 'green' },
-    cardi: {
-      backgroundColor: 'white',
-      backgroundSize: 'auto 85%',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center center',
-      width: '45vh',
-      maxWidth: '300px',
-      height: '85vh',
-      maxHeight: '570px',
-      willChange: 'transform',
-      borderRadius: '10px',
-      boxShadow:
-        '0 12.5px 100px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3)',
-    },
-    cardContainer: {
-      position: 'absolute',
-      width: '100vw',
-      height: '100vh',
-      willChange: 'transform',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  })
-);
 
 // implementation idea with just material ui
 /* <>

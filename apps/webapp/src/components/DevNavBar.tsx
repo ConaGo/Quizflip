@@ -1,4 +1,4 @@
-import { Typography, Button } from '@material-ui/core';
+import { Typography, Button } from '@libs/mui';
 import Link from 'next/link';
 
 export const DevNavBar = () => {

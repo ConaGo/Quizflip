@@ -1,22 +1,14 @@
 import React, { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
 import axios from 'axios';
 
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Modal from '@material-ui/core/Modal';
+import { createStyles, makeStyles } from '@libs/mui/styles';
 import {
-  Dialog,
-  DialogActions,
+  Button,
+  Typography,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
-} from '@material-ui/core';
+} from '@libs/mui';
 
 import {
   LoginDto,
@@ -29,7 +21,7 @@ import {
 import { AuthButton } from '../button/AuthButton';
 
 import { useForm } from '../../hooks/useForm';
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',

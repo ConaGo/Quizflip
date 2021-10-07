@@ -7,5 +7,7 @@ module.exports = {
     '<rootDir>/libs/components',
     '<rootDir>/libs/data-access',
     '<rootDir>/libs/mui',
+    '<rootDir>/libs/mui/icons',
+    '<rootDir>/libs/mui/styles',
   ],
 };
