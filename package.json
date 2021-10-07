@@ -96,7 +96,7 @@
     "react-native-status-bar-height": "^2.6.0",
     "react-query": "^3.19.1",
     "react-router-dom": "^5.2.0",
-    "react-spring": "^9.2.4",
+    "react-spring": "^9.2.6",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
     "rxjs": "7.2.0",

@@ -55,7 +55,7 @@ const options = (dark: boolean): ThemeOptions => {
         styleOverrides: {
           root: {
             // Some CSS
-            background: `linear-gradient(45deg, ${paletteColors.primary.main} 30%, ${paletteColors.secondary.main} 90%)`,
+            background: `linear-gradient(190deg, ${paletteColors.primary.main} 30%, ${paletteColors.secondary.main} 90%)`,
             //borderRadius: 3,
             //border: 0,
             //color: 'white'

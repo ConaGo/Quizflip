@@ -66,7 +66,7 @@ export default function NavBar() {
       </AppBar>
       {openModal ? (
         <AuthModal
-          onClose={handleClose}
+          handleClose={handleClose}
           open={openModal}
           formType={formType}
           setFormType={setFormType}

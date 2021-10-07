@@ -23,16 +23,6 @@ import { AuthButton } from '../button/AuthButton';
 import { useForm } from '../../hooks/useForm';
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {
-      background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-      borderRadius: 20,
-    },
-    img: {
-      maxHeight: 240,
-      maxWidth: 520,
-      alignSelf: 'center',
-      overflow: 'hidden',
-    },
     container: {
       display: 'flex',
       flexDirection: 'column',
@@ -52,6 +42,9 @@ const useStyles = makeStyles((theme) =>
         bottom: '-1.3em',
       },
       marginBottom: '1.2em',
+    },
+    dialog: {
+      overflow: 'visible',
     },
   })
 );
@@ -80,17 +73,6 @@ export function Signup({ setFormType }: SignupProps) {
   const classes = useStyles();
   return (
     <div className={classes.container}>
-      <img alt={'books'} className={classes.img} src="book-small.jpg"></img>
-      <DialogTitle id="form-dialog-title">
-        <div>
-          <Typography variant="h4" align="center">
-            Welcome to LearnIt
-          </Typography>
-          <Typography variant="subtitle1" align="center">
-            Learn and test your knowledge
-          </Typography>
-        </div>
-      </DialogTitle>
       <DialogContent>
         <TextField
           variant="outlined"

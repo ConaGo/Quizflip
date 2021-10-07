@@ -21,9 +21,17 @@ const useStyles = makeStyles((theme) =>
     },
     google: {
       background: 'white',
+      color: 'black',
+      '&:hover': {
+        color: 'white',
+      },
     },
     github: {
       background: 'white',
+      color: 'black',
+      '&:hover': {
+        color: 'white',
+      },
     },
     default: {
       width: '100%',
