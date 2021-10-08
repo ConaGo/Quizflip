@@ -11,7 +11,7 @@ import {
 
 import { FormType, loginFormData } from '@libs/shared-types';
 import { AuthButton } from '../button/AuthButton';
-import { useForm } from '../../hooks/useForm';
+import { useFormHTTP } from '../../hooks/useFormHTTP';
 const useStyles = makeStyles((theme) =>
   createStyles({
     container: {
@@ -56,7 +56,7 @@ export function Login({ setFormType }: LoginProps) {
     handlers,
     onSubmit,
     errors,
-  } = useForm(
+  } = useFormHTTP(
     {
       nameOrEmail: '',
       password: '',

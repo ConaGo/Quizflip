@@ -10,10 +10,10 @@ import {
   GET_ALL_CATEGORIES,
 } from '@libs/data-access';
 type NativeOrWeb = 'native' | 'web';
-export const useForm = (
+export const useFormHTTP = (
   defaultDto: DTO,
   validationObject: Joi.ObjectSchema,
-  url = 'graphql',
+  url: string,
   nativeOrWeb: NativeOrWeb = 'web'
 ): {
   handlers: Record<string, Handler>;
@@ -47,25 +47,11 @@ export const useForm = (
   const [isLoading, setIsLoading] = useState(false);
   const [isFailed, setIsFailed] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
   const validator = async () => {
     console.log('loading..');
     setIsLoading(true);
     const newErrors = { ...defaultErrors };
-    /*     const formData;
-
-    switch (formType) {
-      case 'login':
-        formData = loginFormData;
-        break;
-      case 'signup':
-        formData = signupFormData;
-        break;
-      case 'recovery':
-        formData = recoveryFormData;
-        break;
-      default:
-        formData = loginFormData;
-    } */
     const errs = validationObject.validate(dto, {
       abortEarly: false,
     }).error;
@@ -78,43 +64,49 @@ export const useForm = (
     console.log(errs);
     const baseUrl =
       nativeOrWeb === 'native'
-        ? 'http://10.0.2.2:3700'
-        : 'http://localhost:3070';
+        ? 'http://10.0.2.2:3700/'
+        : 'http://localhost:3070/';
     if (!errs) {
       try {
-        let response;
-        if (url === 'graphql') {
-          const endpoint = 'http://localhost:3070/graphql';
+        const response = await fetch(baseUrl + url, {
+          method: 'POST',
+          body: JSON.stringify(dto),
+          headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
+        console.log(await response.json());
+        if (!response.ok) throw new Error(await response.json());
+        const data = await response.json();
+        console.log(data);
 
-          const graphQLClient = new GraphQLClient(endpoint);
-          const mutationCreateQuestion = gql`
-            mutation createQuestion($input: CreateQuestionInput!) {
-              createQuestion(createQuestionInput: $input) {
-                type
-              }
-            }
-          `;
-          const data = await graphQLClient.request(mutationCreateQuestion, {
-            input: dto,
-          });
-          console.log(data);
-        } else {
-          response = await axios({
-            method: 'post',
-            url: url,
-            data: dto,
-            baseURL: baseUrl,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-        }
-        setIsSuccess(true);
+        /*         response = await axios({
+          method: 'post',
+          url: url,
+          data: dto,
+          baseURL: baseUrl,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }); */
+
+        /*         setIsSuccess(true);
         setIsLoading(false);
         await sleep(800);
-        setIsSuccess(false);
-      } catch (err) {
-        const message = err.response?.data.message;
+        setIsSuccess(false); */
+      } catch (err: any) {
+        console.log(JSON.stringify(err));
+        if (err.message === 'Unauthorized') {
+          console.log('matched');
+          setErrors({
+            ...defaultErrors,
+            name: 'No user with that combination found',
+          });
+        }
+        console.log(err.message);
+        const message = err?.response?.data.message;
+        console.log(message);
         console.log(err);
         if (message === 'User with that name already exists')
           setErrors({ ...defaultErrors, name: message });

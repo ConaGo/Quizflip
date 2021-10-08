@@ -8,7 +8,7 @@ import TextInput from '../../core.native/TextInput';
 import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
 import { Navigation, FormType, loginFormData } from '@libs/shared-types';
-import { useForm } from '../../hooks/useForm';
+import { useFormHTTP } from '../../hooks/useFormHTTP';
 import useTry from '../../hooks/useTry';
 import axios from 'axios';
 
@@ -18,7 +18,7 @@ interface LoginProps {
 }
 
 export const LoginNative = ({ navigation }: LoginProps) => {
-  const { handlers, onSubmit, errors, validator } = useForm(
+  const { handlers, onSubmit, errors, validator } = useFormHTTP(
     {
       nameOrEmail: '',
       password: '',

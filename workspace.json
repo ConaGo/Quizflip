@@ -71,7 +71,7 @@
           "options": {
             "commands": [
               {
-                "command": "yarn env-cmd -e test yarn affected:test --all --parallel --maxParallel 10 --watch"
+                "command": "docker-compose -f docker-compose.test.yml up -d && yarn env-cmd -e test yarn affected:test --all --parallel --maxParallel 10 --watch"
               }
             ]
           }

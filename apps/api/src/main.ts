@@ -31,9 +31,14 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document); */
 
   app.use(cookieParser());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    })
+  );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   //logger setup
-  //app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalInterceptors(new LoggingInterceptor());
   //useRequestLogging(app);
   app.use(morgan('tiny'));
   //morganBody(app);

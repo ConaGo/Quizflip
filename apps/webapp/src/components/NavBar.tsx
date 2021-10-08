@@ -11,7 +11,7 @@ import {
 } from '@libs/mui';
 import { FormType } from '@libs/shared-types';
 import Link from 'next/link';
-
+//import { useUser } from '@libs/data-access';
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 export default function NavBar() {
+  //const { isLoggedIn } = useUser();
   const [openModal, setOpenModal] = useState(false);
   const [formType, setFormType] = useState<FormType>('login');
   const classes = useStyles();
@@ -56,6 +57,7 @@ export default function NavBar() {
           <Typography variant="h6" className={classes.title}>
             News
           </Typography>
+          {}
           <Button color="inherit" onClick={() => handleOpen('login')}>
             Login
           </Button>

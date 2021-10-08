@@ -1,6 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app/app.module';
+import * as request from 'supertest';
 
 describe('e2e', () => {
   let app: INestApplication;
@@ -15,5 +16,18 @@ describe('e2e', () => {
   });
   it('should be defined', async () => {
     expect(app).toBeDefined();
+  });
+
+  it(`/GET cats`, () => {
+    return request(app.getHttpServer())
+      .get('/cats')
+      .expect(200)
+      .expect({
+        data: ['someDaat'],
+      });
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 });

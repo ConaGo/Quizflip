@@ -8,7 +8,7 @@ import TextInput from '../../core.native/TextInput';
 import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
 import { Navigation, FormType, recoveryFormData } from '@libs/shared-types';
-import { useForm } from '../../hooks/useForm';
+import { useFormHTTP } from '../../hooks/useFormHTTP';
 
 interface ForgotPasswordProps {
   navigation: Navigation;
@@ -16,7 +16,7 @@ interface ForgotPasswordProps {
 }
 
 const ForgotPassword = ({ navigation }: ForgotPasswordProps) => {
-  const { handlers, onSubmit, errors } = useForm(
+  const { handlers, onSubmit, errors } = useFormHTTP(
     {
       email: '',
     },

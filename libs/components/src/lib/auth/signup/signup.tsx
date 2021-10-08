@@ -20,7 +20,7 @@ import {
 } from '@libs/shared-types';
 import { AuthButton } from '../button/AuthButton';
 
-import { useForm } from '../../hooks/useForm';
+import { useFormHTTP } from '../../hooks/useFormHTTP';
 const useStyles = makeStyles((theme) =>
   createStyles({
     container: {
@@ -60,7 +60,7 @@ export function Signup({ setFormType }: SignupProps) {
     handlers,
     onSubmit,
     errors,
-  } = useForm(
+  } = useFormHTTP(
     {
       email: '',
       name: '',

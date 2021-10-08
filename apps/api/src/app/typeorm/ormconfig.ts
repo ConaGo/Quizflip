@@ -11,11 +11,11 @@ export const ormconfig: (configService: ConfigService) => ConnectionOptions = (
 ) => {
   const config: ConnectionOptions = {
     type: 'postgres',
-    host: configService.get('DB_HOST'),
-    port: configService.get('DB_PORT'),
-    username: configService.get('DB_USERNAME'),
-    password: configService.get('DB_PASSWORD'),
-    database: configService.get('DB_NAME'),
+    host: configService.get(envChecker('DB_HOST')),
+    port: configService.get(envChecker('DB_PORT')),
+    username: configService.get(envChecker('DB_USERNAME')),
+    password: configService.get(envChecker('DB_PASSWORD')),
+    database: configService.get(envChecker('DB_NAME')),
     //can be set explicitly or automatic
     entities: [User, Question, DriverQuestion, UserToQuestionStats],
     //entities: [__dirname + '/../**/*.entity.ts'],
@@ -36,4 +36,9 @@ export const ormconfig: (configService: ConfigService) => ConnectionOptions = (
     },
   };
   return config;
+};
+
+const envChecker = (s: string) => {
+  if (process.env.NODE_ENV === 'test') return 'TEST_' + s;
+  else return s;
 };

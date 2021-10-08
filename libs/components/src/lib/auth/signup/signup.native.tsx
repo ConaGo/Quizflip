@@ -9,13 +9,13 @@ import BackButton from '../../core.native/BackButton';
 import { theme } from '../../styles/theme';
 import { Navigation, FormType, signupFormData } from '@libs/shared-types';
 
-import { useForm } from '../../hooks/useForm';
+import { useFormHTTP } from '../../hooks/useFormHTTP';
 interface SignupProps {
   navigation: Navigation;
   setFormType: Dispatch<SetStateAction<FormType>>;
 }
 const SignupNative = ({ navigation }: SignupProps) => {
-  const { handlers, onSubmit, errors } = useForm(
+  const { handlers, onSubmit, errors } = useFormHTTP(
     {
       name: '',
       email: '',

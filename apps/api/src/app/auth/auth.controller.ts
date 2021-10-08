@@ -88,6 +88,7 @@ export class AuthController {
       },
     },
   })
+  @UseInterceptors(ClassSerializerInterceptor)
   async signup(@Body() signupDto: SignupDto) {
     return this.userService.create(signupDto);
   }
@@ -108,7 +109,7 @@ export class AuthController {
     res.cookie(...(await this.authService.getJwtCookie(user)));
     //Set RefreshToken and add it the User
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
-    res.redirect('http://localhost:4200/me');
+    res.redirect('http://localhost:4200/');
   }
 
   @Get('github')
@@ -128,7 +129,7 @@ export class AuthController {
     res.cookie(...(await this.authService.getJwtCookie(user)));
     //Set RefreshToken and add it the User
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
-    res.redirect('http://localhost:4200/me');
+    res.redirect('http://localhost:4200/');
   }
 
   @UseGuards(JwtRefreshGuard)
