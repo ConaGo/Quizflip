@@ -29,7 +29,7 @@ define(User, (faker: typeof Faker, context: IUserContext) => {
         name: faker.internet.userName(name),
         passwordHash: argon2.hash(faker.internet.password()),
         authType: authType,
-        role: role,
+        role: 'user',
       };
     }
   } else {

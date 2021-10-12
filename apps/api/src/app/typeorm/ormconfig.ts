@@ -6,16 +6,20 @@ import { UserToQuestionStats } from '../question/entities/userToQuestionStats.en
 import { User } from '../user/entities/user.entity';
 //import {User UserToQuestionStats, Question, DriverQuestion} from '../'
 
-export const ormconfig: (configService: ConfigService) => ConnectionOptions = (
-  configService
-) => {
-  const config: ConnectionOptions = {
+type ConnectionOptiosWithSeeding = ConnectionOptions & {
+  seeds: string[];
+  factories: string[];
+};
+export const ormconfig: (
+  configService: ConfigService
+) => ConnectionOptiosWithSeeding = (configService) => {
+  const config: ConnectionOptiosWithSeeding = {
     type: 'postgres',
-    host: configService.get(envChecker('DB_HOST')),
-    port: configService.get(envChecker('DB_PORT')),
-    username: configService.get(envChecker('DB_USERNAME')),
-    password: configService.get(envChecker('DB_PASSWORD')),
-    database: configService.get(envChecker('DB_NAME')),
+    host: configService.get('DB_HOST'),
+    port: configService.get('DB_PORT'),
+    username: configService.get('DB_USERNAME'),
+    password: configService.get('DB_PASSWORD'),
+    database: configService.get('DB_NAME'),
     //can be set explicitly or automatic
     entities: [User, Question, DriverQuestion, UserToQuestionStats],
     //entities: [__dirname + '/../**/*.entity.ts'],
@@ -34,11 +38,8 @@ export const ormconfig: (configService: ConfigService) => ConnectionOptions = (
     cli: {
       migrationsDir: 'src/migrations',
     },
+    seeds: [__dirname + '/../**/*.entity.seed.ts'],
+    factories: [__dirname + '/../**/*.entity.factory.ts'],
   };
   return config;
-};
-
-const envChecker = (s: string) => {
-  if (process.env.NODE_ENV === 'test') return 'TEST_' + s;
-  else return s;
 };

@@ -103,12 +103,31 @@ To still be able to reap all the benefits of an SPA the App bypasses NextJS rout
 
 # Project Setup
 
+install [node](https://nodejs.org/en/download/)
+
+install ts-node globally
+
+```shell
+npm install -g ts-node
+```
+
+install nx cli globally
+
+```shell
+npm install -g nx
+```
+
+install [docker](https://www.docker.com/products/docker-desktop)
+
 create an .env file and fill out the same variables as povided in the .env.example file.
 
 create an .env-cmdrc file. In this file you can provide environment variable overrides for specific scenarios.
 An example is given in the .env-cmdrc.example file. To be able to run e2e-tests the "test" field has to override all variables for a test database that differ from the development DB specified in .env.
 
-Setup test and development Postgres databases
+you can either use a local postgres service or use docker
+if you want to use docker skip to the [next section](#Development)
+
+Setup development Postgres database
 
 ## Postgres notes
 
@@ -168,7 +187,7 @@ nx run api:serve
 
 # Commands
 
-To use these command install ts-node globally
+To use these command ts-node has to be installed globally
 
 ```shell
 npm install -g ts-node
@@ -196,7 +215,10 @@ nx run api:setup-db
 
 ```shell
 #run all test suites in watch mode
+#also starts postgres docker container defined in "docker-compose.test.yml for e2e tests
 nx run api:test-watch
+#or opt in to a local postgres service for testing
+nx run api:test-watch-local
 #run tests of a specific project
 nx test api
 nx test webapp

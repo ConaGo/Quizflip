@@ -11,6 +11,7 @@ import {
   HttpCode,
   UsePipes,
   ClassSerializerInterceptor,
+  SerializeOptions,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -59,7 +60,7 @@ export class AuthController {
     res.cookie(...(await this.authService.getJwtCookie(user)));
     //Set RefreshToken and add it the User
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
-    return user;
+    return new User(user);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -70,6 +71,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response
   ) {
     await this.userService.removeRefreshToken(req?.cookies?.Refresh, req.user);
+    // set empty cookies
     res.cookie(...(await this.authService.getLogoutCookie('Refresh')));
     res.cookie(...(await this.authService.getLogoutCookie('Authentication')));
   }
@@ -88,9 +90,9 @@ export class AuthController {
       },
     },
   })
-  @UseInterceptors(ClassSerializerInterceptor)
   async signup(@Body() signupDto: SignupDto) {
-    return this.userService.create(signupDto);
+    const user = await this.userService.create(signupDto);
+    return new User(user);
   }
 
   @Get('google')

@@ -101,9 +101,7 @@ describe('AuthController', () => {
       .useValue(guardMock)
       .compile();
     app = module.createNestApplication();
-    app.useGlobalInterceptors(
-      new ClassSerializerInterceptor(app.get(Reflector))
-    );
+
     await app.init();
   });
 
