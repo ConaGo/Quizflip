@@ -1,34 +1,43 @@
-import { ClassSerializerInterceptor, INestApplication } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
-import { factory } from 'typeorm-seeding';
+import { factory, useSeeding } from 'typeorm-seeding';
 import { User } from './entities/user.entity';
 import { UserResolver } from './user.resolver';
-import * as f from '@libs/data-access';
 import { DeleteResult } from 'typeorm';
+
 describe('UserService', () => {
   let resolver: UserResolver;
   let userService: UserService;
-  const usersMock = factory(User)().createMany(10);
-  const userMock = usersMock[0];
-  const userServiceMock: Partial<UserService> = {
-    findAll: () => usersMock,
-    findOneById: (id) => (id === userMock.id ? userMock : null),
-    remove: async (id) => (id === userMock.id ? new DeleteResult() : null),
-  };
-  let app: INestApplication;
+  let usersMock, userMock;
+  let userServiceMock: Partial<UserService>;
   beforeAll(async () => {
+    await useSeeding({
+      root: `${process.cwd()}/apps/api/src`,
+      configName: 'ormconfig.js',
+    });
+    usersMock = await factory(User)({ authType: 'local' }).makeMany(10);
+    userMock = usersMock[0];
+    userServiceMock = {
+      findAll: jest.fn(() => usersMock),
+      findOneById: jest.fn((id) => (id === userMock.id ? userMock : null)),
+      remove: jest.fn(async (id) =>
+        id === userMock.id ? new DeleteResult() : null
+      ),
+    };
     const module: TestingModule = await Test.createTestingModule({
-      providers: [{ provide: UserService, useValue: userServiceMock }],
+      providers: [
+        { provide: UserService, useValue: userServiceMock },
+        UserResolver,
+      ],
     }).compile();
     resolver = module.get<UserResolver>(UserResolver);
     userService = module.get<UserService>(UserService);
   });
+
   describe('findAllUsers', () => {
     it('should call findAll and return all users', async () => {
       const result = await resolver.findAllUsers();
-      expect(userServiceMock.findAll).toBeCalled();
+      expect(userService.findAll).toBeCalled();
       expect(result).toEqual(usersMock);
     });
   });

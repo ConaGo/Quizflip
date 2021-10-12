@@ -1,20 +1,12 @@
-import { ClassSerializerInterceptor, INestApplication } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppModule } from '../app/app.module';
 import * as request from 'supertest';
 import * as Faker from 'faker';
 import { SignupDto } from '@libs/shared-types';
 import { Connection } from 'typeorm';
-import {
-  factory,
-  runSeeder,
-  useRefreshDatabase,
-  useSeeding,
-} from 'typeorm-seeding';
+import { factory, useSeeding } from 'typeorm-seeding';
 import { User } from '../app/indexes/entity.index';
-import CreateUserSeed from '../app/user/entities/user.entity.seed';
-import { ormconfig } from '../ormconfig';
-import { Reflector } from '@nestjs/core';
 describe('e2e', () => {
   let app: INestApplication;
   let user;
@@ -26,9 +18,6 @@ describe('e2e', () => {
     }).compile();
 
     app = module.createNestApplication();
-    app.useGlobalInterceptors(
-      new ClassSerializerInterceptor(app.get(Reflector))
-    );
     await app.init();
 
     //clean database

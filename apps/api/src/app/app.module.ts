@@ -1,8 +1,8 @@
 import * as Joi from 'joi';
 import { join } from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { ClassSerializerInterceptor, Module } from '@nestjs/common';
-import { GqlModuleOptions, GraphQLModule } from '@nestjs/graphql';
+import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -12,12 +12,8 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 
 import { QuestionModule } from './question/question.module';
-import { UserToQuestionStats } from './question/entities/userToQuestionStats.entity';
-import { GraphQLError, GraphQLFormattedError } from 'graphql';
-import { LoggingPlugin } from './graphql/logging.plugin';
 
 import { ormconfig } from './typeorm/ormconfig';
-import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -59,12 +55,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     QuestionModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ClassSerializerInterceptor,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}

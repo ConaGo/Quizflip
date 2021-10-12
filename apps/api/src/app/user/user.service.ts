@@ -6,8 +6,6 @@ import { User } from './entities/user.entity';
 import { SignupDto } from '../auth/dto/signup.dto';
 import SocialSignupData, { AuthType } from '../auth/dto/user.social.data';
 import { ServerErrorException } from '../exceptions/serverError.exception';
-import { PostgresErrorCode } from 'pg';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class UserService {

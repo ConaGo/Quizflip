@@ -3,7 +3,8 @@ import { Connection } from 'typeorm';
 import { User } from './user.entity';
 
 export default class CreateUsers implements Seeder {
-  public async run(factory: Factory, connection: Connection): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public async run(factory: Factory, _connection: Connection): Promise<void> {
     const env = process.env;
     if (env.ADMIN_EMAIL_1 && env.ADMIN_PW_1) {
       await factory(User)({

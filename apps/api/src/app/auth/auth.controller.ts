@@ -5,13 +5,9 @@ import {
   UseGuards,
   Body,
   Req,
-  UseInterceptors,
-  Redirect,
   Res,
   HttpCode,
   UsePipes,
-  ClassSerializerInterceptor,
-  SerializeOptions,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -19,14 +15,11 @@ import { UserService } from '../user/user.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { GithubAuthGuard } from './guards/github-auth.guard';
-import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import {
   ApiOperation,
-  ApiOkResponse,
   ApiUnauthorizedResponse,
   ApiTags,
-  ApiCreatedResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
 import ReqWithUser from './reqWithUser.interface';
@@ -116,9 +109,8 @@ export class AuthController {
 
   @Get('github')
   @UseGuards(GithubAuthGuard)
-  async githubAuth(@Req() req) {
-    console.log('/github');
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  async githubAuth() {}
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)
   async githubAuthRedirect(

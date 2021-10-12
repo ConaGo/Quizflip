@@ -1,5 +1,5 @@
 import { LoginDto, SignupDto } from '@libs/shared-types';
-import { ClassSerializerInterceptor, INestApplication } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { User } from '../indexes/entity.index';
 import { UserService } from '../user/user.service';
 import { AuthController } from './auth.controller';
@@ -11,7 +11,6 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { Reflector } from '@nestjs/core';
 import { GithubStrategy } from './strategies/github.strategy';
 import { GithubAuthGuard } from './guards/github-auth.guard';
 import { GoogleStrategy } from './strategies/google.strategy';
