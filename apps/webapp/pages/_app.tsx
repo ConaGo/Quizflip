@@ -9,7 +9,7 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { DevNavBar } from '../src/components/DevNavBar';
 import { ApolloProvider } from '@apollo/client';
 import { client } from '@libs/data-access';
-
+import { AuthProvider } from '@libs/components';
 //Adding _retry to type
 interface AxiosErrorWithRetry extends AxiosError {
   config: AxiosRequestConfigWithRetry;
@@ -50,31 +50,33 @@ function MyApp({ Component, pageProps }: AppProps) {
     }
   }, []);
   return (
-    <ApolloProvider client={client}>
-      <ThemeProvider theme={lightTheme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <Head>
-          <title>Learnit Digital</title>
-          <meta name="description" content="Online Learning for University" />
-          <link rel="icon" href="/favicon.ico" />
-          <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width"
-          />
-        </Head>
-        {/* This allows react Router to kick in on all pages that are not defined in the pages folder */}
-        <div suppressHydrationWarning>
-          {typeof window === 'undefined' ? null : (
-            <>
-              <NavBar></NavBar>
-              <DevNavBar></DevNavBar>
-              <Component {...pageProps} />
-            </>
-          )}
-        </div>
-      </ThemeProvider>
-    </ApolloProvider>
+    <AuthProvider>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={lightTheme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          <Head>
+            <title>Learnit Digital</title>
+            <meta name="description" content="Online Learning for University" />
+            <link rel="icon" href="/favicon.ico" />
+            <meta
+              name="viewport"
+              content="minimum-scale=1, initial-scale=1, width=device-width"
+            />
+          </Head>
+          {/* This allows react Router to kick in on all pages that are not defined in the pages folder */}
+          <div suppressHydrationWarning>
+            {typeof window === 'undefined' ? null : (
+              <>
+                <NavBar></NavBar>
+                <DevNavBar></DevNavBar>
+                <Component {...pageProps} />
+              </>
+            )}
+          </div>
+        </ThemeProvider>
+      </ApolloProvider>
+    </AuthProvider>
   );
 }
 export default MyApp;

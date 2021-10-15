@@ -29,9 +29,6 @@ export class UserService {
     if (!user) {
       user = await this.userRepository.findOne({ email: nameOrEmail });
     }
-    if (!user) {
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
-    }
     return user;
   }
   async remove(id: number): Promise<DeleteResult> {

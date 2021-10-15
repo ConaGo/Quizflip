@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-
+export { Joi } from './joi.extensions';
 export {
   createQuestionFormData,
   CreateQuestionDto,

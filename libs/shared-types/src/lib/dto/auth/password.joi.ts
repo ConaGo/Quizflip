@@ -1,4 +1,4 @@
-import * as Joi from 'joi';
+import { Joi } from '../../joi.extensions';
 
 export const passwordValidator = Joi.string()
   .pattern(new RegExp('^[a-zA-Z0-9_]{3,30}$'))

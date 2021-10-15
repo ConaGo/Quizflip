@@ -33,6 +33,9 @@ export class AuthService {
     const user = await this.userService.findOneNameOrEmail(
       loginDto.nameOrEmail
     );
+    if (!user) {
+      throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
+    }
     return user;
   }
 
@@ -57,8 +60,10 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
     const options = {
       maxAge: 60 * 1000 * this.configService.get('JWT_EXPIRATION_MINUTES'),
-      httpOnly: true,
+      httpOnly: false,
       path: '/',
+      //TODO-PODUCTION set to true
+      secure: false,
     };
     return [name, token, options];
   }
@@ -75,8 +80,9 @@ export class AuthService {
     const options = {
       maxAge:
         60 * 1000 * this.configService.get('JWT_REFRESH_EXPIRATION_MINUTES'),
-      httpOnly: true,
+      httpOnly: false,
       path: '/',
+      secure: false,
     };
     await this.userService.addRefreshToken(token, user.id);
     return [name, token, options];
@@ -84,14 +90,19 @@ export class AuthService {
   async getLogoutCookie(
     name: string
   ): Promise<[string, string, CookieOptions]> {
-    return [name, '', { maxAge: 0, httpOnly: true, path: '/' }];
+    return [name, '', { maxAge: 0, httpOnly: true, path: '/', secure: false }];
   }
 }
 export type TokenPayload = {
   name: string;
   sub: number;
 };
-export type CookieOptions = { maxAge: number; httpOnly: boolean; path: string };
+export type CookieOptions = {
+  maxAge: number;
+  httpOnly: boolean;
+  path: string;
+  secure: boolean;
+};
 
 function sleep(ms) {
   return new Promise((resolve) => {

@@ -44,7 +44,9 @@ export class AuthController {
   @ApiOperation({
     summary: 'Authentication with password and email/username',
   })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiUnauthorizedResponse({
+    description: 'No user with that combination found',
+  })
   async login(@Req() req: ReqWithUser, @Res({ passthrough: true }) res) {
     const user = await this.userService.findOneNameOrEmail(
       req.body.nameOrEmail
@@ -53,7 +55,7 @@ export class AuthController {
     res.cookie(...(await this.authService.getJwtCookie(user)));
     //Set RefreshToken and add it the User
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
-    return new User(user);
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -104,13 +106,17 @@ export class AuthController {
     res.cookie(...(await this.authService.getJwtCookie(user)));
     //Set RefreshToken and add it the User
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(user)));
-    res.redirect('http://localhost:4200/');
+    res.redirect(
+      `http://localhost:4200/authflow/?user=${JSON.stringify(user)}`
+    );
+    //return user;
   }
 
   @Get('github')
   @UseGuards(GithubAuthGuard)
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   async githubAuth() {}
+
   @Get('github/redirect')
   @UseGuards(GithubAuthGuard)
   async githubAuthRedirect(

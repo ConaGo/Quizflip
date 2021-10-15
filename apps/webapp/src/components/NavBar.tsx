@@ -11,7 +11,7 @@ import {
 } from '@libs/mui';
 import { FormType } from '@libs/shared-types';
 import Link from 'next/link';
-//import { useUser } from '@libs/data-access';
+import { useAuth } from '@libs/components';
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) =>
   })
 );
 export default function NavBar() {
-  //const { isLoggedIn } = useUser();
   const [openModal, setOpenModal] = useState(false);
   const [formType, setFormType] = useState<FormType>('login');
   const classes = useStyles();
@@ -40,6 +39,7 @@ export default function NavBar() {
     setOpenModal(!openModal);
   };
 
+  const { user } = useAuth();
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -58,15 +58,19 @@ export default function NavBar() {
             News
           </Typography>
           {}
-          <Button color="inherit" onClick={() => handleOpen('login')}>
-            Login
-          </Button>
-          <Button color="inherit" onClick={() => handleOpen('signup')}>
-            Signup
-          </Button>
+          {!user && (
+            <>
+              <Button color="inherit" onClick={() => handleOpen('login')}>
+                Login
+              </Button>
+              <Button color="inherit" onClick={() => handleOpen('signup')}>
+                Signup
+              </Button>
+            </>
+          )}
         </Toolbar>
       </AppBar>
-      {openModal ? (
+      {openModal && !user ? (
         <AuthModal
           handleClose={handleClose}
           open={openModal}

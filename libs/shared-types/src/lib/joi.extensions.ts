@@ -2,8 +2,7 @@ import * as BaseJoi from 'joi';
 import * as Filter from 'bad-words';
 
 const filter = new Filter();
-const Joi = BaseJoi.extend(profanity);
-export default Joi;
+export const Joi = BaseJoi.extend(profanity);
 function profanity(joi) {
   return {
     type: 'profanity',

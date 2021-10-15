@@ -1,19 +1,13 @@
 import { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
 import Joi from 'joi';
 import { DTO } from '@libs/shared-types';
-import axios from 'axios';
-import { GraphQLClient, gql } from 'graphql-request';
-import {
-  CREATE_QUESTION,
-  client,
-  DELETE_ALL_QUESTIONS,
-  GET_ALL_CATEGORIES,
-} from '@libs/data-access';
+import { useAuth } from './useAuth';
+
 type NativeOrWeb = 'native' | 'web';
 export const useFormHTTP = (
   defaultDto: DTO,
   validationObject: Joi.ObjectSchema,
-  url: string,
+  action: 'login' | 'logout' | 'signup',
   nativeOrWeb: NativeOrWeb = 'web'
 ): {
   handlers: Record<string, Handler>;
@@ -24,6 +18,7 @@ export const useFormHTTP = (
   isFailed: boolean;
   isSuccess: boolean;
 } => {
+  const { login } = useAuth();
   const [dto, setDto] = useState<typeof defaultDto>(defaultDto);
   //automated validation after 3 secs
   /*   let didMountRef = false; //useRef(false);
@@ -49,69 +44,58 @@ export const useFormHTTP = (
   const [isSuccess, setIsSuccess] = useState(false);
 
   const validator = async () => {
-    console.log('loading..');
     setIsLoading(true);
-    const newErrors = { ...defaultErrors };
-    const errs = validationObject.validate(dto, {
-      abortEarly: false,
-    }).error;
-    errs?.details?.forEach(
-      (e: { path: (string | number)[]; message: string }) => {
-        newErrors[e.path[0]] = e.message;
-      }
-    );
-    setErrors(newErrors);
-    console.log(errs);
+    let errs;
+    if (action !== 'logout') {
+      const newErrors = { ...defaultErrors };
+      errs = validationObject?.validate(dto, {
+        abortEarly: false,
+      }).error;
+      errs?.details?.forEach(
+        (e: { path: (string | number)[]; message: string }) => {
+          newErrors[e.path[0]] = e.message;
+        }
+      );
+      setErrors(newErrors);
+    }
     const baseUrl =
       nativeOrWeb === 'native'
         ? 'http://10.0.2.2:3700/'
         : 'http://localhost:3070/';
     if (!errs) {
       try {
-        const response = await fetch(baseUrl + url, {
+        const response = await fetch(baseUrl + 'auth/' + action, {
           method: 'POST',
           body: JSON.stringify(dto),
+          credentials: 'include',
+          mode: 'cors',
+          redirect: 'follow',
           headers: {
             'Content-Type': 'application/json',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
           },
         });
-        console.log(await response.json());
-        if (!response.ok) throw new Error(await response.json());
-        const data = await response.json();
-        console.log(data);
 
-        /*         response = await axios({
-          method: 'post',
-          url: url,
-          data: dto,
-          baseURL: baseUrl,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }); */
+        const res = await response.json();
+        if (response.status !== 200) throw new Error(res.message);
 
-        /*         setIsSuccess(true);
+        setIsSuccess(true);
         setIsLoading(false);
+
         await sleep(800);
-        setIsSuccess(false); */
+        login(res);
+        setIsSuccess(false);
       } catch (err: any) {
-        console.log(JSON.stringify(err));
         if (err.message === 'Unauthorized') {
-          console.log('matched');
           setErrors({
             ...defaultErrors,
-            name: 'No user with that combination found',
+            nameOrEmail: 'No user with that combination found',
+            password: 'No user with that combination found',
           });
         }
-        console.log(err.message);
-        const message = err?.response?.data.message;
-        console.log(message);
-        console.log(err);
-        if (message === 'User with that name already exists')
-          setErrors({ ...defaultErrors, name: message });
-        if (message === 'User with that email already exists')
-          setErrors({ ...defaultErrors, email: message });
+        if (err.message === 'User with that name already exists')
+          setErrors({ ...defaultErrors, name: err.message });
+        if (err.message === 'User with that email already exists')
+          setErrors({ ...defaultErrors, email: err.message });
         setIsLoading(false);
         setIsFailed(true);
         await sleep(800);

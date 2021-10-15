@@ -1,4 +1,4 @@
-import Joi from '../../joi.extensions';
+import { Joi } from '../../joi.extensions';
 import { passwordValidator } from './password.joi';
 
 export const signupFormData = Joi.object({

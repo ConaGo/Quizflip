@@ -12,6 +12,7 @@ import {
 import { FormType, loginFormData } from '@libs/shared-types';
 import { AuthButton } from '../button/AuthButton';
 import { useFormHTTP } from '../../hooks/useFormHTTP';
+import { useOAuthFlow } from '../../hooks/useOAuth';
 const useStyles = makeStyles((theme) =>
   createStyles({
     container: {
@@ -62,10 +63,11 @@ export function Login({ setFormType }: LoginProps) {
       password: '',
     },
     loginFormData,
-    'auth/login',
+    'login',
     'web'
   );
   const classes = useStyles();
+  const { openSignInWindow } = useOAuthFlow();
   return (
     <div className={classes.container}>
       <DialogContent className={classes.dialog}>
@@ -118,14 +120,14 @@ export function Login({ setFormType }: LoginProps) {
           Or
         </Typography>
         <AuthButton
-          href="http://localhost:3070/auth/github"
           socialType="github"
+          onClick={() => openSignInWindow('http://localhost:3070/auth/github')}
         >
           Login with GitHub
         </AuthButton>
         <AuthButton
-          href="http://localhost:3070/auth/google"
           socialType="google"
+          onClick={() => openSignInWindow('http://localhost:3070/auth/google')}
         >
           Login with Google
         </AuthButton>

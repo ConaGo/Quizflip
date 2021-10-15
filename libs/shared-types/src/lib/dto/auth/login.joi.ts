@@ -1,4 +1,4 @@
-import Joi from '../../joi.extensions';
+import { Joi } from '../../joi.extensions';
 import { LoginDto } from './login.dto';
 import * as BaseJoi from 'joi';
 import { passwordValidator } from './password.joi';

@@ -1,9 +1,24 @@
 import { useEffect, useState } from 'react';
 
-//This endpoint is used to transfer the jwt from the backend to
-//the frontend via cookies; The jwt gets extracted and  the cookie
-//immediately deleted
 const AuthFlow = () => {
+  useEffect(() => {
+    // get the URL parameters which will include the auth token
+    //const params = window.location.search;
+    const params = new URL(String(window.location)).searchParams;
+    console.log(params.get('user'));
+    if (window.opener) {
+      // send them to the opening window
+      window.opener.postMessage(params.get('user'));
+      // close the popup
+      window.close();
+    }
+  });
+  // some text to show the user
+  return <p>Please wait...</p>;
+};
+export default AuthFlow;
+
+/* const AuthFlow = () => {
   const [jwt, setJwt] = useState('');
   useEffect(() => {
     //Getting the jwt
@@ -17,7 +32,7 @@ const AuthFlow = () => {
 
   return <p>{jwt}</p>;
 };
-export default AuthFlow;
+export default AuthFlow; */
 
 //Reading all cookies into object
 /*

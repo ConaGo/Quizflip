@@ -1,4 +1,4 @@
-import Joi from '../../joi.extensions';
+import { Joi } from '../../joi.extensions';
 import * as BaseJoi from 'joi';
 
 export type QuestionType = 'boolean' | 'multiple';

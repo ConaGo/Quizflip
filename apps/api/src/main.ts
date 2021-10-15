@@ -11,11 +11,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { json } from 'body-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      allowedHeaders: 'Content-Type, Accept, access-control-allow-origin',
+      credentials: true,
+      origin: 'http://localhost:4200',
+      preflightContinue: false,
+    },
+  });
+
   //TODO-production: adjust limit
   app.use(json({ limit: '50mb' }));
-  //TODO-production: remove CORS
-  app.enableCors({ credentials: true });
 
   //swagger setup
   /*   const config = new DocumentBuilder()
@@ -38,7 +45,6 @@ async function bootstrap() {
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   //logger setup
-  app.useGlobalInterceptors(new LoggingInterceptor());
   //useRequestLogging(app);
   app.use(morgan('tiny'));
   //morganBody(app);
