@@ -67,7 +67,7 @@ export function Signup({ setFormType }: SignupProps) {
       password: '',
     },
     signupFormData,
-    'auth/signup',
+    'signup',
     'web'
   );
   const classes = useStyles();

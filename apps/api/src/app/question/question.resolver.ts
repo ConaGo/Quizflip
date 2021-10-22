@@ -51,6 +51,7 @@ export class QuestionResolver {
   findAllCategories() {
     return this.questionService.findAllCategories();
   }
+
   @UseGuards(GqlAuthGuard)
   @Query(() => [Question], { name: 'randomQuestions', nullable: true })
   getRandomQuestions(

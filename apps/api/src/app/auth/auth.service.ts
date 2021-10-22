@@ -81,7 +81,7 @@ export class AuthService {
       maxAge:
         60 * 1000 * this.configService.get('JWT_REFRESH_EXPIRATION_MINUTES'),
       httpOnly: false,
-      path: '/',
+      path: '/auth/refresh',
       secure: false,
     };
     await this.userService.addRefreshToken(token, user.id);

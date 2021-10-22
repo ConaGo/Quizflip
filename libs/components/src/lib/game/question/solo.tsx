@@ -40,8 +40,8 @@ const useStyles = makeStyles(() =>
     },
     cardContainer: {
       position: 'absolute',
-      width: '100vw',
-      height: '100vh',
+      /*       width: '100vw',
+      height: '100vh', */
       willChange: 'transform',
       display: 'flex',
       alignItems: 'center',
@@ -49,6 +49,7 @@ const useStyles = makeStyles(() =>
     },
   })
 );
+
 const unescape = (s: string) =>
   s.replace(/&quot;/g, '"').replace(/&#039;/g, '’');
 
@@ -67,6 +68,7 @@ const QuestionField = ({ question }: QuestionFieldProps) => {
     </AnimatedPaper>
   );
 };
+
 interface QuestionProps {
   question: CreateQuestionDto;
 }
@@ -166,6 +168,7 @@ export const SoloQuestionGame = () => {
     <Grid
       container
       justifyContent="center"
+      alignItems="center"
       className={classes.container}
       spacing={2}
     >

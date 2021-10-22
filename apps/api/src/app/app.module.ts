@@ -43,6 +43,9 @@ import { ormconfig } from './typeorm/ormconfig';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'apps/api/src/schema.gql'),
       include: [QuestionModule, UserModule],
+      context: ({ res }) => {
+        res.header('access-control-allow-origin', 'http://localhost:4200');
+      },
     }),
     //for Postgres Database Connection
     //TODO-PRODUCTION for production set synchronize to false

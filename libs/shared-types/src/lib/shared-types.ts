@@ -20,6 +20,7 @@ import { SignupDto } from './dto/auth/signup.dto';
 import { LoginDto } from './dto/auth/login.dto';
 import { RecoveryDto } from './dto/auth/recovery.dto';
 export { RecoveryDto, LoginDto, SignupDto };
+
 export type DTO = LoginDto | SignupDto | RecoveryDto | CreateQuestionDto;
 
 export type Navigation = {

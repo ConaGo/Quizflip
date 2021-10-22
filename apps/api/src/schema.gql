@@ -25,7 +25,7 @@ type Question {
   answers: [String!]!
 }
 
-"""Multiple choice and true/false Questions"""
+"""User Object"""
 type User {
   """Unique Identifier | example: 1"""
   id: Int!

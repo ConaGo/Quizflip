@@ -6,11 +6,12 @@ import { User } from './entities/user.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserResolver } from './user.resolver';
+import { RefreshTokenHash } from './entities/refreshTokenHash.entity';
 
 @Module({
   imports: [
     ConfigModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, RefreshTokenHash]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

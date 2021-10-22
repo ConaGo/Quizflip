@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
 import Joi from 'joi';
 import { DTO } from '@libs/shared-types';
 import { useAuth } from './useAuth';
+import { fetchAuth } from '@libs/data-access';
 
 type NativeOrWeb = 'native' | 'web';
 export const useFormHTTP = (
@@ -64,16 +65,7 @@ export const useFormHTTP = (
         : 'http://localhost:3070/';
     if (!errs) {
       try {
-        const response = await fetch(baseUrl + 'auth/' + action, {
-          method: 'POST',
-          body: JSON.stringify(dto),
-          credentials: 'include',
-          mode: 'cors',
-          redirect: 'follow',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await fetchAuth(baseUrl, action, dto);
 
         const res = await response.json();
         if (response.status !== 200) throw new Error(res.message);

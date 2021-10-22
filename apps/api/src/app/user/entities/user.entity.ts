@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   OneToMany,
+  EntityColumnNotFound,
 } from 'typeorm';
 import { IsEmail, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
@@ -12,11 +13,12 @@ import { classToPlain, Exclude } from 'class-transformer';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { UserToQuestionStats } from '../../question/entities/userToQuestionStats.entity';
 import { BaseEntity } from '../../typeorm/base.entity';
+import { RefreshTokenHash } from './refreshTokenHash.entity';
 
 export type Role = 'user' | 'creator' | 'moderator' | 'admin';
 
 @Entity('user')
-@ObjectType({ description: 'Multiple choice and true/false Questions' })
+@ObjectType({ description: 'User Object' })
 export class User extends BaseEntity {
   @ApiProperty({
     example: 'name@provider.com',
@@ -36,13 +38,21 @@ export class User extends BaseEntity {
   @Column({ default: '' })
   passwordHash: string;
 
-  @Exclude()
+  /*   @Exclude()
   @Column({
     type: 'text',
     array: true,
     default: [],
   })
-  refreshTokenHashes: string[];
+  refreshTokenHashes: string[]; */
+
+  @Exclude()
+  @OneToMany(
+    () => RefreshTokenHash,
+    (refreshTokenHash) => refreshTokenHash.user,
+    { cascade: true }
+  )
+  refreshTokenHashes!: RefreshTokenHash[];
 
   @Exclude()
   @Column({ default: true })
@@ -61,7 +71,8 @@ export class User extends BaseEntity {
 
   @OneToMany(
     () => UserToQuestionStats,
-    (userToQuestionStats) => userToQuestionStats.user
+    (userToQuestionStats) => userToQuestionStats.user,
+    { cascade: true, onDelete: 'CASCADE' }
   )
   public userToQuestionStats!: UserToQuestionStats;
 
