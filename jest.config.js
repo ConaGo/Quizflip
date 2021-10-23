@@ -9,5 +9,6 @@ module.exports = {
     '<rootDir>/libs/mui',
     '<rootDir>/libs/mui/icons',
     '<rootDir>/libs/mui/styles',
+    '<rootDir>/apps/app',
   ],
 };

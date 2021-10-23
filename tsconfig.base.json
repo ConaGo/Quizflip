@@ -15,12 +15,12 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@libs/mui": ["libs/mui/src/index.ts"],
-      "@libs/mui/icons": ["libs/mui/icons/src/index.ts"],
-      "@libs/mui/styles": ["libs/mui/styles/src/index.ts"],
       "@libs/components": ["libs/components/src/index.ts"],
       "@libs/components/native": ["libs/components/src/index.native.ts"],
       "@libs/data-access": ["libs/data-access/src/index.ts"],
+      "@libs/mui": ["libs/mui/src/index.ts"],
+      "@libs/mui/icons": ["libs/mui/icons/src/index.ts"],
+      "@libs/mui/styles": ["libs/mui/styles/src/index.ts"],
       "@libs/shared-types": ["libs/shared-types/src/index.ts"]
     }
   },
