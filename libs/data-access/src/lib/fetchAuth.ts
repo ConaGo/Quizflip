@@ -1,4 +1,3 @@
-import { Observable } from '@apollo/client';
 import { DTO } from '@libs/shared-types';
 
 export const fetchAuth = async (baseUrl: string, action: string, dto: DTO) => {
@@ -16,7 +15,7 @@ export const fetchAuth = async (baseUrl: string, action: string, dto: DTO) => {
 
     .catch((err) => console.log(err));
 };
-export const _promiseToObservable = (promiseFunc) =>
+/* export const _promiseToObservable = (promiseFunc) =>
   new Observable((subscriber) => {
     promiseFunc.then(
       (value) => {
@@ -33,3 +32,4 @@ export const _promiseToObservable = (promiseFunc) =>
     );
     return subscriber; // this line can removed, as per next comment
   });
+ */

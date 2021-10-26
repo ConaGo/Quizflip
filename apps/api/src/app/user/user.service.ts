@@ -125,7 +125,11 @@ export class UserService {
       this.configService.get('JWT_REFRESH_EXPIRATION_MINUTES') * 1000 * 60
     );
   };
-  async removeRefreshToken(refreshToken: string, user: User) {
+  async removeRefreshToken(refreshToken: string, userId: number) {
+    const user = await this.findOneById(userId, {
+      relations: ['refreshTokenHashes'],
+    });
+    if (!refreshToken) return;
     const newRefreshTokenHashes = await this.asyncFilter(
       user.refreshTokenHashes,
       async (hash) => {

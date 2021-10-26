@@ -8,7 +8,7 @@ import {
 import { onError } from '@apollo/client/link/error';
 import { RetryLink } from '@apollo/client/link/retry';
 import { DTO } from '@libs/shared-types';
-import { fetchAuth, _promiseToObservable } from './fetchAuth';
+import { fetchAuth } from './fetchAuth';
 //ATTENTION process.env is not defined on the client
 //everything rendered in the browser will take the uri default
 const httpLink = new HttpLink({

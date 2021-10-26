@@ -65,7 +65,10 @@ export class AuthController {
     @Req() req: ReqWithUser,
     @Res({ passthrough: true }) res: Response
   ) {
-    await this.userService.removeRefreshToken(req?.cookies?.Refresh, req.user);
+    await this.userService.removeRefreshToken(
+      req?.cookies?.Refresh,
+      req.user?.id
+    );
     // set empty cookies
     res.cookie(...(await this.authService.getLogoutCookie('Refresh')));
     res.cookie(...(await this.authService.getLogoutCookie('Authentication')));
@@ -138,7 +141,10 @@ export class AuthController {
     @Req() req: ReqWithUser,
     @Res({ passthrough: true }) res: Response
   ) {
-    await this.userService.removeRefreshToken(req?.cookies?.Refresh, req.user);
+    await this.userService.removeRefreshToken(
+      req?.cookies?.Refresh,
+      req.user?.id
+    );
     res.cookie(...(await this.authService.getJwtCookie(req.user)));
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(req.user)));
     return req.user;
