@@ -1,5 +1,4 @@
-import { createTheme, ThemeOptions } from '@libs/mui';
-
+import { createTheme, ThemeOptions, Theme } from '@mui/material/styles';
 /* export const paletteColorsDark = {
   primary: '#0f4c75',
   secondary: '#3282b8',
@@ -35,6 +34,7 @@ export const paletteColorsLight = {
     main: '#7c1def',
   },
 };
+
 const options = (dark: boolean): ThemeOptions => {
   const paletteColors = dark ? paletteColorsDark : paletteColorsLight;
   return {
@@ -82,5 +82,9 @@ const options = (dark: boolean): ThemeOptions => {
     },
   };
 };
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 export const darkTheme = createTheme(options(true));
 export const lightTheme = createTheme(options(false));

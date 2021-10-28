@@ -1,23 +1,9 @@
-import React, { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
-import axios from 'axios';
+import { Dispatch, SetStateAction, ChangeEvent } from 'react';
 
-import { createStyles, makeStyles } from '@libs/mui/styles';
-import {
-  Button,
-  Typography,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from '@libs/mui';
+import { createStyles, makeStyles } from '@mui/styles';
+import { Button, DialogContent, TextField } from '@mui/material';
 
-import {
-  LoginDto,
-  SignupDto,
-  DTO,
-  NavButtonProps,
-  FormType,
-  signupFormData,
-} from '@libs/shared-types';
+import { FormType, signupFormData } from '@libs/shared-types';
 import { AuthButton } from './AuthButton';
 import { useFormAuth } from '../hooks/useFormAuth';
 

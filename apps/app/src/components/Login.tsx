@@ -1,23 +1,13 @@
 import React, { Dispatch, SetStateAction, ChangeEvent } from 'react';
 
-import { createStyles, makeStyles } from '@libs/mui/styles';
-import {
-  Button,
-  Typography,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from '@libs/mui';
+import { createStyles, makeStyles } from '@mui/styles';
+import { Button, DialogContent, TextField } from '@mui/material';
 
 import { FormType, loginFormData } from '@libs/shared-types';
 import { AuthButton } from './AuthButton';
 import { useFormAuth } from '../hooks/useFormAuth';
 //import { useOAuthFlow } from '../../hooks/useOAuth';
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    container: {},
-  })
-);
+
 interface LoginProps {
   setFormType: Dispatch<SetStateAction<FormType>>;
 }
@@ -38,7 +28,6 @@ const Login = ({ setFormType }: LoginProps) => {
     loginFormData,
     'login'
   );
-  const classes = useStyles();
   //const { openSignInWindow } = useOAuthFlow();
   const openSignInWindow = (s: string) => console.log(s);
   return (

@@ -118,7 +118,7 @@ function useProvideAuth() {
     );
 
     // configure axios-hooks to use this instance of axios
-    configure({ axios });
+    //configure({ axios });
   }, []);
   return {
     user,

@@ -1,8 +1,4 @@
-export interface ILoginDto {
-  nameOrEmail: string;
-  password: string;
-}
-export class LoginDto implements ILoginDto {
+export interface LoginDto {
   readonly nameOrEmail: string;
   readonly password: string;
 }

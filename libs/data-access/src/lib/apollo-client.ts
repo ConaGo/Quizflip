@@ -38,8 +38,8 @@ const errorLink = onError(
         ) {
           console.log('hello');
           //operation.setContext({ refreshTries: 1 });
-          return forward(operation);
-          return _promiseToObservable(
+
+          return fromPromise(
             fetchAuth('http://localhost:3070/', 'refresh', {} as DTO)
           )
             .filter((value) => {
@@ -55,6 +55,7 @@ const errorLink = onError(
         console.log(
           `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
         );
+        return forward(operation);
       });
 
     if (networkError) console.log(`[Network error]: ${networkError}`);

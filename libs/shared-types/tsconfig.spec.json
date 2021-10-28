@@ -10,6 +10,7 @@
     "**/*.spec.tsx",
     "**/*.spec.js",
     "**/*.spec.jsx",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "../../node_modules/bad-words/lib/bad-words.d.ts"
   ]
 }

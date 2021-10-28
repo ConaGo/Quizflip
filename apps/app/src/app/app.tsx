@@ -1,13 +1,11 @@
 import { Route, Link } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
-import {
-  ReactQueryDevtools,
-  ReactQueryDevtoolsPanel,
-} from 'react-query/devtools';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { NavBar } from '../components/NavBar';
 import { lightTheme, darkTheme } from '../styles/muiTheme';
-import { CssBaseline, ThemeProvider } from '@libs/mui';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import { AuthProvider } from '../hooks/useAuth';
+
 const queryClient = new QueryClient();
 const Routing = () => {
   return (
@@ -63,7 +61,7 @@ export function App() {
 
           <QueryClientProvider client={queryClient}>
             <Routing />
-            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+            {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
           </QueryClientProvider>
         </ThemeProvider>
       </AuthProvider>

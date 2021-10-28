@@ -15,7 +15,7 @@ export { signupFormData } from './dto/auth/signup.joi';
 export { loginFormData } from './dto/auth/login.joi';
 export { recoveryFormData } from './dto/auth/recovery.joi';
 
-import { CreateQuestionDto } from '..';
+import { CreateQuestionDto } from './dto/question/create-question.dto';
 import { SignupDto } from './dto/auth/signup.dto';
 import { LoginDto } from './dto/auth/login.dto';
 import { RecoveryDto } from './dto/auth/recovery.dto';

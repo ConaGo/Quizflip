@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import clsx from 'clsx';
-import { Button, CircularProgress, Fab } from '@libs/mui';
-import { GitHub, Check, Close } from '@libs/mui/icons';
-import { useTheme, createStyles, makeStyles, DefaultTheme } from '@mui/styles';
+import { Button, CircularProgress } from '@mui/material';
+import { GitHub, Check, Close } from '@mui/icons-material';
+import { createStyles, makeStyles } from '@mui/styles';
 import { Icon } from '@iconify/react';
 
 const useStyles = makeStyles((theme) =>
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) =>
       opacity: 0.9,
       background:
         'linear-gradient(60deg, ' +
-        theme.palette.primary.main +
+        theme.palette.primary?.main +
         ' 0%, ' +
         theme.palette.secondary.main +
         ' 40%, ' +

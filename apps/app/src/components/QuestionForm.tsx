@@ -1,25 +1,4 @@
-import {
-  tagsValidator,
-  createQuestionFormData,
-  CreateQuestionDto,
-  AQuestionDifficulty,
-  QuestionType,
-  AQuestionType,
-} from '@libs/shared-types';
-import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
-import {
-  CREATE_QUESTION,
-  useForm,
-  Handler,
-  ErrorObject,
-  HandlerObject,
-} from '@libs/data-access';
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
   Typography,
   Button,
@@ -31,26 +10,31 @@ import {
   Grid,
   RadioGroup,
   Radio,
-  FormLabel,
   FormControlLabel,
   Menu,
-  ListItemIcon,
   IconButton,
   Tabs,
   Tab,
-  TextareaAutosize,
-  InputLabel,
-  Box,
-  CenterBox,
   Autocomplete,
-} from '@libs/mui';
+} from '@mui/material';
+import { makeStyles, createStyles, ClassNameMap } from '@mui/styles';
+import { PlusOne, Add } from '@mui/icons-material';
+import { CenterBox } from '@libs/mui';
 import {
-  makeStyles,
-  createStyles,
-  ClassNameMap,
-  mergeClasses,
-} from '@libs/mui/styles';
-import { PlusOne, Add } from '@libs/mui/icons';
+  tagsValidator,
+  createQuestionFormData,
+  CreateQuestionDto,
+  AQuestionDifficulty,
+  QuestionType,
+  AQuestionType,
+} from '@libs/shared-types';
+import {
+  CREATE_QUESTION,
+  useForm,
+  Handler,
+  ErrorObject,
+  HandlerObject,
+} from '@libs/data-access';
 
 interface QuestionFormProps {
   categories: string[];
@@ -61,14 +45,54 @@ function a11yProps(index: number) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      margin: theme.spacing(2),
+      padding: theme.spacing(2),
+    },
+    chip: {
+      margin: theme.spacing(0.1),
+    },
+    noPadding: {
+      padding: 0,
+    },
+    //positiones label a bit further down when input is filled or the user types
+    //this prevents it from getting cut off
+    popoverLabel: {
+      '&.Mui-focused': {
+        position: 'absolute',
+        top: '0.3rem',
+      },
+      '&.MuiFormLabel-filled': {
+        position: 'absolute',
+        top: '0.3rem',
+      },
+    },
+    //position errortext inside the input field
+    helperText: {
+      '& p': {
+        position: 'absolute',
+        bottom: '0.1rem',
+      },
+    },
+    container: {
+      display: 'flex',
+
+      justifyContent: 'center',
+      overflow: 'hidden',
+    },
+  })
+);
+
 export const QuestionForm = ({ categories }: QuestionFormProps) => {
   const classes = useStyles();
   const [type, setType] = useState<QuestionType>('multiple');
-  const handleTypeChange = (
-    event: React.ChangeEvent,
-    newValue: QuestionType
-  ) => {
-    const newType = AQuestionType[newValue];
+  const handleTypeChange = (event: React.SyntheticEvent, newIndex: number) => {
+    const newType = AQuestionType[newIndex];
     setType(newType);
     if (newType === 'multiple') {
       console.log('first');
@@ -145,49 +169,7 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
     </Paper>
   );
 };
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      //background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-      flexGrow: 1,
-    },
-    paper: {
-      margin: theme.spacing(2),
-      padding: theme.spacing(2),
-    },
-    chip: {
-      margin: theme.spacing(0.1),
-    },
-    noPadding: {
-      padding: 0,
-    },
-    //positiones label a bit further down when input is filled or the user types
-    //this prevents it from getting cut off
-    popoverLabel: {
-      '&.Mui-focused': {
-        position: 'absolute',
-        top: '0.3rem',
-      },
-      '&.MuiFormLabel-filled': {
-        position: 'absolute',
-        top: '0.3rem',
-      },
-    },
-    //position errortext inside the input field
-    helperText: {
-      '& p': {
-        position: 'absolute',
-        bottom: '0.1rem',
-      },
-    },
-    container: {
-      display: 'flex',
 
-      justifyContent: 'center',
-      overflow: 'hidden',
-    },
-  })
-);
 const typeSwitch = (type: QuestionType, inputProps: InputProps) => {
   switch (type) {
     case 'multiple':
@@ -203,7 +185,7 @@ interface InputProps {
   dto: CreateQuestionDto;
   handlers: HandlerObject<CreateQuestionDto>;
   errors: ErrorObject<CreateQuestionDto>;
-  categories?: string[];
+  categories: string[];
   number?: number;
 }
 const MultipleChoiceInput = (inputProps: InputProps) => {
@@ -350,6 +332,7 @@ const TagsInput = ({ dto, handlers }: InputProps) => {
     setAnchorEl(null);
     setError('');
   };
+
   const handleAdd = () => {
     const errs = tagsValidator.validate([...dto.tags, value]).error;
     setError(errs ? errs.message : '');

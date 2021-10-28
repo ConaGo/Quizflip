@@ -2,7 +2,7 @@ import { Joi } from '../../joi.extensions';
 import * as BaseJoi from 'joi';
 
 export type QuestionType = 'boolean' | 'multiple';
-export const AQuestionType = ['boolean', 'multiple'];
+export const AQuestionType: QuestionType[] = ['boolean', 'multiple'];
 export type QuestionDifficulty = 'easy' | 'medium' | 'hard';
 export const AQuestionDifficulty = ['easy', 'medium', 'hard'];
 export type QuestionCategory =
@@ -28,10 +28,10 @@ export const AQuestionSubTagEntertainment = [
 export type Language = 'english' | 'german';
 export const ALanguage = ['english', 'german'];
 
-export class CreateQuestionDto {
+export interface CreateQuestionDto {
   readonly type: QuestionType;
   readonly category: string;
-  readonly tags?: string[];
+  readonly tags: string[];
   readonly difficulty: QuestionDifficulty;
   readonly question: string;
   readonly correctAnswers: string[];
@@ -39,6 +39,7 @@ export class CreateQuestionDto {
   readonly language: Language;
   readonly authorId: number;
 }
+
 export const tagsValidator = Joi.array()
   .unique()
   .items(

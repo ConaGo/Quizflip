@@ -1,5 +1,8 @@
 import { Dispatch, SetStateAction, useState } from 'react';
-import Joi from 'joi';
+import { ObjectSchema } from 'joi';
+import { useMutation } from 'react-query';
+import axios from 'axios';
+import { print, ASTNode } from 'graphql';
 
 export type ErrorObject<T> = {
   [K in keyof T]: string;
@@ -11,8 +14,8 @@ export type Handler = (value: unknown) => void;
 
 export function useForm<T>(
   defaultDto: T,
-  validationObject: Joi.ObjectSchema<T>,
-  mutationFn: () => void
+  validationObject: ObjectSchema<T>,
+  mutation: ASTNode
 ): {
   setDto: Dispatch<SetStateAction<T>>;
   dto: T;
@@ -39,7 +42,12 @@ export function useForm<T>(
   //Get handlers for all fields
   const handlers = getHandlers(dto, setDto);
 
-  const [mutate, { data, loading, error }] = useMutation(mutation);
+  const { mutate, data, isLoading, error } = useMutation((dto: T) =>
+    axios.post('/graphql', {
+      query: print(mutation),
+      variables: dto,
+    })
+  );
 
   const validate: () => Promise<boolean> = async () => {
     const newErrors = { ...defaultErrors };
@@ -64,7 +72,7 @@ export function useForm<T>(
     if (await validate()) {
       try {
         console.log(dto);
-        mutate({ variables: { input: dto } });
+        mutate(dto);
       } catch (err) {
         console.log(err);
       }
@@ -78,7 +86,7 @@ export function useForm<T>(
     validate,
     errors,
     onSubmit,
-    loading,
+    loading: isLoading,
     error,
     data,
   };

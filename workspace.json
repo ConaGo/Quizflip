@@ -170,6 +170,12 @@
             }
           }
         },
+        "analyze": {
+          "executor": "@nrwl/workspace:run-commands",
+          "options": {
+            "command": "nx run app:build:production --stats-json && yarn run webpack-bundle-analyzer ./dist/apps/app/stats.json"
+          }
+        },
         "serve": {
           "executor": "@nrwl/web:dev-server",
           "options": {
@@ -178,7 +184,7 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "app:build:production",
+              "buildTarget": "app:build:production --outPutPath ./dist/apps/app/",
               "hmr": false
             }
           }

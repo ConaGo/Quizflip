@@ -6,22 +6,19 @@ import {
   AppBar,
   Slide,
   Toolbar,
-  TransitionProps,
   IconButton,
   Typography,
-  Button,
   Skeleton,
-} from '@libs/mui';
+} from '@mui/material';
+import { Close } from '@mui/icons-material';
+import { TransitionProps } from '@mui/material/transitions';
+
 import { useSpring, animated } from 'react-spring';
-
-import { Close } from '@libs/mui/icons';
 import { FormType } from '@libs/shared-types';
-
-import { Signup } from './Signup';
-
 import bookImage from '../assets/book-medium.jpg';
 
 const Login = React.lazy(() => import('./Login'));
+const Signup = React.lazy(() => import('./Signup'));
 
 export default function AuthModal({
   handleClose,
@@ -126,9 +123,15 @@ export default function AuthModal({
 const FallBackSkeleton = () => {
   return (
     <>
-      <Skeleton variant="text" />
-      <Skeleton variant="circular" width={40} height={40} />
       <Skeleton variant="rectangular" width={240} height={520} />
+      <Skeleton variant="text" />
+      <Skeleton variant="rectangular" height={80} />
+      <Skeleton variant="text" />
+      <Skeleton variant="rectangular" height={80} />
+      <Skeleton variant="text" />
+      <Skeleton variant="rectangular" height={80} />
+      <Skeleton variant="text" />
+      <Skeleton variant="rectangular" height={80} />
     </>
   );
 };

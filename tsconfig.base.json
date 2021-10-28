@@ -10,10 +10,13 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": ["es2017", "dom", "dom.iterable"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+
+    "esModuleInterop": true,
+
     "paths": {
       "@libs/components": ["libs/components/src/index.ts"],
       "@libs/components/native": ["libs/components/src/index.native.ts"],

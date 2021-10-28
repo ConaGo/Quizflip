@@ -1,3 +1,3 @@
-export class RecoveryDto {
+export interface RecoveryDto {
   readonly email: string;
 }

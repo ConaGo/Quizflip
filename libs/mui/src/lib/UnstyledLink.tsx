@@ -1,4 +1,4 @@
-import { styled } from '../../styles/src';
+import { styled } from '@mui/styles';
 import { Link, LinkProps } from 'react-router-dom';
 
 export const UnstyledLink = styled((props: LinkProps) => <Link {...props} />)({
