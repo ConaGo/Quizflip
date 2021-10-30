@@ -24,11 +24,13 @@ export class QuestionResolver {
     private readonly questionService: QuestionService,
     private readonly userService: UserService
   ) {}
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ResolveField('answers', (_type) => [String])
   getAnswers(@Parent() question: Question): string[] {
     return shuffle(merge(question.correctAnswers, question.incorrectAnswers));
   }
+
   @Query(() => [Question], { name: 'questions' })
   findAll() {
     return this.questionService.findAll();

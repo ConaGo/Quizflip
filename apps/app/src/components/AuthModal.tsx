@@ -53,6 +53,8 @@ export default function AuthModal({
   const imgStyle = {
     maxHeight: 240,
     maxWidth: 520,
+    /*     maxWidth: '100%',
+    height: 'auto', */
     alignSelf: 'center',
     overflow: 'hidden',
   };
@@ -104,7 +106,7 @@ export default function AuthModal({
       <Typography variant="subtitle1" align="center">
         Learn and test your knowledge
       </Typography>
-      <Suspense fallback={FallBackSkeleton}>
+      <Suspense fallback={<FallBackSkeleton />}>
         {formType === 'signup' && (
           <animated.div style={{ ...styles1 }}>
             <Signup setFormType={setFormTypeWithSlide}></Signup>
@@ -123,7 +125,7 @@ export default function AuthModal({
 const FallBackSkeleton = () => {
   return (
     <>
-      <Skeleton variant="rectangular" width={240} height={520} />
+      <Skeleton variant="rectangular" width={540} height={520} />
       <Skeleton variant="text" />
       <Skeleton variant="rectangular" height={80} />
       <Skeleton variant="text" />

@@ -89,6 +89,7 @@ function useProvideAuth() {
     setUser(user);
   };
   const logout = async () => {
+    window.localStorage.clear();
     await logoutRequest();
     setUser(null);
   };

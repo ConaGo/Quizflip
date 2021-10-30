@@ -1,4 +1,5 @@
-import { gql } from '@apollo/client';
+//import { gql } from '@apollo/client';
+import { gql } from 'graphql-request';
 
 export const CREATE_QUESTION = gql`
   mutation createQuestion($input: CreateQuestionInput!) {

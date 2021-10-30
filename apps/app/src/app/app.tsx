@@ -5,30 +5,27 @@ import { NavBar } from '../components/NavBar';
 import { lightTheme, darkTheme } from '../styles/muiTheme';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { AuthProvider } from '../hooks/useAuth';
-
+import { QuestionForm } from '../components/QuestionForm';
+import { Try } from '../components/Try';
 const queryClient = new QueryClient();
 const Routing = () => {
   return (
     <>
       <NavBar />
+      <Try />
       <Route
         path="/"
         exact
         render={() => (
           <div>
-            This is the generated root route.{' '}
-            <Link to="/page-2">Click here for page 2.</Link>
+            <Try />
           </div>
         )}
       />
       <Route
         path="/create"
         exact
-        render={() => (
-          <div>
-            <Link to="/">Click here to go back toCREATE root page.</Link>
-          </div>
-        )}
+        render={() => <QuestionForm categories={['ss']} />}
       />
       <Route
         path="/explore"

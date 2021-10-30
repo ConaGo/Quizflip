@@ -1,9 +1,9 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
-import * as morgan from 'morgan';
+import morgan from 'morgan';
 import morganBody from 'morgan-body';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app/app.module';
 import { LoggingInterceptor } from './logging.interceptor';
 import { useRequestLogging } from './logging.middleware';

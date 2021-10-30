@@ -75,10 +75,8 @@ input CreateQuestionInput {
   """
   question: String!
 
-  """
-  examples: "Nine", "True"
-  """
-  correctAnswer: String!
+  """examples: ["Nine", "Five"], ["True"]"""
+  correctAnswers: [String!]!
 
   """
   An array of wrong answers | examples "[ "Ten", "Seven", "Eight ]", "[ "False" ]"
@@ -112,10 +110,8 @@ input UpdateQuestionInput {
   """
   question: String
 
-  """
-  examples: "Nine", "True"
-  """
-  correctAnswer: String
+  """examples: ["Nine", "Five"], ["True"]"""
+  correctAnswers: [String!]
 
   """
   An array of wrong answers | examples "[ "Ten", "Seven", "Eight ]", "[ "False" ]"

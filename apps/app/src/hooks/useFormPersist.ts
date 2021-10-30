@@ -2,6 +2,11 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { ObjectSchema } from 'joi';
 import { useMutation } from 'react-query';
 import axios from 'axios';
+//import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+
+type TData = unknown;
+type TError = unknown;
 
 export type ErrorObject<T> = {
   [K in keyof T]: string;
@@ -11,12 +16,23 @@ export type HandlerObject<T> = {
 };
 export type Handler = (value: unknown) => void;
 
-export function useForm<T>(
-  defaultDto: T,
-  validationObject: ObjectSchema<T>,
-  mutation: string
-): {
-  setDto: Dispatch<SetStateAction<T>>;
+export interface IUseFormPersist<T> {
+  defaultDto: T;
+  validationObject: ObjectSchema<T>;
+  mutation: string;
+  storageKey: string;
+  onError?: (data: TData) => void;
+  onSuccess?: (error: TError) => void;
+}
+
+export const useFormPersist = <T>({
+  defaultDto,
+  validationObject,
+  mutation,
+  storageKey,
+  onError,
+  onSuccess,
+}: IUseFormPersist<T>): {
   dto: T;
   handlers: HandlerObject<T>;
   validate: () => Promise<boolean>;
@@ -25,9 +41,9 @@ export function useForm<T>(
   loading: boolean;
   error: any;
   data: unknown;
-} {
+} => {
   //Initialize state object
-  const [dto, setDto] = useState<T>(defaultDto);
+  const [dto, setDto] = useLocalStorage<T>(storageKey, defaultDto);
 
   //Dynamically create Error object from formtype
   const defaultErrors: { [x: string]: string } = {};
@@ -41,11 +57,16 @@ export function useForm<T>(
   //Get handlers for all fields
   const handlers = getHandlers(dto, setDto);
 
-  const { mutate, data, isLoading, error } = useMutation((dto: T) =>
-    axios.post('/graphql', {
-      query: mutation,
-      variables: dto,
-    })
+  const { mutate, data, isLoading, error } = useMutation(
+    (dto: T) =>
+      axios.post('/graphql', {
+        query: mutation,
+        variables: { input: dto },
+      }),
+    {
+      onError: onError,
+      onSuccess: onSuccess,
+    }
   );
 
   const validate: () => Promise<boolean> = async () => {
@@ -70,7 +91,6 @@ export function useForm<T>(
   const onSubmit = async () => {
     if (await validate()) {
       try {
-        console.log(dto);
         mutate(dto);
       } catch (err) {
         console.log(err);
@@ -78,8 +98,25 @@ export function useForm<T>(
     }
   };
 
+  function getHandler<T>(
+    name: string,
+    obj: T,
+    setter: typeof setDto
+  ): (e: unknown) => void {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return (e) => setter({ ...obj, [name]: e });
+  }
+
+  function getHandlers<T>(obj: T, setter: typeof setDto): HandlerObject<T> {
+    const handlers: { [key: string]: Handler } = {};
+    for (const [key] of Object.entries(obj)) {
+      handlers[key] = getHandler(key, obj, setter);
+    }
+    return handlers as HandlerObject<T>;
+  }
+
   return {
-    setDto,
     dto,
     handlers,
     validate,
@@ -89,23 +126,4 @@ export function useForm<T>(
     error,
     data,
   };
-}
-
-function getHandlers<T>(
-  obj: T,
-  setter: Dispatch<SetStateAction<T>>
-): HandlerObject<T> {
-  const handlers: { [key: string]: Handler } = {};
-  for (const [key] of Object.entries(obj)) {
-    handlers[key] = getHandler(key, obj, setter);
-  }
-  return handlers as HandlerObject<T>;
-}
-
-function getHandler<T>(
-  name: string,
-  obj: T,
-  setter: Dispatch<SetStateAction<T>>
-): (e: unknown) => void {
-  return (e) => setter({ ...obj, [name]: e });
-}
+};

@@ -16,9 +16,11 @@ import {
   Tabs,
   Tab,
   Autocomplete,
+  Box,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { makeStyles, createStyles, ClassNameMap } from '@mui/styles';
-import { PlusOne, Add } from '@mui/icons-material';
+import { Add, Save } from '@mui/icons-material';
 import { CenterBox } from '@libs/mui';
 import {
   tagsValidator,
@@ -30,12 +32,13 @@ import {
 } from '@libs/shared-types';
 import {
   CREATE_QUESTION,
-  useForm,
   Handler,
   ErrorObject,
   HandlerObject,
 } from '@libs/data-access';
-
+import { useFormPersist } from '../hooks/useFormPersist';
+//import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 interface QuestionFormProps {
   categories: string[];
 }
@@ -89,6 +92,9 @@ const useStyles = makeStyles((theme) =>
 );
 
 export const QuestionForm = ({ categories }: QuestionFormProps) => {
+  const localStorageKey = 'question_form';
+  //const setDto = (dto: CreateQuestionDto) => writeStorage(localStorageKey, dto);
+  const [_dto, setDto] = useLocalStorage('localStorageKey', {});
   const classes = useStyles();
   const [type, setType] = useState<QuestionType>('multiple');
   const handleTypeChange = (event: React.SyntheticEvent, newIndex: number) => {
@@ -128,11 +134,24 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
     language: 'english',
     authorId: 2,
   };
-  const { setDto, dto, handlers, onSubmit, errors, loading, error } = useForm(
-    defaultValues,
-    createQuestionFormData,
-    CREATE_QUESTION
-  );
+
+  const {
+    dto,
+    handlers,
+    onSubmit,
+    errors,
+    loading,
+    error,
+    data,
+  } = useFormPersist({
+    defaultDto: defaultValues,
+    validationObject: createQuestionFormData,
+    mutation: CREATE_QUESTION,
+    storageKey: localStorageKey,
+    onSuccess: () => console.log('great success'),
+    onError: () => console.log('great failure'),
+  });
+
   const inputProps: InputProps = {
     setDto,
     dto,
@@ -142,30 +161,45 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
   };
   return (
     <Paper elevation={10} className={classes.paper}>
-      <CenterBox>
-        <Typography variant="h4">Create A New Question</Typography>
-      </CenterBox>
-      <Tabs
-        value={AQuestionType.indexOf(type)}
-        onChange={handleTypeChange}
-        aria-label="question-type-tab-select"
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: 1,
+          m: 1,
+          bgcolor: 'background.paper',
+        }}
       >
-        <Tab label="True Or False" {...a11yProps(1)} />
-        <Tab label="Multiple Choice" {...a11yProps(0)} />
-      </Tabs>
-      <Grid
-        container
-        justifyContent="center"
-        className={classes.container}
-        spacing={2}
-      >
+        <CenterBox>
+          <Typography variant="h4">Create A New Question</Typography>
+        </CenterBox>
+        <Tabs
+          value={AQuestionType.indexOf(type)}
+          onChange={handleTypeChange}
+          aria-label="question-type-tab-select"
+        >
+          <Tab label="True Or False" {...a11yProps(1)} />
+          <Tab label="Multiple Choice" {...a11yProps(0)} />
+        </Tabs>
+
         <QuestionInput {...inputProps}></QuestionInput>
         {typeSwitch(type, inputProps)}
         <CategoryInput {...inputProps} />
         <DifficultyInput {...inputProps} />
         <TagsInput {...inputProps} />
-        <Button onClick={onSubmit}>Submit Question</Button>
-      </Grid>
+        <LoadingButton
+          variant="contained"
+          color={error ? 'error' : data ? 'success' : 'secondary'}
+          loadingPosition="start"
+          loading={loading}
+          onClick={onSubmit}
+          startIcon={<Save />}
+        >
+          {error ? 'Try Again' : 'Submit Question'}
+        </LoadingButton>
+      </Box>
     </Paper>
   );
 };
@@ -181,7 +215,7 @@ const typeSwitch = (type: QuestionType, inputProps: InputProps) => {
   }
 };
 interface InputProps {
-  setDto: Dispatch<SetStateAction<CreateQuestionDto>>;
+  setDto: (dto: CreateQuestionDto) => void;
   dto: CreateQuestionDto;
   handlers: HandlerObject<CreateQuestionDto>;
   errors: ErrorObject<CreateQuestionDto>;
@@ -218,12 +252,13 @@ const IncorrectAnswerInput = ({
 }: InputProps) => {
   return (
     <TextField
+      sx={{ m: 3 }}
       label={`Incorrect answer no. ${number}`}
-      value={dto.incorrectAnswers[number]}
+      value={dto.incorrectAnswers[number - 1]}
       onChange={(e) => {
-        console.log(dto.correctAnswers);
+        //console.log(dto.correctAnswers);
         const newIncorrectAnswers = dto.incorrectAnswers.slice();
-        newIncorrectAnswers[number] = e.target.value;
+        newIncorrectAnswers[number - 1] = e.target.value;
         handlers.incorrectAnswers(newIncorrectAnswers);
       }}
     ></TextField>

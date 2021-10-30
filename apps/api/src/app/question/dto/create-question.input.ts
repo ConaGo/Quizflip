@@ -35,8 +35,10 @@ export class CreateQuestionInput {
   })
   readonly question: string;
 
-  @Field({ description: 'examples: "Nine", "True"' })
-  readonly correctAnswer: string;
+  @Field(() => [String], {
+    description: 'examples: ["Nine", "Five"], ["True"]',
+  })
+  readonly correctAnswers: string[];
 
   @Field(() => [String], {
     description:
