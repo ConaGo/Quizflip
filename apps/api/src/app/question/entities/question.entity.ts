@@ -69,7 +69,8 @@ export class Question extends BaseEntity {
   @Column({ nullable: false })
   question: string;
 
-  @Exclude()
+  @Expose({ groups: ['author'] })
+  @Field(() => [String])
   @Column({
     nullable: false,
     type: 'text',
@@ -77,7 +78,8 @@ export class Question extends BaseEntity {
   })
   correctAnswers: string[];
 
-  @Exclude()
+  @Expose({ groups: ['author'] })
+  @Field(() => [String])
   @Column({
     nullable: false,
     type: 'text',

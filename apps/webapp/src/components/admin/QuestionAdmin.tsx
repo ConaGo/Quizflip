@@ -33,7 +33,6 @@ export const QuestionAdmin = () => {
       correctAnswers: [e.correct_answer],
       incorrectAnswers: e.incorrect_answers,
       language: 'english',
-      authorId: 2,
     };
     return ret;
   };

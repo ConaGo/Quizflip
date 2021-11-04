@@ -1,6 +1,18 @@
 //import { gql } from '@apollo/client';
 import { gql } from 'graphql-request';
 
+export const QUESTION_FULL = gql`
+  fragment QuestionFull on Question {
+    id
+    type
+    category
+    tags
+    question
+    correctAnswers
+    incorrectAnswers
+  }
+`;
+
 export const CREATE_QUESTION = gql`
   mutation createQuestion($input: CreateQuestionInput!) {
     createQuestion(input: $input) {
@@ -25,6 +37,15 @@ export const DELETE_ALL_QUESTIONS = gql`
 export const GET_ALL_CATEGORIES = gql`
   query {
     categories
+  }
+`;
+
+export const GET_USER_QUESTIONS = gql`
+  ${QUESTION_FULL}
+  query getuserQuestions {
+    userQuestions {
+      ...QuestionFull
+    }
   }
 `;
 

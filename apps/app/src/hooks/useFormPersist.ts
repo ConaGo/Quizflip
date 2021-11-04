@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { ObjectSchema } from 'joi';
 import { useMutation } from 'react-query';
-import axios from 'axios';
+import axios from './axios';
 //import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useLocalStorage, SetValue } from '../hooks/useLocalStorage';
 
 type TData = unknown;
 type TError = unknown;
@@ -33,6 +33,7 @@ export const useFormPersist = <T>({
   onError,
   onSuccess,
 }: IUseFormPersist<T>): {
+  setDto: SetValue<T>;
   dto: T;
   handlers: HandlerObject<T>;
   validate: () => Promise<boolean>;
@@ -117,6 +118,7 @@ export const useFormPersist = <T>({
   }
 
   return {
+    setDto,
     dto,
     handlers,
     validate,

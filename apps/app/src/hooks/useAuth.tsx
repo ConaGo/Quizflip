@@ -6,12 +6,6 @@ import React, {
   useContext,
 } from 'react';
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import useAxios, {
-  configure,
-  loadCache,
-  serializeCache,
-  makeUseAxios,
-} from 'axios-hooks';
 
 import { useMutation, useQuery } from 'react-query';
 import { DTO, LoginDto, SignupDto, RecoveryDto } from '@libs/shared-types';

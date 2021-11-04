@@ -17,6 +17,7 @@ import {
   Tab,
   Autocomplete,
   Box,
+  Stack,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { makeStyles, createStyles, ClassNameMap } from '@mui/styles';
@@ -37,8 +38,7 @@ import {
   HandlerObject,
 } from '@libs/data-access';
 import { useFormPersist } from '../hooks/useFormPersist';
-//import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { QueryClient, useQueryClient } from 'react-query';
 interface QuestionFormProps {
   categories: string[];
 }
@@ -92,39 +92,83 @@ const useStyles = makeStyles((theme) =>
 );
 
 export const QuestionForm = ({ categories }: QuestionFormProps) => {
-  const localStorageKey = 'question_form';
-  //const setDto = (dto: CreateQuestionDto) => writeStorage(localStorageKey, dto);
-  const [_dto, setDto] = useLocalStorage('localStorageKey', {});
+  const queryClient = useQueryClient();
   const classes = useStyles();
+
   const [type, setType] = useState<QuestionType>('multiple');
+
   const handleTypeChange = (event: React.SyntheticEvent, newIndex: number) => {
     const newType = AQuestionType[newIndex];
     setType(newType);
-    if (newType === 'multiple') {
-      console.log('first');
-      setDto({ ...dto, incorrectAnswers: ['', '', ''], correctAnswers: [''] });
-    } else if (newType === 'boolean') {
-      console.log('second');
-      if (
-        dto.correctAnswers[0] !== 'True' &&
-        dto.correctAnswers[0] !== 'False'
-      ) {
-        handlers.correctAnswers(['True']);
-      }
-      if (
-        dto.correctAnswers[0] === 'True' &&
-        dto.incorrectAnswers[0] !== 'False'
-      )
-        handlers.incorrectAnswers(['False']);
-      else if (
-        dto.correctAnswers[0] === 'False' &&
-        dto.incorrectAnswers[0] !== 'True'
-      )
-        handlers.incorrectAnswers(['True']);
-    }
   };
+
+  return (
+    <Paper sx={{}} elevation={10} className={classes.paper}>
+      {/*       <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          p: 1,
+          m: 1,
+          bgcolor: 'background.paper',
+        }}
+      > */}
+      <Stack justifyContent="center" alignItems="center">
+        <CenterBox>
+          <Typography variant="h4">Create A New Question</Typography>
+        </CenterBox>
+        <Tabs
+          value={AQuestionType.indexOf(type)}
+          onChange={handleTypeChange}
+          aria-label="question-type-tab-select"
+        >
+          <Tab label="True Or False" {...a11yProps(1)} />
+          <Tab label="Multiple Choice" {...a11yProps(0)} />
+        </Tabs>
+        {formTypeSwitch({ categories, queryClient, type })}
+        {/*       </Box> */}
+      </Stack>
+    </Paper>
+  );
+};
+interface ICustomLoadingButton {
+  text?: string;
+  error: any;
+  data: unknown;
+  loading: boolean;
+  onSubmit: () => Promise<void>;
+}
+const CustomLoadingButton = ({
+  text = 'Submit Question',
+  error,
+  data,
+  loading,
+  onSubmit,
+}: ICustomLoadingButton) => {
+  return (
+    <LoadingButton
+      variant="contained"
+      color={error ? 'error' : data ? 'success' : 'secondary'}
+      loadingPosition="start"
+      loading={loading}
+      onClick={onSubmit}
+      startIcon={<Save />}
+    >
+      {error ? 'Try Again' : text}
+    </LoadingButton>
+  );
+};
+
+interface IQuestionForm {
+  categories: string[];
+  queryClient: QueryClient;
+}
+const MultipleChoiceForm = ({ categories, queryClient }: IQuestionForm) => {
+  const localStorageKey = 'question_form_multiple';
   const defaultValues: CreateQuestionDto = {
-    type: 'boolean',
+    type: 'multiple',
     category: categories.length > 0 ? categories[0] : '',
     tags: [],
     difficulty: 'medium',
@@ -132,10 +176,10 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
     correctAnswers: [''],
     incorrectAnswers: ['', '', ''],
     language: 'english',
-    authorId: 2,
   };
 
   const {
+    setDto,
     dto,
     handlers,
     onSubmit,
@@ -148,10 +192,13 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
     validationObject: createQuestionFormData,
     mutation: CREATE_QUESTION,
     storageKey: localStorageKey,
-    onSuccess: () => console.log('great success'),
+    onSuccess: () => {
+      setDto(defaultValues);
+      queryClient.invalidateQueries('user_questions');
+      console.log('great success');
+    },
     onError: () => console.log('great failure'),
   });
-
   const inputProps: InputProps = {
     setDto,
     dto,
@@ -160,60 +207,94 @@ export const QuestionForm = ({ categories }: QuestionFormProps) => {
     categories,
   };
   return (
-    <Paper elevation={10} className={classes.paper}>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          p: 1,
-          m: 1,
-          bgcolor: 'background.paper',
-        }}
-      >
-        <CenterBox>
-          <Typography variant="h4">Create A New Question</Typography>
-        </CenterBox>
-        <Tabs
-          value={AQuestionType.indexOf(type)}
-          onChange={handleTypeChange}
-          aria-label="question-type-tab-select"
-        >
-          <Tab label="True Or False" {...a11yProps(1)} />
-          <Tab label="Multiple Choice" {...a11yProps(0)} />
-        </Tabs>
-
-        <QuestionInput {...inputProps}></QuestionInput>
-        {typeSwitch(type, inputProps)}
-        <CategoryInput {...inputProps} />
-        <DifficultyInput {...inputProps} />
-        <TagsInput {...inputProps} />
-        <LoadingButton
-          variant="contained"
-          color={error ? 'error' : data ? 'success' : 'secondary'}
-          loadingPosition="start"
-          loading={loading}
-          onClick={onSubmit}
-          startIcon={<Save />}
-        >
-          {error ? 'Try Again' : 'Submit Question'}
-        </LoadingButton>
-      </Box>
-    </Paper>
+    <>
+      <QuestionInput {...inputProps}></QuestionInput>
+      <MultipleChoiceInput {...inputProps} />;
+      <CategoryInput {...inputProps} />
+      <DifficultyInput {...inputProps} />
+      <TagsInput {...inputProps} />
+      <CustomLoadingButton
+        error={error}
+        data={data}
+        loading={loading}
+        onSubmit={onSubmit}
+      />
+    </>
   );
 };
+const BooleanForm = ({ categories, queryClient }: IQuestionForm) => {
+  const localStorageKey = 'question_form_boolean';
+  const defaultValues: CreateQuestionDto = {
+    type: 'boolean',
+    category: categories.length > 0 ? categories[0] : '',
+    tags: [],
+    difficulty: 'medium',
+    question: '',
+    correctAnswers: ['True'],
+    incorrectAnswers: ['False'],
+    language: 'english',
+  };
 
-const typeSwitch = (type: QuestionType, inputProps: InputProps) => {
+  const {
+    setDto,
+    dto,
+    handlers,
+    onSubmit,
+    errors,
+    loading,
+    error,
+    data,
+  } = useFormPersist({
+    defaultDto: defaultValues,
+    validationObject: createQuestionFormData,
+    mutation: CREATE_QUESTION,
+    storageKey: localStorageKey,
+    onSuccess: () => {
+      setDto(defaultValues);
+      queryClient.invalidateQueries('user_questions');
+      console.log('great success');
+    },
+    onError: () => console.log('great failure'),
+  });
+  const inputProps: InputProps = {
+    setDto,
+    dto,
+    handlers,
+    errors,
+    categories,
+  };
+  return (
+    <>
+      <QuestionInput {...inputProps}></QuestionInput>
+      <BooleanInput {...inputProps} />
+      <CategoryInput {...inputProps} />
+      <DifficultyInput {...inputProps} />
+      <TagsInput {...inputProps} />
+      <CustomLoadingButton
+        error={error}
+        data={data}
+        loading={loading}
+        onSubmit={onSubmit}
+      />
+    </>
+  );
+};
+const formTypeSwitch = ({
+  categories,
+  queryClient,
+  type,
+}: IQuestionForm & { type: QuestionType }) => {
+  const props = { categories, queryClient };
   switch (type) {
     case 'multiple':
-      return <MultipleChoiceInput {...inputProps} />;
+      return <MultipleChoiceForm {...props} />;
     case 'boolean':
-      return <BooleanInput {...inputProps} />;
+      return <BooleanForm {...props} />;
     default:
       return null;
   }
 };
+
 interface InputProps {
   setDto: (dto: CreateQuestionDto) => void;
   dto: CreateQuestionDto;
@@ -366,6 +447,7 @@ const TagsInput = ({ dto, handlers }: InputProps) => {
     setFocus(false);
     setAnchorEl(null);
     setError('');
+    setValue('');
   };
 
   const handleAdd = () => {
@@ -378,7 +460,7 @@ const TagsInput = ({ dto, handlers }: InputProps) => {
     }
   };
   return (
-    <>
+    <Stack direction="row" spacing={2}>
       {dto.tags.map((tag) => {
         return Tag(tag, handlers.tags, dto.tags, classes);
       })}
@@ -413,7 +495,7 @@ const TagsInput = ({ dto, handlers }: InputProps) => {
           </IconButton>
         </MenuItem>
       </Menu>
-    </>
+    </Stack>
   );
 };
 const Tag = (

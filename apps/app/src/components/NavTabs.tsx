@@ -68,7 +68,7 @@ function NavTabs({ routes }: INavTabs) {
   };
   return (
     <Tabs
-      value={selected}
+      value={selected === -1 ? false : selected}
       sx={{
         flexGrow: 1,
         '& .MuiTabs-flexContainer': { height: '100%' },

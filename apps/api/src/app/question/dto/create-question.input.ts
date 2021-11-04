@@ -51,7 +51,4 @@ export class CreateQuestionInput {
       'Language of the question. Defaults to "english" | example "german"',
   })
   readonly language: Language;
-
-  @Field(() => Int)
-  readonly authorId: number;
 }

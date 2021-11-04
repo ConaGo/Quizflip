@@ -14,7 +14,7 @@ import { UpdateQuestionInput } from './dto/update-question.input';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { merge, shuffle } from 'lodash';
-import { UseGuards } from '@nestjs/common';
+import { SerializeOptions, UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/graphQL-jwt-auth.guard';
 import { CurrentUser } from '../decorators/graphQL-GetUser';
 
@@ -55,26 +55,38 @@ export class QuestionResolver {
   }
 
   @UseGuards(GqlAuthGuard)
+  @SerializeOptions({ groups: ['author'] })
+  @Query(() => [Question], { name: 'userQuestions', nullable: true })
+  getUserQuestions(@CurrentUser() user: User) {
+    return this.questionService.findAllFromUser(user.id);
+  }
+
+  @UseGuards(GqlAuthGuard)
   @Query(() => [Question], { name: 'randomQuestions', nullable: true })
   getRandomQuestions(
     @Args('count', { type: () => Int }) count: number,
     @CurrentUser() user: User
   ) {
-    console.log(user.id);
     return this.questionService.getRandomBatch(count);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => Question)
-  createQuestion(@Args('input') createQuestionInput: CreateQuestionInput) {
-    return this.questionService.create(createQuestionInput);
+  createQuestion(
+    @CurrentUser() user: User,
+    @Args('input') createQuestionInput: CreateQuestionInput
+  ) {
+    return this.questionService.create(createQuestionInput, user.id);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => [Question])
   createQuestions(
+    @CurrentUser() user: User,
     @Args('input', { type: () => [CreateQuestionInput] })
     createQuestionInput: CreateQuestionInput[]
   ) {
-    return this.questionService.createMany(createQuestionInput);
+    return this.questionService.createMany(createQuestionInput, user.id);
   }
 
   @Mutation(() => Question)

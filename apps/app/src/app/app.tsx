@@ -7,25 +7,25 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { AuthProvider } from '../hooks/useAuth';
 import { QuestionForm } from '../components/QuestionForm';
 import { Try } from '../components/Try';
+import { QuestionOverview } from '../components/QuestionOverview';
+
 const queryClient = new QueryClient();
+
 const Routing = () => {
   return (
     <>
       <NavBar />
-      <Try />
-      <Route
-        path="/"
-        exact
-        render={() => (
-          <div>
-            <Try />
-          </div>
-        )}
-      />
+
+      <Route path="/" exact render={() => <div></div>} />
       <Route
         path="/create"
         exact
-        render={() => <QuestionForm categories={['ss']} />}
+        render={() => (
+          <>
+            <QuestionOverview />
+            <QuestionForm categories={['ss']} />
+          </>
+        )}
       />
       <Route
         path="/explore"
@@ -58,7 +58,7 @@ export function App() {
 
           <QueryClientProvider client={queryClient}>
             <Routing />
-            {/* <ReactQueryDevtools initialIsOpen={false} position="bottom-right" /> */}
+            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
           </QueryClientProvider>
         </ThemeProvider>
       </AuthProvider>

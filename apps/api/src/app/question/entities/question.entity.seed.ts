@@ -8,7 +8,7 @@ import { User } from '../../user/entities/user.entity';
 const formatQuestion = (e, id) => {
   const tags = e.category.split(': ');
 
-  const ret: CreateQuestionDto = {
+  const ret: CreateQuestionDto & { authorId: number } = {
     type: e.type,
     category: tags[0],
     tags: tags[1] ? [tags[1]] : [],

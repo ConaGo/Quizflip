@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState, ChangeEvent } from 'react';
 import Joi from 'joi';
 import { DTO } from '@libs/shared-types';
 import { useAuth } from './useAuth';
-import axios from 'axios';
+import axios from './axios';
 
 type Handler = (e: ChangeEvent<HTMLInputElement>) => void;
 const getHandler = (

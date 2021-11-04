@@ -28,7 +28,7 @@ export const AQuestionSubTagEntertainment = [
 export type Language = 'english' | 'german';
 export const ALanguage = ['english', 'german'];
 
-export interface CreateQuestionDto {
+export interface QuestionDto {
   readonly type: QuestionType;
   readonly category: string;
   readonly tags: string[];
@@ -53,6 +53,7 @@ export const tagsValidator = Joi.array()
     'string.base': 'please provide a tag',
     'string.empty': 'please provide a tag',
   });
+
 export const createQuestionFormData = BaseJoi.object<CreateQuestionDto>({
   type: Joi.string()
     .valid(...AQuestionType)

@@ -19,6 +19,8 @@ type Question {
   tags: [String!]
   difficulty: String!
   question: String!
+  correctAnswers: [String!]!
+  incorrectAnswers: [String!]!
   language: String!
   author: User!
   authorId: Int
@@ -42,6 +44,7 @@ type Query {
   answerQuestion(answers: [String!]!, id: Int!): Boolean!
   question(id: Int!): Question!
   categories: [String!]
+  userQuestions: [Question!]
   randomQuestions(count: Int!): [Question!]
 }
 
@@ -87,7 +90,6 @@ input CreateQuestionInput {
   Language of the question. Defaults to "english" | example "german"
   """
   language: String!
-  authorId: Int!
 }
 
 input UpdateQuestionInput {
@@ -122,7 +124,6 @@ input UpdateQuestionInput {
   Language of the question. Defaults to "english" | example "german"
   """
   language: String
-  authorId: Int
 
   """Unique Identifier | example: 1"""
   id: Int!

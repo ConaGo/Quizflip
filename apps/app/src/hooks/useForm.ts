@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { ObjectSchema } from 'joi';
 import { useMutation } from 'react-query';
-import axios from 'axios';
+import axios from './axios';
 
 export type ErrorObject<T> = {
   [K in keyof T]: string;

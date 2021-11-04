@@ -19,36 +19,24 @@ export class QuestionService {
     private readonly userService: UserService
   ) {}
 
-  async create(createQuestionInput: CreateQuestionInput): Promise<Question> {
-    //TODO extract userid from request
-    const { authorId, ...rest } = createQuestionInput;
-
-    //Throws if user is not found
-    await this.userService.findOneById(authorId);
-    const question = await this.questionRepo.save(rest);
+  async create(
+    createQuestionInput: CreateQuestionInput,
+    userId: number
+  ): Promise<Question> {
+    const question = await this.questionRepo.save(createQuestionInput);
     await this.questionRepo
       .createQueryBuilder()
       .relation(Question, 'author')
       .of(question.id)
-      .set(authorId);
+      .set(userId);
     return question;
   }
   async createMany(
-    createQuestionInput: CreateQuestionInput[]
+    createQuestionInput: CreateQuestionInput[],
+    userId: number
   ): Promise<Question[]> {
-    //TODO extract userid from request
-    const { authorId } = createQuestionInput[0];
-
-    //Throws if user is not found
-    await this.userService.findOneById(authorId);
-
     //Save Questions
-    const questionArray = createQuestionInput.map((element) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { authorId, ...rest } = element;
-      return rest;
-    });
-    const questions = await this.questionRepo.save(questionArray);
+    const questions = await this.questionRepo.save(createQuestionInput);
     console.log(questions);
     //Add Author-Relation
     createQuestionInput.forEach(async (element, i) => {
@@ -56,13 +44,17 @@ export class QuestionService {
         .createQueryBuilder()
         .relation(Question, 'author')
         .of(questions[i].id)
-        .set(authorId);
+        .set(userId);
     });
     return questions;
   }
 
   findAll(): Promise<Question[]> {
     return this.questionRepo.find();
+  }
+
+  findAllFromUser(userId: number): Promise<Question[]> {
+    return this.questionRepo.find({ authorId: userId });
   }
 
   async check(id: number, answers: string[]): Promise<boolean> {
