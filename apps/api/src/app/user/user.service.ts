@@ -106,16 +106,19 @@ export class UserService {
     });
     const newHashes = [];
     let found = false;
+    console.log(user.refreshTokenHashes);
     for (let i = user.refreshTokenHashes.length - 1; i >= 0; i--) {
       const token = user.refreshTokenHashes[i];
       if (!this.isTokenExpired(token.created)) {
         newHashes.push(token);
+        console.log('he ', token.id);
         if (await argon2.verify(token.tokenHash, refreshToken)) found = true;
       }
     }
-    if (!found) return null;
 
     user.refreshTokenHashes = newHashes;
+    console.log('found = ', found);
+    if (!found) return null;
     return this.userRepository.save(user);
   }
   private isTokenExpired = (creationDate: Date) => {

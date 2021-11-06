@@ -5,7 +5,7 @@ import React, {
   createContext,
   useContext,
 } from 'react';
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosStatic } from 'axios';
 
 import { useMutation, useQuery } from 'react-query';
 import { DTO, LoginDto, SignupDto, RecoveryDto } from '@libs/shared-types';
@@ -17,17 +17,21 @@ interface AxiosErrorWithRetry extends AxiosError {
 interface AxiosRequestConfigWithRetry extends AxiosRequestConfig {
   _retry: boolean;
 }
+
 type UserMethods = {
+  axios: AxiosStatic | null;
   user: User | null;
   login: (user: User) => void;
   logout: () => void;
 };
+
 type User = {
   id: number;
   email: string;
   name: string;
   user: string;
 };
+
 const loginRequest = async (payload: LoginDto) =>
   axios.post('auth/login', payload);
 
@@ -39,6 +43,7 @@ const logoutRequest = async () => axios.post('auth/logout');
 const refreshRequest = async () => axios.get('auth/refresh');
 
 const AuthContext: React.Context<UserMethods> = createContext<UserMethods>({
+  axios: null,
   user: null,
   login: () => {
     return;
@@ -82,6 +87,7 @@ function useProvideAuth() {
   const login = async (user: User) => {
     setUser(user);
   };
+
   const logout = async () => {
     window.localStorage.clear();
     await logoutRequest();
@@ -90,11 +96,17 @@ function useProvideAuth() {
 
   useEffect(() => {
     //configure axios
-    axios.defaults.baseURL = 'http://localhost:3070';
+    /*     axios.defaults.baseURL = 'http://localhost:3070';
     axios.defaults.withCredentials = true; //sending cookies with each request
     axios.interceptors.response.use(
       //If there is no error simply return the response
-      (response) => response,
+      async (response) => {
+        if (response.data.errors[0].message === 'Unauthorized') {
+          await refreshRequest();
+        }
+        console.log(response);
+        return response;
+      },
       async (err: AxiosErrorWithRetry) => {
         console.log(err);
         const originalRequest = err.config;
@@ -110,12 +122,12 @@ function useProvideAuth() {
         }
         return Promise.reject(err);
       }
-    );
-
+    ); */
     // configure axios-hooks to use this instance of axios
     //configure({ axios });
   }, []);
   return {
+    axios,
     user,
     login,
     logout,

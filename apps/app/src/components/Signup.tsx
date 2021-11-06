@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, ChangeEvent } from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
 import { Button, DialogContent, TextField } from '@mui/material';
 
-import { FormType, signupFormData } from '@libs/shared-types';
+import { AuthFormType, signupFormValidator } from '@libs/shared-types';
 import { AuthButton } from './AuthButton';
 import { useFormAuth } from '../hooks/useFormAuth';
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 export interface SignupProps {
-  setFormType: Dispatch<SetStateAction<FormType>>;
+  setFormType: Dispatch<SetStateAction<AuthFormType>>;
 }
 
 export function Signup({ setFormType }: SignupProps) {
@@ -44,7 +44,7 @@ export function Signup({ setFormType }: SignupProps) {
       name: '',
       password: '',
     },
-    signupFormData,
+    signupFormValidator,
     'signup'
   );
   const classes = useStyles();

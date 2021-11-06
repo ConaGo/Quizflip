@@ -65,6 +65,7 @@ export class QuestionService {
       difference(answers, question.correctAnswers).length === 0;
     return sameLength && sameAnswers;
   }
+
   async findOne(id: number): Promise<Question> {
     console.log(await this.questionRepo.findOne(id));
     return this.questionRepo.findOne(id);

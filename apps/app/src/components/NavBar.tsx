@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import AuthModal from './AuthModal';
 import { AppBar, Toolbar, Button, Box } from '@mui/material';
-import { FormType } from '@libs/shared-types';
+import { AuthFormType } from '@libs/shared-types';
 import { useAuth } from '../hooks/useAuth';
 import { NavTabs } from './NavTabs';
 
 export const NavBar = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [formType, setFormType] = useState<FormType>('login');
+  const [formType, setFormType] = useState<AuthFormType>('login');
 
   const handleClose = () => {
     setOpenModal(false);
   };
 
-  const handleOpen = (type: FormType) => {
+  const handleOpen = (type: AuthFormType) => {
     setFormType(type);
     setOpenModal(!openModal);
   };

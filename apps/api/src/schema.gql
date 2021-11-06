@@ -5,7 +5,7 @@
 """Multiple choice and true/false Questions"""
 type Question {
   """Unique Identifier | example: 1"""
-  id: Int!
+  id: Int
 
   """Type of the question | example: "boolean" """
   type: String!
@@ -30,7 +30,7 @@ type Question {
 """User Object"""
 type User {
   """Unique Identifier | example: 1"""
-  id: Int!
+  id: Int
 
   """Unique e-mail | example: nest@js.com"""
   email: String!

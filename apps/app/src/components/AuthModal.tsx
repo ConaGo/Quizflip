@@ -14,7 +14,7 @@ import { Close } from '@mui/icons-material';
 import { TransitionProps } from '@mui/material/transitions';
 
 import { useSpring, animated } from 'react-spring';
-import { FormType } from '@libs/shared-types';
+import { AuthFormType } from '@libs/shared-types';
 import bookImage from '../assets/book-medium.jpg';
 
 const Login = React.lazy(() => import('./Login'));
@@ -28,8 +28,8 @@ export default function AuthModal({
 }: {
   handleClose: () => void;
   open: boolean;
-  formType: FormType;
-  setFormType: React.Dispatch<React.SetStateAction<FormType>>;
+  formType: AuthFormType;
+  setFormType: React.Dispatch<React.SetStateAction<AuthFormType>>;
 }) {
   const [slideSide, setSlideSide] = useState(false);
   const handleCloseWithSlide = () => {

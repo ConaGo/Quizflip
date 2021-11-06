@@ -27,7 +27,7 @@ import JwtRefreshGuard from './guards/jwt-refresh-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 import { JoiValidationPipe } from '../validation.pipe';
-import { loginFormData, signupFormData } from '@libs/shared-types';
+import { loginFormValidator, signupFormValidator } from '@libs/shared-types';
 import { User } from '../indexes/entity.index';
 @ApiTags('Auth')
 @Controller('auth')
@@ -37,7 +37,7 @@ export class AuthController {
     private readonly authService: AuthService
   ) {}
 
-  @UsePipes(new JoiValidationPipe(loginFormData))
+  @UsePipes(new JoiValidationPipe(loginFormValidator))
   @UseGuards(LocalAuthGuard)
   @HttpCode(200) //nestjs default for POST is 201
   @Post('login')
@@ -74,7 +74,7 @@ export class AuthController {
     res.cookie(...(await this.authService.getLogoutCookie('Authentication')));
   }
 
-  @UsePipes(new JoiValidationPipe(signupFormData))
+  @UsePipes(new JoiValidationPipe(signupFormValidator))
   @Post('signup')
   @ApiOperation({
     summary: 'Signup with password, email and username',
@@ -141,13 +141,13 @@ export class AuthController {
     @Req() req: ReqWithUser,
     @Res({ passthrough: true }) res: Response
   ) {
+    console.log('refresh');
     await this.userService.removeRefreshToken(
       req?.cookies?.Refresh,
       req.user?.id
     );
     res.cookie(...(await this.authService.getJwtCookie(req.user)));
     res.cookie(...(await this.authService.getAndAddJwtRefreshCookie(req.user)));
-    return req.user;
   }
 }
 //$argon2i$v=19$m=4096,t=3,p=1$S52hd0DuqcpRCLCJ46IdGw$BxVUL81U6uYZuoK4z5Q2lZNqzVN8BsKaJlV9o9/CJcs

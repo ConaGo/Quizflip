@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
@@ -7,9 +7,14 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
+@Exclude()
 @ObjectType({ description: 'BaseEntity' })
 export abstract class BaseEntity {
-  @Field(() => Int, { description: 'Unique Identifier | example: 1' })
+  @Expose({ groups: ['author'] })
+  @Field(() => Int, {
+    description: 'Unique Identifier | example: 1',
+    nullable: true,
+  })
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -17,7 +22,7 @@ export abstract class BaseEntity {
   @CreateDateColumn()
   created: Date;
 
-  @Exclude()
+  @Expose({ groups: ['author'] })
   @UpdateDateColumn()
   updated: Date;
 

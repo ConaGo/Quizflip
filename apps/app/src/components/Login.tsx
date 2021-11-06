@@ -3,13 +3,13 @@ import React, { Dispatch, SetStateAction, ChangeEvent } from 'react';
 import { createStyles, makeStyles } from '@mui/styles';
 import { Button, DialogContent, TextField } from '@mui/material';
 
-import { FormType, loginFormData } from '@libs/shared-types';
+import { AuthFormType, loginFormValidator } from '@libs/shared-types';
 import { AuthButton } from './AuthButton';
 import { useFormAuth } from '../hooks/useFormAuth';
 //import { useOAuthFlow } from '../../hooks/useOAuth';
 
 interface LoginProps {
-  setFormType: Dispatch<SetStateAction<FormType>>;
+  setFormType: Dispatch<SetStateAction<AuthFormType>>;
 }
 
 const Login = ({ setFormType }: LoginProps) => {
@@ -25,7 +25,7 @@ const Login = ({ setFormType }: LoginProps) => {
       nameOrEmail: '',
       password: '',
     },
-    loginFormData,
+    loginFormValidator,
     'login'
   );
   //const { openSignInWindow } = useOAuthFlow();

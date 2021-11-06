@@ -38,21 +38,25 @@ export {
   Language,
 };
 
+@Exclude()
 @Entity('question')
 @ObjectType({ description: 'Multiple choice and true/false Questions' })
 export class Question extends BaseEntity {
+  @Expose()
   @Field({
     description: 'Type of the question | example: "boolean" ',
   })
   @Column({ nullable: false })
   type: QuestionType;
 
+  @Expose()
   @Field(() => String, {
     description: 'Category of the Question | example: "Sports" ',
   })
   @Column({ nullable: false })
   category: string;
 
+  @Expose()
   @Field(() => [String], {
     nullable: true,
     description:
@@ -61,10 +65,12 @@ export class Question extends BaseEntity {
   @Column({ type: 'text', array: true, nullable: true })
   tags?: string[];
 
+  @Expose()
   @Field()
   @Column({ nullable: false })
   difficulty: QuestionDifficulty;
 
+  @Expose()
   @Field()
   @Column({ nullable: false })
   question: string;
@@ -87,12 +93,13 @@ export class Question extends BaseEntity {
   })
   incorrectAnswers: string[];
 
-  @Expose()
+  @Expose({ groups: ['user'] })
   //Returns an array with all possible answers in random order
   get answers(): string[] {
     return shuffle(merge(this.correctAnswers, this.incorrectAnswers));
   }
 
+  @Expose()
   @Field()
   @Column({ default: 'english', nullable: false })
   language: Language;

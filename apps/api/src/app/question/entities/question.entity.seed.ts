@@ -26,7 +26,13 @@ export default class CreateQuestion implements Seeder {
     const data = JSON.parse(
       fs.readFileSync('./app/question/entities/question.json').toString()
     );
-    const user = await factory(User)({ authType: 'local' }).create();
+
+    const user = await factory(User)({
+      authType: 'local',
+      name: 'schubi',
+      password: 'schubi',
+    }).create();
+
     data.forEach((element) => {
       factory(Question)({
         question: formatQuestion(element, user.id),

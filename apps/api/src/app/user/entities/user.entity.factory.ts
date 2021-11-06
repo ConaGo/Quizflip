@@ -9,16 +9,18 @@ interface IUserContext {
   role: Role;
   password: string;
   email: string;
+  name: string;
 }
 define(User, (faker: typeof Faker, context: IUserContext) => {
   const { authType, role, password, email } = context;
+  let { name } = context;
   let userData;
-  const name = faker.name.findName();
+  if (!name) name = faker.name.findName();
   if (authType === 'local') {
     if (role === 'admin')
       userData = {
         email: email,
-        name: faker.internet.userName(name),
+        name: name,
         passwordHash: argon2.hash(password),
         authType: authType,
         role: role,
@@ -26,8 +28,8 @@ define(User, (faker: typeof Faker, context: IUserContext) => {
     else {
       userData = {
         email: Faker.internet.email(name),
-        name: faker.internet.userName(name),
-        passwordHash: argon2.hash(faker.internet.password()),
+        name: name,
+        passwordHash: argon2.hash(password || faker.internet.password()),
         authType: authType,
         role: 'user',
       };

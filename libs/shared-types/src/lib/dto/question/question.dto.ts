@@ -29,6 +29,7 @@ export type Language = 'english' | 'german';
 export const ALanguage = ['english', 'german'];
 
 export interface QuestionDto {
+  readonly id: number;
   readonly type: QuestionType;
   readonly category: string;
   readonly tags: string[];
@@ -38,6 +39,10 @@ export interface QuestionDto {
   readonly incorrectAnswers: string[];
   readonly language: Language;
 }
+
+export type CreateQuestionDto = Omit<QuestionDto, 'id'>;
+export type UpdateQuestionDto = Partial<CreateQuestionDto>;
+export type QuestionDtos = CreateQuestionDto | UpdateQuestionDto;
 
 export const tagsValidator = Joi.array()
   .unique()

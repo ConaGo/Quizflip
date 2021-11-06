@@ -38,14 +38,6 @@ export class User extends BaseEntity {
   @Column({ default: '' })
   passwordHash: string;
 
-  /*   @Exclude()
-  @Column({
-    type: 'text',
-    array: true,
-    default: [],
-  })
-  refreshTokenHashes: string[]; */
-
   @Exclude()
   @OneToMany(
     () => RefreshTokenHash,
